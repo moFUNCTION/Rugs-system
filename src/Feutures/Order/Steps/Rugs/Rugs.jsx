@@ -14,8 +14,9 @@ import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import {} from "@chakra-ui/react";
 import { RugModal } from "./RugModal";
 import { useState } from "react";
+import { MdCancel } from "react-icons/md";
 export const Rugs = ({ control, setValue }) => {
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "RugsUploaded",
   });
@@ -30,6 +31,9 @@ export const Rugs = ({ control, setValue }) => {
       value: data,
     });
     onCloseRugModal();
+  };
+  const onDeleteRug = (index) => {
+    remove(index);
   };
 
   return (
@@ -68,7 +72,17 @@ export const Rugs = ({ control, setValue }) => {
                   p="3"
                   key={field.id}
                   w="100%"
+                  pos="relative"
                 >
+                  <IconButton
+                    colorScheme="red"
+                    pos="absolute"
+                    top="1"
+                    right="1"
+                    onClick={() => onDeleteRug(index)}
+                  >
+                    <MdCancel />
+                  </IconButton>
                   {RugCleaningOption?.RugImages && (
                     <Image
                       borderRadius="lg"
