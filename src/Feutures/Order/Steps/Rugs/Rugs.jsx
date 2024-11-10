@@ -85,7 +85,7 @@ export const Rugs = ({ control, setValue, errors }) => {
                   >
                     <MdCancel />
                   </IconButton>
-                  {RugCleaningOption?.RugImages && (
+                  {RugCleaningOption?.RugImages.length >= 1 && (
                     <Image
                       borderRadius="lg"
                       w="120px"
