@@ -57,7 +57,13 @@ export const schema = z
       .min(1, { message: "you must fill the Rug Collection Address Field" }),
     RugReturnAddress: z.any(),
     isSameRugCollectionAddress: z.boolean().default(true),
-    RugsUploaded: z.any(),
+    RugsUploaded: z
+      .array(
+        z.object({
+          k: z.any(),
+        })
+      )
+      .min(1, { message: "please upload 1 rug at least" }),
   })
   .superRefine((value, ctx) => {
     const { isSameRugCollectionAddress, RugReturnAddress } = value;

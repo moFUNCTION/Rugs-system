@@ -30,7 +30,7 @@ export default function Index() {
     steps: [
       {
         Component: Rugs,
-        fieldsRequired: [],
+        fieldsRequired: ["RugsUploaded"],
       },
       {
         Component: UserInformation,

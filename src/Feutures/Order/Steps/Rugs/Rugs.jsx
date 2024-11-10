@@ -15,7 +15,8 @@ import {} from "@chakra-ui/react";
 import { RugModal } from "./RugModal";
 import { useState } from "react";
 import { MdCancel } from "react-icons/md";
-export const Rugs = ({ control, setValue }) => {
+import { ErrorText } from "../../../../Components/Common/ErrorText/ErrorText";
+export const Rugs = ({ control, setValue, errors }) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "RugsUploaded",
@@ -45,6 +46,7 @@ export const Rugs = ({ control, setValue }) => {
         onClose={onCloseRugModal}
       />
       <Stack borderRadius="lg" alignItems="center" bgColor="gray.200" p="3">
+        <ErrorText>{errors?.RugsUploaded?.message}</ErrorText>
         {fields?.length > 0 ? (
           <>
             <Button
