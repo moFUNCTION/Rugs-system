@@ -1,31 +1,47 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FormWrapper } from "./FormWrapper/FormWrapper";
-import { Button, Flex, Heading, Stack } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Heading,
+  Stack,
+  useToast,
+  Text,
+  Progress,
+} from "@chakra-ui/react";
 import { useMultipleFormSteps } from "../../Hooks/useMultipleFormSteps/useMultipleFormSteps";
 import { UserInformation } from "./Steps/UserInformation/UserInformation";
 import { ProgressBar } from "../../Components/Common/ProgressBar/ProgressBar";
 import { Logo } from "../../Components/Common/Logo/Logo";
-import { motion } from "framer-motion";
+import { motion, steps } from "framer-motion";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { Rugs } from "./Steps/Rugs/Rugs";
 import { UserLocation } from "./Steps/UserLocation/UserLocation";
 import { schema } from "./schema";
+import localforage from "localforage";
+import { Order } from "../../@Firebase/Utils/Order/Order";
+import { useNavigate } from "react-router-dom";
+
 export default function Index() {
+  const Navigate = useNavigate();
+  const toast = useToast({
+    position: "top-right",
+    duration: 3000,
+    isClosable: true,
+  });
   const {
     currentStepIndex,
     wrapperTransionStyles,
     CurrentStep,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     register,
     control,
     setValue,
     isLastStep,
     isFirstStep,
-    isSubmitting,
     handleSubmit,
     HandleNext,
     HandlePrev,
-    watch,
   } = useMultipleFormSteps({
     steps: [
       {
@@ -44,36 +60,71 @@ export default function Index() {
     schema: schema,
     mode: "onBlur",
   });
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const OrderInit = new Order(data);
+      await OrderInit.onAdd();
+      toast({
+        status: "success",
+        title: "Success",
+        description:
+          "Order Submited Successfully we will Respond As soon As possible To You",
+      });
+      Navigate("/user/orders");
+    } catch (err) {
+      toast({
+        status: "error",
+        title: "Error",
+        description: err,
+      });
+    }
   };
-  console.log(errors);
+
   return (
     <FormWrapper>
       <Stack
         alignItems="center"
         w="100%"
-        maxW="600px"
+        maxW="800px"
         bgColor="white"
         p="3"
         borderRadius="lg"
       >
-        <ProgressBar size="sm" steps={3} current={currentStepIndex + 1} />
+        <ProgressBar
+          justifyContent="center"
+          w="100%"
+          size="sm"
+          steps={3}
+          current={currentStepIndex + 1}
+        />
       </Stack>
 
       <Stack
         justifyContent="center"
         alignItems="center"
-        p="3"
         borderRadius="lg"
         bgColor="white"
         w="100%"
-        maxW="600px"
+        maxW="800px"
         gap="4"
         overflow="hidden"
         boxShadow="lg"
+        pos="relative"
+        p="4"
+        pt="6"
       >
-        <Logo w="120px" />
+        <Progress
+          pos="absolute"
+          top="0"
+          w="100%"
+          h="5px"
+          transition="0.3s"
+          value={(currentStepIndex / 2) * 100}
+        />
+        <Heading size="md" color="gray.600">
+          Rug Works and Services
+        </Heading>
+        <Text>●FREE ONLINE ESTIMATE | ORDER REQUEST FORM●</Text>
         <motion.div
           style={{
             width: "100%",

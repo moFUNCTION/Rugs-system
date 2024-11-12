@@ -16,8 +16,9 @@ import { RugModal } from "./RugModal";
 import { useState } from "react";
 import { MdCancel } from "react-icons/md";
 import { ErrorText } from "../../../../Components/Common/ErrorText/ErrorText";
+import { Rug } from "./Rug";
 export const Rugs = ({ control, setValue, errors }) => {
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "RugsUploaded",
   });
@@ -36,7 +37,17 @@ export const Rugs = ({ control, setValue, errors }) => {
   const onDeleteRug = (index) => {
     remove(index);
   };
-
+  const onUpdateRug = ({ id, data }) => {
+    replace(
+      fields.map((field) => {
+        if (field.id === id) {
+          return { value: data, id };
+        } else {
+          return field;
+        }
+      })
+    );
+  };
   return (
     <>
       <RugModal
@@ -50,7 +61,9 @@ export const Rugs = ({ control, setValue, errors }) => {
         {fields?.length > 0 ? (
           <>
             <Button
-              onClick={onOpenRugModal}
+              onClick={() => {
+                onOpenRugModal();
+              }}
               size="sm"
               ml="auto"
               colorScheme="red"
@@ -58,57 +71,14 @@ export const Rugs = ({ control, setValue, errors }) => {
               Add A New Rug
             </Button>
             {fields.map((field, index) => {
-              const {
-                RugCleaningOption,
-                width,
-                length,
-                RugMaterial,
-                AdditionalServices,
-                Comment,
-              } = field.value;
               return (
-                <Flex
-                  gap="3"
-                  borderRadius="lg"
-                  bgColor="white"
-                  p="3"
+                <Rug
+                  onUpdate={(data) => onUpdateRug({ data, id: field.id })}
+                  onDelete={() => onDeleteRug(index)}
                   key={field.id}
-                  w="100%"
-                  pos="relative"
-                >
-                  <IconButton
-                    colorScheme="red"
-                    pos="absolute"
-                    top="1"
-                    right="1"
-                    onClick={() => onDeleteRug(index)}
-                  >
-                    <MdCancel />
-                  </IconButton>
-                  {RugCleaningOption?.RugImages.length >= 1 && (
-                    <Image
-                      borderRadius="lg"
-                      w="120px"
-                      h="120px"
-                      objectFit="cover"
-                      src={URL.createObjectURL(
-                        RugCleaningOption.RugImages[0]?.value
-                      )}
-                    />
-                  )}
-                  <Stack gap="0">
-                    <Heading size="sm">Rug {index + 1}</Heading>
-                    <Text size="sm">Rug Width : {width + 1}m</Text>
-                    <Text size="sm">Rug length : {length + 1}m</Text>
-                    <Text size="sm">Rug Material : {RugMaterial + 1}</Text>
-                    <Text>
-                      Additional Services Selected :{" "}
-                      {AdditionalServices.map((value) => {
-                        return value.label;
-                      })}
-                    </Text>
-                  </Stack>
-                </Flex>
+                  index={index}
+                  {...field.value}
+                />
               );
             })}
           </>

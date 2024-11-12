@@ -13,11 +13,20 @@ import { ErrorText } from "../ErrorText/ErrorText";
 import { forwardRef } from "react";
 export const InputElement = forwardRef(
   (
-    { Icon, name, placeholder = name, errors = [], register, type, ...rest },
+    {
+      Icon,
+      name,
+      placeholder = name,
+      errors = [],
+      register,
+      type,
+      containerStyles,
+      rest,
+    },
     ref
   ) => {
     return (
-      <Stack w="100%">
+      <Stack w="100%" {...containerStyles}>
         <InputGroup variant="filled">
           <InputLeftElement pointerEvents="none">
             {Icon && (

@@ -58,19 +58,36 @@ export const schema = z
     RugReturnAddress: z.any(),
     isSameRugCollectionAddress: z.boolean().default(true),
     RugsUploaded: z
-      .array(
-        z.object({
-          k: z.any(),
-        })
-      )
+      .array(z.any())
       .min(1, { message: "please upload 1 rug at least" }),
+
+    RugCollectionAddressPostCode: z
+      .string()
+      .regex(/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/, {
+        message: "Invalid UK postal code format",
+      }),
+    RugReturnAddressPostCode: z.any(),
   })
   .superRefine((value, ctx) => {
-    const { isSameRugCollectionAddress, RugReturnAddress } = value;
-    if (!isSameRugCollectionAddress && !RugReturnAddress) {
-      ctx.addIssue({
-        message: "you must fill the Rug Return Address Field",
-        path: ["RugReturnAddress"],
-      });
+    const {
+      isSameRugCollectionAddress,
+      RugReturnAddress,
+      RugReturnAddressPostCode,
+    } = value;
+    if (!isSameRugCollectionAddress) {
+      if (!RugReturnAddress) {
+        ctx.addIssue({
+          message: "you must fill the Rug Return Address Field",
+          path: ["RugReturnAddress"],
+        });
+      }
+      if (
+        !/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/.test(RugReturnAddressPostCode)
+      ) {
+        ctx.addIssue({
+          message: "Invalid UK postal code format",
+          path: ["RugReturnAddressPostCode"],
+        });
+      }
     }
   });

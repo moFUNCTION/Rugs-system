@@ -42,7 +42,6 @@ export const RugModal = ({
     HandlePrev,
     watch,
   } = useMultipleFormSteps({
-    defaultValues,
     steps: [
       {
         Component: RugPropertiesStep,
@@ -61,6 +60,9 @@ export const RugModal = ({
     ],
     schema: RugSchema,
     mode: "onBlur",
+    defaultValues: async () => {
+      return defaultValues;
+    },
   });
 
   return (

@@ -1,4 +1,4 @@
-import { Flex, IconButton, Tooltip } from "@chakra-ui/react";
+import { Flex, IconButton, Progress, Stack, Tooltip } from "@chakra-ui/react";
 import { BsArrowRight } from "react-icons/bs";
 import SuccessAnimation from "../../../Assets/SuccessAnimation/SuccessAnimation.json";
 import Lottie from "lottie-react";
@@ -10,6 +10,7 @@ export const ProgressBar = ({ steps, colortheme, size, current, ...rest }) => {
         direction: "ltr !important",
       }}
       gap="3"
+      pos="relative"
       {...rest}
     >
       {Array.from({ length: steps }).map((_, index) => {

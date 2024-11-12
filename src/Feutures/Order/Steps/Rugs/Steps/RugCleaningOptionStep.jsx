@@ -87,7 +87,6 @@ const CleaningOption = ({
               color="gray.600"
               border="2px"
               borderColor="gray.700"
-              borderRadius="md"
             >
               {text}
             </Text>

@@ -1,6 +1,14 @@
-import { Textarea } from "@chakra-ui/react";
+import { Stack, Textarea, Text } from "@chakra-ui/react";
 import React from "react";
 
 export const RugCommentStep = ({ register }) => {
-  return <Textarea placeholder="write a comment" {...register("Comment")} />;
+  return (
+    <>
+      <Text color="gray.500">Add additional comments...</Text>
+      <Textarea
+        placeholder="for example: rug no./works reference / rug placement in-situ / specific customer requests"
+        {...register("Comment")}
+      />
+    </>
+  );
 };

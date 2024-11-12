@@ -20,7 +20,7 @@ export const RugAdditionalService = ({ setValue, control }) => {
   return (
     <MultiSelect
       options={options}
-      label="Would you like us to supply Rug Underlay and/or Rug Uplifting and Furniture Moving?"
+      label="choose the additional service your rug needs..."
       value={selectedAdditionalServices}
       onChange={(values) => setValue("AdditionalServices", values)}
       placeholder="Select"

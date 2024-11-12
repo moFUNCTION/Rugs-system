@@ -3,7 +3,7 @@ import { Text } from "@chakra-ui/react";
 import { InputElement } from "../../../../../Components/Common/InputElement/InputElement";
 import { MdOfflineBolt } from "react-icons/md";
 import { ErrorText } from "../../../../../Components/Common/ErrorText/ErrorText";
-
+import { RxWidth } from "react-icons/rx";
 export const RugPropertiesStep = ({ register, errors }) => {
   const [isPhoneQuery] = useMediaQuery("(max-width: 900px)");
   const RugCarpetTypeOptions = [
@@ -31,7 +31,7 @@ export const RugPropertiesStep = ({ register, errors }) => {
         <InputElement
           name="length"
           placeholder="length"
-          Icon={MdOfflineBolt}
+          Icon={RxWidth}
           errors={errors}
           register={register}
           type="number"
@@ -39,7 +39,7 @@ export const RugPropertiesStep = ({ register, errors }) => {
         <InputElement
           name="width"
           placeholder="width"
-          Icon={MdOfflineBolt}
+          Icon={RxWidth}
           errors={errors}
           register={register}
           type="number"
