@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { CircularProgress, Stack } from "@chakra-ui/react";
-import { UseUserData } from "../../Context/UserDataProvider/UserDataProvider";
+import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
 
 export const ProtectedRoute = ({
   condition,
@@ -8,7 +8,7 @@ export const ProtectedRoute = ({
   children,
   isLoading,
 }) => {
-  const { user } = UseUserData();
+  const { user } = useUserData();
   if (isLoading || user.loading) {
     return (
       <Stack

@@ -15,19 +15,20 @@ export const InputElement = forwardRef(
   (
     {
       Icon,
+      size,
       name,
       placeholder = name,
       errors = [],
       register,
       type,
       containerStyles,
-      rest,
+      ...rest
     },
     ref
   ) => {
     return (
       <Stack w="100%" {...containerStyles}>
-        <InputGroup variant="filled">
+        <InputGroup size={size} variant="filled">
           <InputLeftElement pointerEvents="none">
             {Icon && (
               <Icon

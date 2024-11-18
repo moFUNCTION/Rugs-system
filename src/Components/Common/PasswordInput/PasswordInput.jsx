@@ -1,15 +1,19 @@
-import { Input, InputGroup, InputRightAddon } from "@chakra-ui/react";
+import {
+  Input,
+  InputGroup,
+  InputRightAddon,
+  InputRightElement,
+} from "@chakra-ui/react";
 import { forwardRef, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { PiEyeClosed } from "react-icons/pi";
 import styles from "./styles.module.css";
-export const PasswordInput = forwardRef(({ sx, ...rest }, ref) => {
+export const PasswordInput = forwardRef(({ sx, size, ...rest }, ref) => {
   const [show, setShow] = useState(false);
   return (
-    <InputGroup sx={sx}>
+    <InputGroup size={size} sx={sx}>
       <Input ref={ref} type={show ? "text" : "password"} {...rest} />
-      <InputRightAddon
-        bgColor="white"
+      <InputRightElement
         cursor="pointer"
         onClick={() => setShow(!show)}
         overflow="hidden"
@@ -19,7 +23,7 @@ export const PasswordInput = forwardRef(({ sx, ...rest }, ref) => {
         ) : (
           <PiEyeClosed key={show} className={styles["opacity-animation"]} />
         )}
-      </InputRightAddon>
+      </InputRightElement>
     </InputGroup>
   );
 });

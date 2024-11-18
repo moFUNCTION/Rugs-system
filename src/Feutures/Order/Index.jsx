@@ -21,7 +21,8 @@ import { schema } from "./schema";
 import localforage from "localforage";
 import { Order } from "../../@Firebase/Utils/Order/Order";
 import { useNavigate } from "react-router-dom";
-
+import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithLines/CenteredTextWithLines";
+import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
 export default function Index() {
   const Navigate = useNavigate();
   const toast = useToast({
@@ -29,6 +30,7 @@ export default function Index() {
     duration: 3000,
     isClosable: true,
   });
+  const { user } = useUserData();
   const {
     currentStepIndex,
     wrapperTransionStyles,
@@ -42,6 +44,7 @@ export default function Index() {
     handleSubmit,
     HandleNext,
     HandlePrev,
+    reset,
   } = useMultipleFormSteps({
     steps: [
       {
@@ -60,17 +63,39 @@ export default function Index() {
     schema: schema,
     mode: "onBlur",
   });
+
+  useEffect(() => {
+    if (user.data) {
+      reset({
+        email: user.data?.email,
+        username: user.data?.username,
+        phoneNumber: user.data?.phoneNumber,
+        RugCollectionAddress: user.data?.locationAddress,
+        RugCollectionAddressPostCode: user.data?.locationPostCode,
+      });
+    }
+  }, [user.data]);
+
   const onSubmit = async (data) => {
     try {
       const OrderInit = new Order(data);
       await OrderInit.onAdd();
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          email: data.email,
+          username: data.email,
+          phoneNumber: data.phoneNumber,
+        })
+      );
+
       toast({
         status: "success",
         title: "Success",
         description:
           "Order Submited Successfully we will Respond As soon As possible To You",
       });
-      Navigate("/user/orders");
+      Navigate("/orders");
     } catch (err) {
       toast({
         status: "error",
@@ -124,7 +149,11 @@ export default function Index() {
         <Heading size="md" color="gray.600">
           Rug Works and Services
         </Heading>
-        <Text>●FREE ONLINE ESTIMATE | ORDER REQUEST FORM●</Text>
+        <CenteredTextWithLines>
+          <Text flexShrink="0" size="sm">
+            FREE ONLINE ESTIMATE | ORDER REQUEST FORM
+          </Text>
+        </CenteredTextWithLines>
         <motion.div
           style={{
             width: "100%",
