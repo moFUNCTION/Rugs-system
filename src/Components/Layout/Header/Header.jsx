@@ -5,7 +5,6 @@ import {
   IconButton,
   VStack,
   Text,
-  Link,
   HStack,
   Avatar,
   Menu,
@@ -14,7 +13,9 @@ import {
   MenuItem,
   Stack,
   useDisclosure,
+  Button,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 import { FaFacebookF } from "react-icons/fa";
 import { BsYoutube, BsInstagram } from "react-icons/bs";
 import { IoCloseOutline } from "react-icons/io5";
@@ -194,6 +195,17 @@ export const Header = () => {
           </Text>
         </VStack>
       )}
+      <Flex gap="5" p="3" justifyContent="center">
+        <Button to="/orders" variant="link" as={Link}>
+          Orders
+        </Button>
+        <Button variant="link" as={Link}>
+          Chat With Us
+        </Button>
+        <Button variant="link" as={Link}>
+          Blog
+        </Button>
+      </Flex>
     </Box>
   );
 };
