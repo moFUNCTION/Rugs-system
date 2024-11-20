@@ -1,96 +1,199 @@
+import React, { useState } from "react";
 import {
-  Avatar,
-  Button,
+  Box,
   Flex,
-  HStack,
   IconButton,
-  Skeleton,
-  useMediaQuery,
+  VStack,
+  Text,
+  Link,
+  HStack,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+import { FaFacebookF } from "react-icons/fa";
+import { BsYoutube, BsInstagram } from "react-icons/bs";
+import { IoCloseOutline } from "react-icons/io5";
+import { RxHamburgerMenu } from "react-icons/rx";
 import { Logo } from "../../Common/Logo/Logo";
-import { Link } from "react-router-dom";
 import { useUserData } from "../../../Context/UserDataProvider/UserDataPRovider";
-import { UserAvatar } from "../../Common/UserAvatar/UserAvatar";
 export const Header = () => {
-  const [isPhoneQuery] = useMediaQuery("(max-width: 965px)");
+  const { isOpen, onToggle } = useDisclosure();
   const { user } = useUserData();
   return (
-    <Flex
-      alignItems="center"
-      justifyContent={isPhoneQuery ? "center" : "space-between"}
-      p="4"
-      gap="7"
-      flexWrap="wrap"
+    <Box
+      as="header"
+      w="full"
+      borderBottom="1px"
+      borderColor="gray.200"
+      bg="white"
+      shadow="sm"
+      zIndex="sticky"
+      position="relative"
     >
-      <Logo w="100px" />
-
-      <HStack
-        wrap="wrap"
-        justifyContent="center"
-        order={isPhoneQuery && 3}
-        gap="3"
+      <Flex
+        pos="relative"
+        justify="space-between"
+        align="center"
+        maxW="1200px"
+        mx="auto"
+        px={{ base: "4", md: "8" }}
+        py="3"
+        gap="10"
       >
-        {["orders", "Blog", "Chat-With-Us"].map((child) => {
-          return (
-            <Button
-              textTransform="capitalize"
-              as={Link}
-              to={child}
-              size="lg"
-              variant="link"
-              key={child}
-            >
-              {child}
-            </Button>
-          );
-        })}
-      </HStack>
+        {/* Logo */}
+        <Logo w="120px" />
 
-      <HStack as={Skeleton} isLoaded={!user.loading} gap="3">
-        {user.data ? (
-          <>
-            <Button
-              colorScheme="red"
-              variant="outline"
-              borderRadius="full"
-              size="lg"
-              as={Link}
-              to="/user"
+        {/* Mobile Menu Toggle */}
+        <Box display={{ base: "block", lg: "none" }}>
+          <IconButton
+            icon={isOpen ? <IoCloseOutline /> : <RxHamburgerMenu />}
+            onClick={onToggle}
+            aria-label="Toggle Navigation"
+            variant="ghost"
+            size="lg"
+          />
+        </Box>
+
+        {/* Desktop Info */}
+        <HStack
+          display={{ base: "none", lg: "flex" }}
+          flex="1"
+          justify="center"
+          spacing="6"
+        >
+          <Text fontWeight="medium" color="gray.700">
+            OPEN 7 DAYS
+          </Text>
+          <Text>
+            <Text as="span" color="red.500">
+              LONDON{" "}
+            </Text>
+            020 8800 3377
+          </Text>
+          <Text>
+            <Text as="span" color="red.500">
+              OXFORD{" "}
+            </Text>
+            0186 598 5779
+          </Text>
+          <Text>
+            <Text as="span" color="red.500">
+              SURREY{" "}
+            </Text>
+            020 8800 3377
+          </Text>
+          <Text>
+            <Text as="span" color="red.500">
+              EMAIL{" "}
+            </Text>
+            <Link href="mailto:rugs@magichand.co.uk" color="blue.500">
+              rugs@magichand.co.uk
+            </Link>
+          </Text>
+          <Text fontWeight="medium" color="gray.700">
+            FREE COLLECTION & DELIVERY
+          </Text>
+        </HStack>
+
+        {/* User & Social Icons */}
+        <HStack spacing="4" align="center">
+          {/* Social Icons */}
+          <HStack spacing="2">
+            <Link
+              href="https://www.facebook.com/MagicHandLtd/"
+              title="Follow on Facebook"
+              target="_blank"
             >
-              Account Data
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              colorScheme="red"
-              variant="outline"
-              borderRadius="full"
-              size="lg"
-              as={Link}
-              to="/login"
+              <FaFacebookF size="20" />
+            </Link>
+            <Link
+              href="https://www.instagram.com/magichandltd/"
+              title="Follow on Instagram"
+              target="_blank"
             >
-              Login
-            </Button>
-            <Button
-              as={Link}
-              to="/register"
-              colorScheme="red"
-              borderRadius="full"
-              size="lg"
+              <BsInstagram size="20" />
+            </Link>
+            <Link
+              href="https://www.youtube.com/channel/UCgR8T356ZF4xQAaNiVUqvJQ"
+              title="Follow on Youtube"
+              target="_blank"
             >
-              Register
-            </Button>
-          </>
-        )}
-        <UserAvatar
-          email={user.data?.email}
-          isAuthenticated={user.data}
-          profilePhoto={user.data?.photoURL}
-          username={user.data?.username}
-        />
-      </HStack>
-    </Flex>
+              <BsYoutube size="20" />
+            </Link>
+          </HStack>
+
+          {/* User Account */}
+          <Menu>
+            <MenuButton
+              as={Avatar}
+              src={user?.data?.photoURL}
+              name={user?.data?.username}
+              size="sm"
+              cursor="pointer"
+            />
+            <MenuList>
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>Settings</MenuItem>
+              <MenuItem>Logout</MenuItem>
+            </MenuList>
+          </Menu>
+        </HStack>
+      </Flex>
+
+      {/* Mobile Sidebar */}
+      {isOpen && (
+        <VStack
+          pos="absolute"
+          top="100%"
+          w="full"
+          bg="white"
+          border="1px"
+          borderColor="gray.200"
+          p="4"
+          spacing="4"
+          shadow="md"
+          rounded="md"
+          zIndex="10"
+        >
+          <Text fontWeight="medium" color="gray.700">
+            OPEN 7 DAYS
+          </Text>
+          <Text>
+            <Text as="span" color="red.500">
+              LONDON{" "}
+            </Text>
+            020 8800 3377
+          </Text>
+          <Text>
+            <Text as="span" color="red.500">
+              OXFORD{" "}
+            </Text>
+            0186 598 5779
+          </Text>
+          <Text>
+            <Text as="span" color="red.500">
+              SURREY{" "}
+            </Text>
+            020 8800 3377
+          </Text>
+          <Text>
+            <Text as="span" color="red.500">
+              EMAIL{" "}
+            </Text>
+            <Link href="mailto:rugs@magichand.co.uk" color="blue.500">
+              rugs@magichand.co.uk
+            </Link>
+          </Text>
+          <Text fontWeight="medium" color="gray.700">
+            FREE COLLECTION & DELIVERY
+          </Text>
+        </VStack>
+      )}
+    </Box>
   );
 };
