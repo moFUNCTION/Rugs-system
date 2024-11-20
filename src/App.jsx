@@ -14,9 +14,10 @@ const Login = lazy(() => import("./Feutures/Auth/Login/Index"));
 // Orders
 const Orders = lazy(() => import("./Feutures/Orders/Index"));
 // Order {Id}
-const OrderUpdate = lazy(() => import("./Feutures/OrderUpdate/Index"));
+const OrderWatch = lazy(() => import("./Feutures/OrderUpdate/Index"));
 // User profile
 const UserProfile = lazy(() => import("./Feutures/UserProfile/UserProfile"));
+
 function App() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -75,7 +76,7 @@ function App() {
             }
           />
           <Route path="orders" element={<Orders />} />
-          <Route path="orders/:id" element={<OrderUpdate />} />
+          <Route path="orders/:id" element={<OrderWatch />} />
         </Routes>
       </LazyPageWrapper>
     </>

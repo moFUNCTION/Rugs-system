@@ -78,7 +78,7 @@ export class Order {
               },
             };
           }
-          return RugUploaded;
+          return RugUploaded.value;
         })
       );
       const Data = {
@@ -92,6 +92,7 @@ export class Order {
         userId: UserID.value,
         title: this.title,
       };
+
       if (this.RugReturnAddress && this.RugReturnAddressPostCode) {
         Data.RugReturnAddress = this.RugReturnAddress;
         Data.RugReturnAddressPostCode = this.RugReturnAddressPostCode;

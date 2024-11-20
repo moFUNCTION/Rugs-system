@@ -22,9 +22,11 @@ import { IoCloseOutline } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Logo } from "../../Common/Logo/Logo";
 import { useUserData } from "../../../Context/UserDataProvider/UserDataPRovider";
+import { useLogout } from "../../../@Firebase/Hooks/Auth/useLogout/useLogout";
 export const Header = () => {
   const { isOpen, onToggle } = useDisclosure();
   const { user } = useUserData();
+  const { onLogout } = useLogout();
   return (
     <Box
       as="header"
@@ -138,9 +140,11 @@ export const Header = () => {
               cursor="pointer"
             />
             <MenuList>
-              <MenuItem>Profile</MenuItem>
+              <MenuItem as={Link} to="/user">
+                Profile
+              </MenuItem>
               <MenuItem>Settings</MenuItem>
-              <MenuItem>Logout</MenuItem>
+              <MenuItem onClick={onLogout}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </HStack>
