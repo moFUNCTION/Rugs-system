@@ -42,7 +42,7 @@ export default function Index() {
         ],
   });
   return (
-    <Stack alignItems="center" h="calc(100vh - 95px)">
+    <Stack p="3" alignItems="center" minH="calc(100vh - 95px)">
       <Flex gap="3">
         {orderStatusTypes.map((statusType) => {
           return (

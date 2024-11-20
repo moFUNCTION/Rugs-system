@@ -46,15 +46,6 @@ export const Rug = ({ onDelete, onUpdate, index, ...data }) => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <IconButton
-          colorScheme="red"
-          pos="absolute"
-          top="1"
-          right="1"
-          onClick={onDelete}
-        >
-          <MdCancel />
-        </IconButton>
         {RugCleaningOption?.RugImages.length >= 1 &&
           RugCleaningOption?.name !==
             "General (Deep Wash) Rug Cleaning Works ONLY" && (
@@ -86,27 +77,6 @@ export const Rug = ({ onDelete, onUpdate, index, ...data }) => {
             Click Here To see all order details
           </Button>
         </Stack>
-
-        {/* <Stack gap="0">
-        <Heading size="sm">Rug {index + 1}</Heading>
-        <Text size="sm">
-          Rug Width : {width} {UnitSelector}
-        </Text>
-        <Text size="sm">
-          Rug length : {length} {UnitSelector}{" "}
-        </Text>
-        <Text size="sm">Rug Material : {RugMaterial} </Text>
-        <Stack>
-          <Text>Additional Services Selected :</Text>
-          {AdditionalServices.map((value) => {
-            return (
-              <Box bgColor="gray.100" p="2" key={value.label}>
-                {value.label}
-              </Box>
-            );
-          })}
-        </Stack>
-      </Stack> */}
       </Flex>
     </>
   );

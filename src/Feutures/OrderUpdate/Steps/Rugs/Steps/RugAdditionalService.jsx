@@ -19,6 +19,7 @@ export const RugAdditionalService = ({ setValue, control }) => {
 
   return (
     <MultiSelect
+      disabled
       options={options}
       label="choose the additional service your rug needs..."
       value={selectedAdditionalServices}

@@ -6,6 +6,7 @@ export const RugCommentStep = ({ register }) => {
     <>
       <Text color="gray.500">Add additional comments...</Text>
       <Textarea
+        readOnly
         placeholder="for example: rug no./works reference / rug placement in-situ / specific customer requests"
         {...register("Comment")}
       />

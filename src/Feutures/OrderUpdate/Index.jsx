@@ -87,36 +87,6 @@ export default function Index() {
     reset({ ...data, RugsUploaded: RugsUploaded });
   }, [data, JSON.stringify(RugsUploaded)]);
 
-  const onSubmit = async (data) => {
-    try {
-      const OrderInit = new Order(data);
-      await OrderInit.onUpdate(id);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          email: data.email,
-          username: data.email,
-          phoneNumber: data.phoneNumber,
-        })
-      );
-
-      toast({
-        status: "success",
-        title: "Success",
-        description:
-          "Order Updated Successfully we will Respond As soon As possible To You",
-      });
-      Navigate("/orders");
-    } catch (err) {
-      toast({
-        status: "error",
-        title: "Error",
-        description: err.code || err.message,
-      });
-      console.log(err);
-    }
-  };
-
   return (
     <FormWrapper>
       <Stack
@@ -203,21 +173,10 @@ export default function Index() {
             Prev
           </Button>
 
-          {isLastStep ? (
-            <Button
-              isLoading={isSubmitting}
-              onClick={handleSubmit(onSubmit)}
-              gap="3"
-              colorScheme="red"
-            >
-              Update Order
-            </Button>
-          ) : (
-            <Button onClick={HandleNext} gap="3">
-              Next
-              <FaArrowRight />
-            </Button>
-          )}
+          <Button isDisabled={isLastStep} onClick={HandleNext} gap="3">
+            Next
+            <FaArrowRight />
+          </Button>
         </Flex>
       </Stack>
     </FormWrapper>

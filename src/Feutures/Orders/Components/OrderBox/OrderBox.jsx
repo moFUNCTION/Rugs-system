@@ -52,9 +52,6 @@ export const OrderBox = ({
         <Button as={Link} to={id} colorScheme="blackAlpha" variant="outline">
           Watch the Complete Order
         </Button>
-        <Button as={Link} to={id} colorScheme="green" variant="outline">
-          Update The Order
-        </Button>
       </HStack>
     </Stack>
   );

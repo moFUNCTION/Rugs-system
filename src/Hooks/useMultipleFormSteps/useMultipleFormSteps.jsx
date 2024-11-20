@@ -45,6 +45,7 @@ export const useMultipleFormSteps = ({
     resolver: zodResolver(schema),
     defaultValues,
     mode,
+    reValidateMode: "onBlur",
   });
 
   return {

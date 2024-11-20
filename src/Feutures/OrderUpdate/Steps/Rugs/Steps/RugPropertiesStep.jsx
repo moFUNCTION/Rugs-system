@@ -18,9 +18,11 @@ export const RugPropertiesStep = ({ register, errors }) => {
       <Flex wrap={isPhoneQuery && "wrap"} gap="3">
         <Stack w="150px" flexShrink="0" flexGrow={1}>
           <Select
+            isDisabled
             variant="filled"
             placeholder="unit selector"
             {...register("UnitSelector")}
+            readOnly
           >
             <option value="cms">cms</option>
             <option value="inches">inches</option>
@@ -35,6 +37,7 @@ export const RugPropertiesStep = ({ register, errors }) => {
           errors={errors}
           register={register}
           type="number"
+          readOnly
         />
         <InputElement
           name="width"
@@ -43,11 +46,13 @@ export const RugPropertiesStep = ({ register, errors }) => {
           errors={errors}
           register={register}
           type="number"
+          readOnly
         />
       </Flex>
       <Stack borderRadius="md" bgColor="gray.50" p="3">
         <Text ml="1">What is your rug/oriental carpet type?</Text>
         <Select
+          isDisabled
           {...register("RugMaterial")}
           flexShrink="0"
           variant="filled"

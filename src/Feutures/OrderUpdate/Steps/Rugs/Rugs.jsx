@@ -57,44 +57,17 @@ export const Rugs = ({ control, setValue, errors }) => {
         onClose={onCloseRugModal}
       />
       <Stack borderRadius="lg" alignItems="center" bgColor="gray.200" p="3">
-        <ErrorText>{errors?.RugsUploaded?.message}</ErrorText>
-        {fields?.length > 0 ? (
-          <>
-            <Button
-              onClick={() => {
-                onOpenRugModal();
-              }}
-              size="sm"
-              ml="auto"
-              colorScheme="red"
-            >
-              Add A New Rug
-            </Button>
-            {fields.map((field, index) => {
-              return (
-                <Rug
-                  onUpdate={(data) => onUpdateRug({ data, id: field.id })}
-                  onDelete={() => onDeleteRug(index)}
-                  key={field.id}
-                  index={index}
-                  {...field.value}
-                />
-              );
-            })}
-          </>
-        ) : (
-          <Button
-            onClick={onOpenRugModal}
-            w="100%"
-            variant="outline"
-            bgColor="white"
-            colorScheme="red"
-            borderStyle="dashed"
-            size="lg"
-          >
-            Add Your First Rug
-          </Button>
-        )}
+        {fields.map((field, index) => {
+          return (
+            <Rug
+              onUpdate={(data) => onUpdateRug({ data, id: field.id })}
+              onDelete={() => onDeleteRug(index)}
+              key={field.id}
+              index={index}
+              {...field.value}
+            />
+          );
+        })}
       </Stack>
     </>
   );

@@ -10,6 +10,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../Config";
+import { Create_New_User } from "../Auth/Register/Register";
 
 export class Order {
   constructor({
@@ -21,6 +22,10 @@ export class Order {
     RugCollectionAddressPostCode,
     RugReturnAddressPostCode,
     RugsUploaded,
+    password,
+    isSignedIn,
+    userId,
+    title,
   } = {}) {
     this.username = username;
     this.email = email;
@@ -31,9 +36,30 @@ export class Order {
     this.RugReturnAddress = RugReturnAddress;
     this.RugReturnAddressPostCode = RugReturnAddressPostCode;
     this.RugsUploaded = RugsUploaded;
+    this.password = password;
+    this.isSignedIn = isSignedIn;
+    this.userId = userId;
+    this.title = title;
   }
   async onAdd() {
     try {
+      const UserID = {
+        value: this.userId,
+      };
+      if (!this.isSignedIn) {
+        const User_Register_Init = new Create_New_User({
+          username: this.username,
+          email: this.email,
+          phoneNumber: this.phoneNumber,
+          locationAddress: this.RugCollectionAddress,
+          locationPostCode: this.RugCollectionAddressPostCode,
+          password: this.password,
+          title: this.title,
+        });
+        const req = await User_Register_Init.onCreate();
+        UserID.value = req;
+      }
+
       const RugsUploaded = await Promise.all(
         this.RugsUploaded.map(async (RugUploaded) => {
           const RugImages = RugUploaded.value.RugCleaningOption.RugImages;
@@ -63,6 +89,8 @@ export class Order {
         RugCollectionAddressPostCode: this.RugCollectionAddressPostCode,
         status: "pending",
         createdAt: serverTimestamp(),
+        userId: UserID.value,
+        title: this.title,
       };
       if (this.RugReturnAddress && this.RugReturnAddressPostCode) {
         Data.RugReturnAddress = this.RugReturnAddress;
@@ -140,7 +168,7 @@ export class Order {
         await addDoc(RugsUploadedCollection, RugUploaded);
       }
     } catch (err) {
-      throw new Error(err);
+      throw new Error(err.code || err.message);
     }
   }
 

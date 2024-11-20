@@ -47,6 +47,7 @@ export const RugSchema = z.object({
 
 export const schema = z
   .object({
+    title: z.string().min(1, { message: "please fill the Title field" }),
     username: z.string().min(1, { message: "you must fill username field" }),
     email: z
       .string({ message: "you must fill the email field" })
@@ -67,13 +68,24 @@ export const schema = z
         message: "Invalid UK postal code format",
       }),
     RugReturnAddressPostCode: z.any(),
+    password: z
+      .string({
+        message: "please fill the password field",
+      })
+      .min(8, { message: "password must be more than 8 characters" }),
+    confirmPassword: z.string({ message: "please confirm password" }).min(1, {
+      message: "please confirm password",
+    }),
   })
   .superRefine((value, ctx) => {
     const {
       isSameRugCollectionAddress,
       RugReturnAddress,
       RugReturnAddressPostCode,
+      password,
+      confirmPassword,
     } = value;
+
     if (isSameRugCollectionAddress === "No") {
       if (!RugReturnAddress) {
         ctx.addIssue({
@@ -89,5 +101,11 @@ export const schema = z
           path: ["RugReturnAddressPostCode"],
         });
       }
+    }
+    if (password !== confirmPassword) {
+      ctx.addIssue({
+        message: "please rewrite the password correctly",
+        path: ["confirmPassword"],
+      });
     }
   });

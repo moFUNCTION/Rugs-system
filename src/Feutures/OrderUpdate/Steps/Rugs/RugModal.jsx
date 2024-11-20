@@ -127,21 +127,10 @@ export const RugModal = ({
             Prev
           </Button>
 
-          {isLastStep ? (
-            <Button
-              isLoading={isSubmitting}
-              onClick={handleSubmit(onSubmit)}
-              gap="3"
-              colorScheme="red"
-            >
-              {role}
-            </Button>
-          ) : (
-            <Button onClick={HandleNext} gap="3">
-              Next
-              <FaArrowRight />
-            </Button>
-          )}
+          <Button isDisabled={isLastStep} onClick={HandleNext} gap="3">
+            Next
+            <FaArrowRight />
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -1,9 +1,7 @@
 import { Flex } from "@chakra-ui/react";
-import React from "react";
 import { FaUser } from "react-icons/fa6";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { InputElement } from "../../../../Components/Common/InputElement/InputElement";
-import { PasswordInput } from "../../../../Components/Common/PasswordInput/PasswordInput";
 
 export const UserInformation = ({ register, errors }) => {
   return (
@@ -14,12 +12,14 @@ export const UserInformation = ({ register, errors }) => {
           Icon={FaUser}
           errors={errors}
           register={register}
+          readOnly
         />
         <InputElement
           name="email"
           Icon={MdOutlineAlternateEmail}
           errors={errors}
           register={register}
+          readOnly
         />
       </Flex>
 
@@ -30,6 +30,7 @@ export const UserInformation = ({ register, errors }) => {
         errors={errors}
         register={register}
         type="number"
+        readOnly
       />
     </>
   );

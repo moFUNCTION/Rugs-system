@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Component, useEffect } from "react";
 import { FormWrapper } from "./FormWrapper/FormWrapper";
 import {
   Button,
@@ -8,6 +8,11 @@ import {
   useToast,
   Text,
   Progress,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useMultipleFormSteps } from "../../Hooks/useMultipleFormSteps/useMultipleFormSteps";
 import { UserInformation } from "./Steps/UserInformation/UserInformation";
@@ -23,6 +28,11 @@ import { Order } from "../../@Firebase/Utils/Order/Order";
 import { useNavigate } from "react-router-dom";
 import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithLines/CenteredTextWithLines";
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
+import { UserPassword } from "./Steps/UserPassword/UserPassword";
+
+const errorNavigation = {
+  "auth/email-already-in-use": 2,
+};
 export default function Index() {
   const Navigate = useNavigate();
   const toast = useToast({
@@ -45,6 +55,8 @@ export default function Index() {
     HandleNext,
     HandlePrev,
     reset,
+    HandleChangeCurrentStepIndex,
+    setError,
   } = useMultipleFormSteps({
     steps: [
       {
@@ -53,7 +65,11 @@ export default function Index() {
       },
       {
         Component: UserInformation,
-        fieldsRequired: ["username", "email", "phoneNumber"],
+        fieldsRequired: ["username", "email", "phoneNumber", "title"],
+      },
+      {
+        Component: UserPassword,
+        fieldsRequired: ["password", "confirmPassword"],
       },
       {
         Component: UserLocation,
@@ -75,19 +91,14 @@ export default function Index() {
       });
     }
   }, [user.data]);
-
   const onSubmit = async (data) => {
     try {
-      const OrderInit = new Order(data);
+      const OrderInit = new Order({
+        ...data,
+        isSignedIn: user.data ? true : false,
+        userId: user.data?.uid,
+      });
       await OrderInit.onAdd();
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          email: data.email,
-          username: data.email,
-          phoneNumber: data.phoneNumber,
-        })
-      );
 
       toast({
         status: "success",
@@ -97,10 +108,12 @@ export default function Index() {
       });
       Navigate("/orders");
     } catch (err) {
+      setError("root", { message: err.message });
+      HandleChangeCurrentStepIndex(errorNavigation[err.message] - 1);
       toast({
         status: "error",
         title: "Error",
-        description: err,
+        description: err.message,
       });
     }
   };
@@ -125,6 +138,8 @@ export default function Index() {
       </Stack>
 
       <Stack
+        as={Skeleton}
+        isLoaded={!user.loading}
         justifyContent="center"
         alignItems="center"
         borderRadius="lg"
@@ -154,6 +169,14 @@ export default function Index() {
             FREE ONLINE ESTIMATE | ORDER REQUEST FORM
           </Text>
         </CenteredTextWithLines>
+        {errors.root && (
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{errors.root?.message}</AlertDescription>
+          </Alert>
+        )}
+
         <motion.div
           style={{
             width: "100%",

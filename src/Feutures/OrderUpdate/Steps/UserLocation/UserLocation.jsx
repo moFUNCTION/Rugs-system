@@ -12,7 +12,7 @@ import { MdGpsFixed } from "react-icons/md";
 import { InputElement } from "../../../../Components/Common/InputElement/InputElement";
 import { useWatch } from "react-hook-form";
 import { FaMapLocationDot } from "react-icons/fa6";
-export const UserLocation = ({ register, errors, control, setValue }) => {
+export const UserLocation = ({ register, errors, control }) => {
   const isSameRugCollectionAddress = useWatch({
     control,
     name: "isSameRugCollectionAddress",
@@ -27,6 +27,7 @@ export const UserLocation = ({ register, errors, control, setValue }) => {
           errors={errors}
           register={register}
           placeholder="Rug Collection Address"
+          readOnly
         />
         <InputElement
           name="RugCollectionAddressPostCode"
@@ -37,6 +38,7 @@ export const UserLocation = ({ register, errors, control, setValue }) => {
           containerStyles={{
             w: "250px",
           }}
+          readOnly
         />
       </Flex>
 
@@ -48,6 +50,7 @@ export const UserLocation = ({ register, errors, control, setValue }) => {
             errors={errors}
             register={register}
             placeholder="Rug Return Address"
+            readOnly
           />
           <InputElement
             name="RugReturnAddressPostCode"
@@ -58,17 +61,12 @@ export const UserLocation = ({ register, errors, control, setValue }) => {
             containerStyles={{
               w: "250px",
             }}
+            readOnly
           />
         </Flex>
       )}
 
-      <RadioGroup
-        value={isSameRugCollectionAddress}
-        onChange={(value) => {
-          setValue("isSameRugCollectionAddress", value);
-        }}
-        defaultValue="Yes"
-      >
+      <RadioGroup value={isSameRugCollectionAddress} defaultValue="Yes">
         <Flex
           borderRadius="md"
           bgColor="gray.50"

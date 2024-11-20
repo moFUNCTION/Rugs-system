@@ -9,7 +9,9 @@ export class Create_New_User {
     locationPostCode,
     locationAddress,
     password,
+    title,
   }) {
+    this.title = title;
     this.username = username;
     this.email = email;
     this.phoneNumber = phoneNumber;
@@ -20,6 +22,7 @@ export class Create_New_User {
   async #onSaveInFirestore({ userID }) {
     const userDoc = doc(db, "Users", userID);
     await setDoc(userDoc, {
+      title: this.title,
       username: this.username,
       email: this.email,
       phoneNumber: this.phoneNumber,
@@ -35,6 +38,7 @@ export class Create_New_User {
         this.password
       );
       await this.#onSaveInFirestore({ userID: req.user.uid });
+      return req.user.uid;
     } catch (err) {
       throw new Error(err.code);
     }

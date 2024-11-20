@@ -11,12 +11,7 @@ const CleaningOption = ({
   containImagesUpload,
   containRugImagesDescription,
   text,
-  onChooseTreatment,
-  onRemoveTreatment,
   TreatmentsSelected,
-  onChangeRugImagesSelected,
-  onRemoveRugImage,
-  onRemoveAllRugImages,
   RugImagesUploaded,
   register,
   errors,
@@ -37,13 +32,6 @@ const CleaningOption = ({
               {TreatmentsValues?.map((treatment) => {
                 return (
                   <Checkbox
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        onChooseTreatment(treatment);
-                      } else {
-                        onRemoveTreatment(treatment);
-                      }
-                    }}
                     isChecked={TreatmentsSelected?.find((treatmentSelected) => {
                       return treatmentSelected.value === treatment;
                     })}
@@ -64,9 +52,6 @@ const CleaningOption = ({
                 {errors?.RugCleaningOption?.RugImages?.message}
               </ErrorText>
               <MultiImageUploader
-                onChange={onChangeRugImagesSelected}
-                onRemoveItem={onRemoveRugImage}
-                onRemoveAllItems={onRemoveAllRugImages}
                 addingTitle="add rug photos"
                 isLoaded
                 images={RugImagesUploaded}
@@ -78,6 +63,7 @@ const CleaningOption = ({
               bgColor="white"
               placeholder="add a comment to rug images"
               {...register("RugCleaningOption.RugImagesDescription")}
+              readOnly
             />
           )}
           {text && (
@@ -85,8 +71,8 @@ const CleaningOption = ({
               bgColor="white"
               p="2"
               color="gray.600"
-              border="2px"
-              borderColor="gray.700"
+              border="1px"
+              borderColor="gray.400"
             >
               {text}
             </Text>
@@ -107,64 +93,24 @@ export const RugCleaningOptionStep = ({
     control,
     name: "RugCleaningOption.Treatment",
   });
-  const HandleAddTreatment = (value) => {
-    if (
-      !treatments.fields.find((treatment) => {
-        return treatment.value === value;
-      })
-    ) {
-      treatments.append({
-        value,
-      });
-    }
-  };
-  const HandleRemoveTreatment = (value) => {
-    treatments.replace(
-      treatments?.fields.filter((treatment) => {
-        return treatment.value !== value;
-      })
-    );
-  };
 
   const RugImagesUploaded = useFieldArray({
     control,
     name: "RugCleaningOption.RugImages",
   });
 
-  const HandleAddImage = (files) => {
-    Array.from(files).forEach((file) => {
-      RugImagesUploaded.append({
-        value: file,
-      });
-    });
-  };
-  const HandleRemoveImage = ({ index }) => {
-    RugImagesUploaded.remove(index);
-  };
-  const HandleRemoveAllImages = () => {
-    RugImagesUploaded.replace([]);
-  };
-
   return (
     <>
       <Text>Choose one of the following Rug Cleaning options below...</Text>
-      <RadioGroup
-        value={RugCleaningOption?.name}
-        onChange={(value) => setValue("RugCleaningOption.name", value)}
-      >
+      <RadioGroup value={RugCleaningOption?.name}>
         <Stack gap="3">
           <ErrorText>{errors?.RugCleaningOption?.name?.message}</ErrorText>
           {RugOptions.map((option) => {
             const isSelected = RugCleaningOption?.name === option.name;
             return (
               <CleaningOption
-                onRemoveTreatment={HandleRemoveTreatment}
-                onChooseTreatment={HandleAddTreatment}
-                onChangeRugImagesSelected={HandleAddImage}
                 RugImagesUploaded={RugImagesUploaded.fields}
                 TreatmentsSelected={treatments.fields}
-                onRemoveRugImage={HandleRemoveImage}
-                onRemoveAllRugImages={HandleRemoveAllImages}
                 key={option.name}
                 isSelected={isSelected}
                 errors={errors}
