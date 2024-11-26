@@ -28,5 +28,6 @@ export const TabsValues = [
   {
     title: "Customers",
     Icon: FaUsers,
+    href: "/customers",
   },
 ];

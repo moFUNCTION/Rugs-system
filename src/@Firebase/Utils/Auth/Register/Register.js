@@ -1,4 +1,4 @@
-import { addDoc, doc, setDoc } from "firebase/firestore";
+import { addDoc, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../../../Config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 export class Create_New_User {
@@ -9,7 +9,7 @@ export class Create_New_User {
     locationPostCode,
     locationAddress,
     password,
-    title,
+    title = "MR",
   }) {
     this.title = title;
     this.username = username;
@@ -28,6 +28,7 @@ export class Create_New_User {
       phoneNumber: this.phoneNumber,
       locationAddress: this.locationAddress,
       locationPostCode: this.locationPostCode,
+      createdAt: serverTimestamp(),
     });
   }
   async onCreate() {
@@ -40,6 +41,7 @@ export class Create_New_User {
       await this.#onSaveInFirestore({ userID: req.user.uid });
       return req.user.uid;
     } catch (err) {
+      console.log(err);
       throw new Error(err.code);
     }
   }
