@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Component, useEffect } from "react";
 import { FormWrapper } from "./FormWrapper/FormWrapper";
 import {
   Button,
@@ -27,6 +27,7 @@ import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithL
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
 import { useGetDoc } from "../../@Firebase/Hooks/Common/useGetDoc/useGetDoc";
 import { useGetCollectionWithPaginationInCursors } from "../../@Firebase/Hooks/Common/useCollectionWithPagination(Cursors)/useCollectionWithPagination(Cursors)";
+import OrderTotalPrice from "./Steps/OrderTotalPrice/OrderTotalPrice";
 
 const processRugImages = (images) =>
   images?.map((image) => ({
@@ -70,6 +71,28 @@ export default function Index() {
     size: 30,
     orderByQueries: [],
   });
+  const Steps = () => {
+    const arr = [
+      {
+        Component: Rugs,
+        fieldsRequired: ["RugsUploaded"],
+      },
+      {
+        Component: UserInformation,
+        fieldsRequired: ["username", "email", "phoneNumber"],
+      },
+      {
+        Component: UserLocation,
+        fieldsRequired: ["RugCollectionAddress", "RugReturnAddress"],
+      },
+    ];
+    if (data?.status === "accepted") {
+      arr.push({
+        Component: OrderTotalPrice,
+      });
+    }
+    return arr;
+  };
   const {
     currentStepIndex,
     wrapperTransionStyles,
@@ -85,20 +108,7 @@ export default function Index() {
     HandlePrev,
     reset,
   } = useMultipleFormSteps({
-    steps: [
-      {
-        Component: Rugs,
-        fieldsRequired: ["RugsUploaded"],
-      },
-      {
-        Component: UserInformation,
-        fieldsRequired: ["username", "email", "phoneNumber"],
-      },
-      {
-        Component: UserLocation,
-        fieldsRequired: ["RugCollectionAddress", "RugReturnAddress"],
-      },
-    ],
+    steps: Steps(),
     schema: schema,
     mode: "onBlur",
   });
@@ -130,7 +140,7 @@ export default function Index() {
           justifyContent="center"
           w="100%"
           size="sm"
-          steps={3}
+          steps={Steps().length}
           current={currentStepIndex + 1}
         />
       </Stack>
@@ -183,6 +193,10 @@ export default function Index() {
             register={register}
             control={control}
             setValue={setValue}
+            data={{
+              ...data,
+              RugsUploaded: formatRugsUploadedData(RugsUploaded),
+            }}
           />
         </motion.div>
         <Flex w="100%" justifyContent="end" gap="3">
