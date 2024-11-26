@@ -1,18 +1,10 @@
-import {
-  Badge,
-  Button,
-  Flex,
-  HStack,
-  IconButton,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Badge, Button, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { useCollectionCount } from "../../../../@Firebase/Hooks/Common/useCollectionCount/useCollectionCount";
 import { CenteredTextWithLines } from "../../../../Components/Common/CenteredTextWithLines/CenteredTextWithLines";
 import { calculateTimeDifference } from "../../../../Utils/GetDateByTimeStamp/GetDateByTimeStamp";
 import { Link } from "react-router-dom";
-import { CiReceipt } from "react-icons/ci";
+
 export const OrderBox = ({
   RugCollectionAddress,
   RugCollectionAddressPostCode,
@@ -24,7 +16,6 @@ export const OrderBox = ({
   id,
   RugReturnAddressPostCode,
   RugReturnAddress,
-  isAcceptedByClient,
 }) => {
   const { count } = useCollectionCount({
     __collection__: `Orders/${id}/RugsUploaded`,
@@ -38,21 +29,7 @@ export const OrderBox = ({
       p="3"
       bgColor="white"
       alignItems="center"
-      pos="relative"
     >
-      {status === "accepted" && (
-        <IconButton
-          pos="absolute"
-          top="2"
-          right="2"
-          colorScheme="red"
-          borderRadius="full"
-          zIndex="100000"
-        >
-          <CiReceipt />
-        </IconButton>
-      )}
-
       <CenteredTextWithLines>
         <Text flexShrink="0">Order Data</Text>
       </CenteredTextWithLines>
@@ -71,29 +48,10 @@ export const OrderBox = ({
           <Text flexShrink="0">The Rug Return Address is the Same</Text>
         </CenteredTextWithLines>
       )}
-      <HStack flexWrap="wrap" my="3">
-        <Button
-          flexGrow="1"
-          as={Link}
-          to={id}
-          colorScheme="blackAlpha"
-          variant="outline"
-        >
+      <HStack my="3">
+        <Button as={Link} to={id} colorScheme="blackAlpha" variant="outline">
           Watch the Complete Order
         </Button>
-        {status === "accepted" && isAcceptedByClient === false && (
-          <Button
-            as={Link}
-            to={`${id}/client-submition`}
-            whiteSpace="wrap"
-            p="8"
-            flexGrow="1"
-            colorScheme="red"
-            textAlign="center"
-          >
-            The Admin Has Reviewed Your Order Please Submit it From Here
-          </Button>
-        )}
       </HStack>
     </Stack>
   );

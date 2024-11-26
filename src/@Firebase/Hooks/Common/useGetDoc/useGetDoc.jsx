@@ -4,7 +4,7 @@ import { db } from "../../../Config";
 import { doc, getDoc } from "firebase/firestore";
 
 export const useGetDoc = ({ __collection__, docId }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(undefined);
   const [data, setData] = useState(undefined);
 

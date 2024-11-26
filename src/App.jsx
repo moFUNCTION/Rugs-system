@@ -17,7 +17,10 @@ const Orders = lazy(() => import("./Feutures/Orders/Index"));
 const OrderWatch = lazy(() => import("./Feutures/OrderUpdate/Index"));
 // User profile
 const UserProfile = lazy(() => import("./Feutures/UserProfile/UserProfile"));
-
+// Order Submition
+const OrderSubmition = lazy(() =>
+  import("./Feutures/ClientOrderSubmition/Index")
+);
 function App() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -77,6 +80,10 @@ function App() {
           />
           <Route path="orders" element={<Orders />} />
           <Route path="orders/:id" element={<OrderWatch />} />
+          <Route
+            path="orders/:id/client-submition"
+            element={<OrderSubmition />}
+          />
         </Routes>
       </LazyPageWrapper>
     </>

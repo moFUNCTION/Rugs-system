@@ -279,11 +279,13 @@ const styles = StyleSheet.create({
 });
 
 export const InvoicePDF = ({ data }) => {
+  console.log(data);
   const rugs = data?.rugs;
   const invTotalPrice = data?.totalPrice;
-  const { CompletedData, TimeDifferenceDate } = GetDateByTimeStamp(
-    data?.createdAt
-  );
+  const { CompletedData, TimeDifferenceDate } = GetDateByTimeStamp({
+    dateProvided: data?.createdAt,
+  });
+  console.log(rugs);
   return (
     <Document>
       <Page
@@ -401,39 +403,45 @@ export const InvoicePDF = ({ data }) => {
                       <View style={styles.leftColumn}>
                         <Text style={styles.cellTextRugNG}>
                           <Text style={styles.cellTextRugNG}>
-                            {rug.RugCleaningOption.name}
+                            {rug?.RugCleaningOption?.name}
                           </Text>
                         </Text>
                       </View>
                       <View style={styles.CenterColumn}>
                         <Text style={styles.cellTextPrice}>
-                          {rug.RugCleaningOption.name ===
+                          {rug?.RugCleaningOption?.name ===
                             "Rug Alteration Works ONLY" &&
-                            parseFloat(rug.RugCleaningOption.price).toFixed(2)}
-                          {rug.RugCleaningOption.name ===
+                            parseFloat(rug?.RugCleaningOption?.price).toFixed(
+                              2
+                            )}
+                          {rug?.RugCleaningOption?.name ===
                             "Rug Repairs and Restoration Works ONLY" &&
                             parseFloat(
-                              rug.RugCleaningOption.repairPrice
+                              rug?.RugCleaningOption?.repairPrice
                             ).toFixed(2)}
                         </Text>
                       </View>
                     </View>
-                    {rug.RugCleaningOption.name ===
+                    {rug?.RugCleaningOption?.name ===
                     "Rug Repairs and Restoration Works ONLY" ? (
                       <View style={styles.row}>
                         <View style={styles.leftColumn}>
-                          <Text style={styles.cellTextRugN}>{rug.comment}</Text>
+                          <Text style={styles.cellTextRugN}>
+                            {rug?.comment}
+                          </Text>
                         </View>
                         <View style={styles.CenterColumn}>
                           <Text style={styles.cellTextPrice}></Text>
                         </View>
                       </View>
                     ) : null}
-                    {rug.RugCleaningOption.name ===
+                    {rug?.RugCleaningOption?.name ===
                     "Rug Alteration Works ONLY" ? (
                       <View style={styles.row}>
                         <View style={styles.leftColumn}>
-                          <Text style={styles.cellTextRugN}>{rug.comment}</Text>
+                          <Text style={styles.cellTextRugN}>
+                            {rug?.comment}
+                          </Text>
                         </View>
                         <View style={styles.CenterColumn}>
                           <Text style={styles.cellTextPrice}></Text>
@@ -444,26 +452,26 @@ export const InvoicePDF = ({ data }) => {
                     <View style={styles.row}>
                       <View style={styles.leftColumn}>
                         <Text style={styles.cellTextRugN}>
-                          Rug Type : {rug.RugMaterial}
+                          Rug Type : {rug?.RugMaterial}
                         </Text>
                       </View>
                       <View style={styles.CenterColumn}>
                         <Text style={styles.cellTextPrice}>
-                          {rug.RugCleaningOption.name ===
+                          {rug?.RugCleaningOption?.name ===
                             "Rug Alteration Works ONLY" ||
-                          rug.RugCleaningOption.name ===
+                          rug?.RugCleaningOption?.name ===
                             "Rug Repairs and Restoration Works ONLY" ? null : (
                             <>
-                              {rug.Treatment.some(
+                              {rug?.Treatment?.some(
                                 (treatmentSelected) =>
                                   treatmentSelected.value ===
                                   "Flood water/mould/damp damage"
                               )
                                 ? null
                                 : parseFloat(
-                                    rug.RugCleaningOption.price *
-                                      rug.length *
-                                      rug.width
+                                    rug?.RugCleaningOption?.price *
+                                      rug?.length *
+                                      rug?.width
                                   ).toFixed(2)}
                             </>
                           )}
@@ -471,7 +479,7 @@ export const InvoicePDF = ({ data }) => {
                       </View>
                     </View>
 
-                    {rug.Treatment.length > 0 && (
+                    {rug?.Treatment?.length > 0 && (
                       <React.Fragment>
                         <View style={styles.row}>
                           <View style={styles.leftColumn}>
@@ -481,7 +489,7 @@ export const InvoicePDF = ({ data }) => {
                             <Text style={styles.cellTextPrice}></Text>
                           </View>
                         </View>
-                        {rug.Treatment.map((treat, treatIndex) => (
+                        {rug?.Treatment.map((treat, treatIndex) => (
                           <>
                             <View
                               style={styles.row}
@@ -498,15 +506,15 @@ export const InvoicePDF = ({ data }) => {
                                   {treat.value ===
                                   "Flood water/mould/damp damage"
                                     ? ` ${parseFloat(
-                                        rug.RugCleaningOption.price *
-                                          rug.width *
-                                          rug.length *
+                                        rug?.RugCleaningOption?.price *
+                                          rug?.width *
+                                          rug?.length *
                                           2
                                       ).toFixed(2)}`
                                     : ` ${parseFloat(
                                         treat.price +
                                           treat.priceAfter *
-                                            (rug.width + rug.length - 1)
+                                            (rug?.width + rug?.length - 1)
                                       ).toFixed(2)}`}
                                 </Text>
                               </View>
@@ -528,7 +536,7 @@ export const InvoicePDF = ({ data }) => {
                         ))}
                       </React.Fragment>
                     )}
-                    {rug.AdditionalServices.length > 0 && (
+                    {rug?.AdditionalServices?.length > 0 && (
                       <React.Fragment>
                         <View style={styles.row}>
                           <View style={styles.leftColumn}>
@@ -538,31 +546,33 @@ export const InvoicePDF = ({ data }) => {
                             <Text style={styles.cellTextPrice}></Text>
                           </View>
                         </View>
-                        {rug.AdditionalServices.map((service, serviceIndex) => (
-                          <View
-                            style={styles.row}
-                            key={`service-${rugIndex}-${serviceIndex}`}
-                          >
-                            {/* Ensure keys are unique */}
-                            <View style={styles.leftColumn}>
-                              <Text style={styles.cellTextRugN}>
-                                {service.label ==
-                                  "click to choose anti-slip rug underlay and free fitting" &&
-                                  "Anti-slip rug underlay and free fitting"}
-                                {service.label ==
-                                  "click to choose rug uplifting and furniture moving on collection and/or return delivery" &&
-                                  "Rug uplifting and furniture moving on collection and/or return delivery"}
-                              </Text>
+                        {rug?.AdditionalServices.map(
+                          (service, serviceIndex) => (
+                            <View
+                              style={styles.row}
+                              key={`service-${rugIndex}-${serviceIndex}`}
+                            >
+                              {/* Ensure keys are unique */}
+                              <View style={styles.leftColumn}>
+                                <Text style={styles.cellTextRugN}>
+                                  {service.label ==
+                                    "click to choose anti-slip rug underlay and free fitting" &&
+                                    "Anti-slip rug underlay and free fitting"}
+                                  {service.label ==
+                                    "click to choose rug uplifting and furniture moving on collection and/or return delivery" &&
+                                    "Rug uplifting and furniture moving on collection and/or return delivery"}
+                                </Text>
+                              </View>
+                              <View style={styles.CenterColumn}>
+                                <Text style={styles.cellTextPrice}>
+                                  {parseFloat(
+                                    service.price * (rug?.width * rug?.length)
+                                  ).toFixed(2)}
+                                </Text>
+                              </View>
                             </View>
-                            <View style={styles.CenterColumn}>
-                              <Text style={styles.cellTextPrice}>
-                                {parseFloat(
-                                  service.price * (rug.width * rug.length)
-                                ).toFixed(2)}
-                              </Text>
-                            </View>
-                          </View>
-                        ))}
+                          )
+                        )}
                       </React.Fragment>
                     )}
                   </React.Fragment>
@@ -578,7 +588,7 @@ export const InvoicePDF = ({ data }) => {
                   <Text style={styles.cellTextPrice}>FREE</Text>
                 </View>
               </View>
-              {data.appliedDiscount && (
+              {data?.appliedDiscount && (
                 <View style={styles.row}>
                   <View style={styles.leftColumnFDL}>
                     <Text style={styles.cellTextRugN}>

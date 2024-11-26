@@ -1,29 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Input,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  PopoverArrow,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   Button,
   Text,
   Flex,
   IconButton,
   Box,
+  useDisclosure,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 
 import { BsCalendarDate } from "react-icons/bs";
 import { MdArrowLeft, MdArrowRight } from "react-icons/md";
+
 export const ChakraDatePicker = ({
   placeholder = "Select date",
   onChange,
   value,
   minDate,
   maxDate,
+  ...rest
 }) => {
-  const [selectedDate, setSelectedDate] = useState(value || null);
+  const [selectedDate, setSelectedDate] = useState(
+    value instanceof Date ? value : new Date(value)
+  );
+  useEffect(() => {
+    setSelectedDate(value instanceof Date ? value : new Date(value));
+  }, [JSON.stringify(value)]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // Generate calendar days
   const generateCalendarDays = () => {
@@ -62,6 +74,7 @@ export const ChakraDatePicker = ({
   const handleDateSelect = (date) => {
     setSelectedDate(date);
     onChange?.(date);
+    onClose(); // Close modal after selection
   };
 
   // Navigate months
@@ -77,86 +90,95 @@ export const ChakraDatePicker = ({
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <Popover>
-      <PopoverTrigger>
+    <>
+      <InputGroup>
+        <InputRightElement>
+          <BsCalendarDate />
+        </InputRightElement>
         <Input
+          {...rest}
           placeholder={placeholder}
-          value={selectedDate ? selectedDate.toLocaleDateString() : ""}
+          value={selectedDate ? selectedDate?.toLocaleDateString() : ""}
           readOnly
-          rightElement={<BsCalendarDate />}
+          onClick={onOpen}
         />
-      </PopoverTrigger>
-      <PopoverContent width="320px">
-        <PopoverArrow />
-        <PopoverBody p={4}>
-          {/* Month Navigation */}
-          <Flex justify="space-between" align="center" mb={4}>
-            <IconButton
-              icon={<MdArrowLeft />}
-              variant="ghost"
-              onClick={() => navigateMonth(-1)}
-            />
-            <Text fontWeight="bold">
-              {currentMonth.toLocaleString("default", {
-                month: "long",
-                year: "numeric",
-              })}
-            </Text>
-            <IconButton
-              icon={<MdArrowRight />}
-              variant="ghost"
-              onClick={() => navigateMonth(1)}
-            />
-          </Flex>
+      </InputGroup>
 
-          {/* Weekday Headers */}
-          <Flex
-            mb={2}
-            textAlign="center"
-            fontWeight="semibold"
-            color="gray.500"
-          >
-            {weekdays.map((day) => (
-              <Box key={day} flex={1}>
-                {day}
-              </Box>
-            ))}
-          </Flex>
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size="sm">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            <Flex justify="space-between" align="center">
+              <IconButton
+                icon={<MdArrowLeft />}
+                variant="ghost"
+                onClick={() => navigateMonth(-1)}
+                aria-label="Previous month"
+              />
+              <Text fontWeight="bold">
+                {currentMonth.toLocaleString("default", {
+                  month: "long",
+                  year: "numeric",
+                })}
+              </Text>
+              <IconButton
+                icon={<MdArrowRight />}
+                variant="ghost"
+                onClick={() => navigateMonth(1)}
+                aria-label="Next month"
+              />
+            </Flex>
+          </ModalHeader>
 
-          {/* Calendar Grid */}
-          <Flex flexWrap="wrap">
-            {calendarDays.map((day, index) => (
-              <Box key={index} width="14.285%" textAlign="center" p={1}>
-                {day && (
-                  <Button
-                    size="sm"
-                    width="full"
-                    variant={
-                      selectedDate &&
-                      day.toDateString() === selectedDate.toDateString()
-                        ? "solid"
-                        : "ghost"
-                    }
-                    colorScheme={
-                      selectedDate &&
-                      day.toDateString() === selectedDate.toDateString()
-                        ? "blue"
-                        : "gray"
-                    }
-                    onClick={() =>
-                      isDateSelectable(day) && handleDateSelect(day)
-                    }
-                    isDisabled={!isDateSelectable(day)}
-                  >
-                    {day.getDate()}
-                  </Button>
-                )}
-              </Box>
-            ))}
-          </Flex>
+          <ModalBody>
+            {/* Weekday Headers */}
+            <Flex
+              mb={2}
+              textAlign="center"
+              fontWeight="semibold"
+              color="gray.500"
+            >
+              {weekdays.map((day) => (
+                <Box key={day} flex={1}>
+                  {day}
+                </Box>
+              ))}
+            </Flex>
 
-          {/* Quick Actions */}
-          <Flex justify="space-between" mt={4}>
+            {/* Calendar Grid */}
+            <Flex flexWrap="wrap">
+              {calendarDays.map((day, index) => (
+                <Box key={index} width="14.285%" textAlign="center" p={1}>
+                  {day && (
+                    <Button
+                      size="sm"
+                      width="full"
+                      variant={
+                        selectedDate &&
+                        day.toDateString() === selectedDate.toDateString()
+                          ? "solid"
+                          : "ghost"
+                      }
+                      colorScheme={
+                        selectedDate &&
+                        day.toDateString() === selectedDate.toDateString()
+                          ? "blue"
+                          : "gray"
+                      }
+                      onClick={() =>
+                        isDateSelectable(day) && handleDateSelect(day)
+                      }
+                      isDisabled={!isDateSelectable(day)}
+                    >
+                      {day.getDate()}
+                    </Button>
+                  )}
+                </Box>
+              ))}
+            </Flex>
+          </ModalBody>
+
+          <ModalFooter>
             <Button
               size="sm"
               variant="ghost"
@@ -173,13 +195,14 @@ export const ChakraDatePicker = ({
               onClick={() => {
                 setSelectedDate(null);
                 onChange?.(null);
+                onClose();
               }}
             >
               Clear
             </Button>
-          </Flex>
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };

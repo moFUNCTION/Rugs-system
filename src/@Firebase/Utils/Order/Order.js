@@ -30,6 +30,7 @@ export class Order {
     isSignedIn,
     userId,
     title,
+    status = "pending",
   } = {}) {
     this.username = username;
     this.email = email;
@@ -44,6 +45,10 @@ export class Order {
     this.isSignedIn = isSignedIn;
     this.userId = userId;
     this.title = title;
+    this.status = status;
+  }
+  #getAllParams() {
+    return { ...this };
   }
   async onAdd() {
     try {
@@ -121,38 +126,55 @@ export class Order {
       throw new Error(Err.message);
     }
   }
-  async onUpdate(orderId) {
+  async onUpdate(orderId, RestParams) {
     try {
-      const RugsUploaded = await Promise.all(
-        this.RugsUploaded.map(async (RugUploaded) => {
-          const RugImages = RugUploaded.value.RugCleaningOption.RugImages;
-          if (RugImages.length >= 1 && RugImages instanceof Array) {
-            const RugImagesLinks = await ImageUploader({
-              path: "RugsImages",
-              files: RugImages.map((image) => image.value),
-            });
-            return {
-              ...RugUploaded.value,
-              RugCleaningOption: {
-                ...RugUploaded.value.RugCleaningOption,
-                RugImages: RugImagesLinks,
-              },
-            };
-          }
-          return RugUploaded;
-        })
-      );
+      if (this.RugsUploaded?.length >= 1) {
+        const RugsUploaded = await Promise.all(
+          this.RugsUploaded.map(async (RugUploaded) => {
+            const RugImages = RugUploaded.value.RugCleaningOption.RugImages;
+            if (RugImages.length >= 1 && RugImages instanceof Array) {
+              const RugImagesLinks = await ImageUploader({
+                path: "RugsImages",
+                files: RugImages.map((image) => image.value),
+              });
+              return {
+                ...RugUploaded.value,
+                RugCleaningOption: {
+                  ...RugUploaded.value.RugCleaningOption,
+                  RugImages: RugImagesLinks,
+                },
+              };
+            }
+            return RugUploaded;
+          })
+        );
+        const RugsUploadedCollection = collection(
+          db,
+          `Orders/${orderId}/RugsUploaded`
+        );
+        const existingRugs = await getDocs(RugsUploadedCollection);
+        for (let rugDoc of existingRugs.docs) {
+          await deleteDoc(rugDoc.ref);
+        }
+
+        for (let RugUploaded of RugsUploaded) {
+          await addDoc(RugsUploadedCollection, RugUploaded);
+        }
+      }
 
       const Data = {
-        username: this.username,
-        email: this.email,
-        phoneNumber: this.phoneNumber,
-        RugCollectionAddress: this.RugCollectionAddress,
-        RugCollectionAddressPostCode: this.RugCollectionAddressPostCode,
-        status: "pending",
+        status: this.status,
         isUpdated: true,
         updatedAt: serverTimestamp(),
+        ...RestParams,
       };
+
+      const Params = this.#getAllParams();
+      for (let item in Params) {
+        if (Params[item]) {
+          Data[item] = Params[item];
+        }
+      }
 
       if (this.RugReturnAddress && this.RugReturnAddressPostCode) {
         Data.RugReturnAddress = this.RugReturnAddress;
@@ -162,26 +184,16 @@ export class Order {
       // Update the main order document
       const OrderDocRef = doc(db, "Orders", orderId);
       await updateDoc(OrderDocRef, Data);
-
-      // Update the RugsUploaded sub-collection
-      const RugsUploadedCollection = collection(
-        db,
-        `Orders/${orderId}/RugsUploaded`
-      );
-
-      // Delete existing RugsUploaded documents before adding new ones
-      const existingRugs = await getDocs(RugsUploadedCollection);
-      for (let rugDoc of existingRugs.docs) {
-        await deleteDoc(rugDoc.ref);
-      }
-
-      // Add updated RugsUploaded documents
-      for (let RugUploaded of RugsUploaded) {
-        await addDoc(RugsUploadedCollection, RugUploaded);
-      }
     } catch (err) {
       throw new Error(err.code || err.message);
     }
+  }
+  async onConfirmByClient({ orderId, collectionDate, returnDate }) {
+    await this.onUpdate(orderId, {
+      collectionDate,
+      returnDate,
+      isAcceptedByClient: true,
+    });
   }
 
   async onRemove() {}

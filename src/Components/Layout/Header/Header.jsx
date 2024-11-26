@@ -140,11 +140,29 @@ export const Header = () => {
               cursor="pointer"
             />
             <MenuList>
-              <MenuItem as={Link} to="/user">
-                Profile
+              {user.data ? (
+                <>
+                  <MenuItem as={Link} to="/user">
+                    Profile
+                  </MenuItem>
+                  <MenuItem onClick={onLogout}>Logout</MenuItem>
+                  <MenuItem as={Link} to="/orders">
+                    Orders
+                  </MenuItem>
+                </>
+              ) : (
+                <>
+                  <MenuItem as={Link} to="/login">
+                    Login
+                  </MenuItem>
+                  <MenuItem as={Link} to="/register">
+                    Register
+                  </MenuItem>
+                </>
+              )}
+              <MenuItem as={Link} href="https://www.facebook.com/MagicHandLtd/">
+                Chat With Us
               </MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem onClick={onLogout}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </HStack>
@@ -199,17 +217,6 @@ export const Header = () => {
           </Text>
         </VStack>
       )}
-      <Flex gap="5" p="3" justifyContent="center">
-        <Button to="/orders" variant="link" as={Link}>
-          Orders
-        </Button>
-        <Button variant="link" as={Link}>
-          Chat With Us
-        </Button>
-        <Button variant="link" as={Link}>
-          Blog
-        </Button>
-      </Flex>
     </Box>
   );
 };

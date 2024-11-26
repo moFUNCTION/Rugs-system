@@ -27,7 +27,6 @@ import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithL
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
 import { useGetDoc } from "../../@Firebase/Hooks/Common/useGetDoc/useGetDoc";
 import { useGetCollectionWithPaginationInCursors } from "../../@Firebase/Hooks/Common/useCollectionWithPagination(Cursors)/useCollectionWithPagination(Cursors)";
-import OrderTotalPrice from "./Steps/OrderTotalPrice/OrderTotalPrice";
 
 const processRugImages = (images) =>
   images?.map((image) => ({
@@ -86,11 +85,7 @@ export default function Index() {
         fieldsRequired: ["RugCollectionAddress", "RugReturnAddress"],
       },
     ];
-    if (data?.status === "accepted") {
-      arr.push({
-        Component: OrderTotalPrice,
-      });
-    }
+
     return arr;
   };
   const {
@@ -155,11 +150,12 @@ export default function Index() {
         w="100%"
         maxW="800px"
         gap="4"
-        overflow="hidden"
         boxShadow="lg"
         pos="relative"
         p="4"
         pt="6"
+        overflowX="hidden"
+        overflowY="hidden"
       >
         <Progress
           pos="absolute"

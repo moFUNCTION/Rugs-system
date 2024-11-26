@@ -56,7 +56,7 @@ export default function Index() {
       ],
     },
   ];
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("accepted-waiting-client");
   const { user } = useUserData();
   const Queries = () => {
     const statusSelected = status.split("-");
