@@ -24,6 +24,7 @@ export const useGetCollectionWithPaginationInCursors = ({
   isDependantLoading,
   __collection__,
 }) => {
+  console.log(whereQueries);
   if (!orderByQueries) {
     orderByQueries = [{ field: "createdAt", direction: "desc" }];
   }
@@ -41,6 +42,7 @@ export const useGetCollectionWithPaginationInCursors = ({
     () => whereQueries,
     [JSON.stringify(whereQueries)]
   );
+  console.log(memoWhereQueries);
 
   const createQuery = () => {
     let q = query(DocumnetsCollection, limit(size));
@@ -49,8 +51,12 @@ export const useGetCollectionWithPaginationInCursors = ({
       q = query(q, orderBy(field, direction));
     });
 
-    memoWhereQueries.forEach(({ field, operator, value }) => {
-      if (value) {
+    memoWhereQueries.forEach(({ field, operator, value } = {}) => {
+      if (
+        field !== undefined &&
+        value !== undefined &&
+        operator !== undefined
+      ) {
         q = query(q, where(field, operator, value));
       }
     });
@@ -67,7 +73,7 @@ export const useGetCollectionWithPaginationInCursors = ({
   const HandleGetDocumnets = useCallback(async () => {
     if (
       !isDependantLoading &&
-      !memoWhereQueries.find((query) => !query.value)
+      !memoWhereQueries.find((query) => query.value === undefined)
     ) {
       try {
         dispach({ type: "FETCH_START" });
@@ -124,9 +130,9 @@ export const useGetCollectionWithPaginationInCursors = ({
     __collection__,
     whereQueries,
   });
-  let pagesNumber = count?.count ? Math.ceil(count?.count / size) : 0;
+  let pagesNumber = count?.count ? Math.floor(count?.count / size) : 0;
   const isDisabledNext =
-    pagesNumber >= Documnets.page + 1 || Documnets.error || Documnets.loading;
+    pagesNumber >= Documnets.page || Documnets.error || Documnets.loading;
   const isDisabledPrev = Documnets.page === 0;
   return {
     data: Documnets.data.map((doc) => ({ ...doc.data(), id: doc.id })),

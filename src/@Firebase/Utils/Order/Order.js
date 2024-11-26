@@ -5,7 +5,11 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
+  limit,
+  orderBy,
+  query,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -81,6 +85,12 @@ export class Order {
           return RugUploaded.value;
         })
       );
+      const {
+        docs: [lastDoc],
+      } = await getDocs(
+        query(collection(db, "Orders"), limit(1), orderBy("createdAt", "desc"))
+      );
+
       const Data = {
         username: this.username,
         email: this.email,
@@ -91,6 +101,7 @@ export class Order {
         createdAt: serverTimestamp(),
         userId: UserID.value,
         title: this.title,
+        uniqueId: (lastDoc?.data()?.uniqueId || 0) + 1,
       };
 
       if (this.RugReturnAddress && this.RugReturnAddressPostCode) {

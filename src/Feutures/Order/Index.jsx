@@ -88,6 +88,7 @@ export default function Index() {
         phoneNumber: user.data?.phoneNumber,
         RugCollectionAddress: user.data?.locationAddress,
         RugCollectionAddressPostCode: user.data?.locationPostCode,
+        title: user?.data?.title,
       });
     }
   }, [user.data]);

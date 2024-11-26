@@ -27,6 +27,27 @@ import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithL
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
 import { useGetDoc } from "../../@Firebase/Hooks/Common/useGetDoc/useGetDoc";
 import { useGetCollectionWithPaginationInCursors } from "../../@Firebase/Hooks/Common/useCollectionWithPagination(Cursors)/useCollectionWithPagination(Cursors)";
+
+const processRugImages = (images) =>
+  images?.map((image) => ({
+    value: image.URL,
+    id: image.URL,
+  })) ?? [];
+
+const formatRugsUploadedData = (rugsData) =>
+  rugsData?.map((rug) => ({
+    value: {
+      ...rug,
+      RugCleaningOption: {
+        ...rug.RugCleaningOption,
+        RugImages: processRugImages(rug?.RugCleaningOption?.RugImages),
+        RugReceivedImages: processRugImages(
+          rug?.RugCleaningOption?.RugReceivedImages
+        ),
+      },
+    },
+    id: rug.id,
+  }));
 export default function Index() {
   const { id } = useParams();
   const Navigate = useNavigate();
@@ -49,7 +70,6 @@ export default function Index() {
     size: 30,
     orderByQueries: [],
   });
-  console.log(RugsUploaded);
   const {
     currentStepIndex,
     wrapperTransionStyles,
@@ -82,10 +102,13 @@ export default function Index() {
     schema: schema,
     mode: "onBlur",
   });
-
   useEffect(() => {
-    reset({ ...data, RugsUploaded: RugsUploaded });
-  }, [data, JSON.stringify(RugsUploaded)]);
+    const formattedRugs = formatRugsUploadedData(RugsUploaded);
+    reset({
+      ...data,
+      RugsUploaded: formattedRugs,
+    });
+  }, [JSON.stringify(RugsUploaded), JSON.stringify(data)]);
 
   return (
     <FormWrapper>
