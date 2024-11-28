@@ -19,6 +19,7 @@ export const MultiImageUploader = ({
   onRemoveAllItems,
   addingTitle,
   isLoaded = true,
+  readOnly = false,
   ...rest
 }) => {
   const [isPhoneQuery] = useMediaQuery("(max-width: 800px)");
@@ -62,53 +63,57 @@ export const MultiImageUploader = ({
               onRemove={() => HandleRemoveItem({ index, item: images[index] })}
               key={image.id}
               src={image.value}
+              readOnly
             />
           );
         })}
-        <Button
-          justifyContent="center"
-          alignItems="center"
-          w="120px"
-          h="120px"
-          borderRadius="lg"
-          border="2px"
-          borderColor="gray.300"
-          borderStyle="dashed"
-          colorScheme="blue"
-          variant="outline"
-          bgColor="white"
-          flexDir="column"
-          gap="3"
-          as="label"
-          htmlFor="1"
-          cursor="pointer"
-          transition="0.3s"
-          key={images?.length}
-          className={styles["upload-btn"]}
-        >
-          <IoAddCircleOutline
-            style={{
-              fontSize: "25px",
-            }}
-          />
-          <Heading
-            textAlign="center"
-            whiteSpace="wrap"
-            textTransform="capitalize"
-            size="xs"
+        {!readOnly && (
+          <Button
+            justifyContent="center"
+            alignItems="center"
+            w="120px"
+            h="120px"
+            borderRadius="lg"
+            border="2px"
+            borderColor="gray.300"
+            borderStyle="dashed"
+            colorScheme="blue"
+            variant="outline"
+            bgColor="white"
+            flexDir="column"
+            gap="3"
+            as="label"
+            htmlFor="1"
+            cursor="pointer"
+            transition="0.3s"
+            key={images?.length}
+            className={styles["upload-btn"]}
           >
-            {addingTitle}
-          </Heading>
-          <input
-            type="file"
-            id="1"
-            hidden
-            onChange={HandleChange}
-            accept="image/*"
-            multiple={true}
-          />
-        </Button>
-        {images?.length >= 2 && (
+            <IoAddCircleOutline
+              style={{
+                fontSize: "25px",
+              }}
+            />
+            <Heading
+              textAlign="center"
+              whiteSpace="wrap"
+              textTransform="capitalize"
+              size="xs"
+            >
+              {addingTitle}
+            </Heading>
+            <input
+              type="file"
+              id="1"
+              hidden
+              onChange={HandleChange}
+              accept="image/*"
+              multiple={true}
+            />
+          </Button>
+        )}
+
+        {images?.length >= 2 && !readOnly && (
           <Button
             justifyContent="center"
             alignItems="center"
@@ -130,6 +135,11 @@ export const MultiImageUploader = ({
               Delete All photos
             </Heading>
           </Button>
+        )}
+        {(images.length === 0 || !images) && readOnly && (
+          <Heading textAlign="center" w="100%" color="white" size="md">
+            There are no Images Uploaded
+          </Heading>
         )}
       </Flex>
     </>

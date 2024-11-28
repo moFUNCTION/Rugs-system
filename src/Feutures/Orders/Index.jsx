@@ -31,12 +31,12 @@ export default function Index() {
           value: true,
           isBoolean: true,
         },
-        {
-          field: "isClientApprovalReviewed",
-          operator: "==",
-          value: false,
-          isBoolean: true,
-        },
+        // {
+        //   field: "isClientApprovalReviewed",
+        //   operator: "==",
+        //   value: false,
+        //   isBoolean: true,
+        // },
       ],
     },
     {

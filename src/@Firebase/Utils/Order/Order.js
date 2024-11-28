@@ -18,7 +18,8 @@ import { Create_New_User } from "../Auth/Register/Register";
 
 export class Order {
   constructor({
-    username,
+    firstName,
+    lastName,
     email,
     phoneNumber,
     RugCollectionAddress,
@@ -32,7 +33,8 @@ export class Order {
     title,
     status = "pending",
   } = {}) {
-    this.username = username;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.RugCollectionAddress = RugCollectionAddress;
@@ -57,7 +59,9 @@ export class Order {
       };
       if (!this.isSignedIn) {
         const User_Register_Init = new Create_New_User({
-          username: this.username,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          username: this.firstName + " " + this.lastName,
           email: this.email,
           phoneNumber: this.phoneNumber,
           locationAddress: this.RugCollectionAddress,
@@ -97,7 +101,8 @@ export class Order {
       );
 
       const Data = {
-        username: this.username,
+        username: this.firstName + this.lastName,
+        firstName: this.firstName + this.lastName,
         email: this.email,
         phoneNumber: this.phoneNumber,
         RugCollectionAddress: this.RugCollectionAddress,
@@ -171,7 +176,7 @@ export class Order {
 
       const Params = this.#getAllParams();
       for (let item in Params) {
-        if (Params[item]) {
+        if (Params[item] && item !== "RugsUploaded") {
           Data[item] = Params[item];
         }
       }
@@ -188,11 +193,11 @@ export class Order {
       throw new Error(err.code || err.message);
     }
   }
-  async onConfirmByClient({ orderId, collectionDate, returnDate }) {
+  async onConfirmByClient({ orderId, returnDate, collectionDate }) {
     await this.onUpdate(orderId, {
-      collectionDate,
-      returnDate,
       isAcceptedByClient: true,
+      returnDate,
+      collectionDate,
     });
   }
 

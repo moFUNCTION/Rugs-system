@@ -40,28 +40,6 @@ export const UserLocation = ({ register, errors, control, setValue }) => {
         />
       </Flex>
 
-      {isSameRugCollectionAddress === "No" && (
-        <Flex gap="3">
-          <InputElement
-            name="RugReturnAddress"
-            Icon={MdGpsFixed}
-            errors={errors}
-            register={register}
-            placeholder="Rug Return Address"
-          />
-          <InputElement
-            name="RugReturnAddressPostCode"
-            Icon={FaMapLocationDot}
-            errors={errors}
-            register={register}
-            placeholder="Post Code"
-            containerStyles={{
-              w: "250px",
-            }}
-          />
-        </Flex>
-      )}
-
       <RadioGroup
         value={isSameRugCollectionAddress}
         onChange={(value) => {
@@ -83,6 +61,27 @@ export const UserLocation = ({ register, errors, control, setValue }) => {
           </Flex>
         </Flex>
       </RadioGroup>
+      {isSameRugCollectionAddress === "No" && (
+        <Flex gap="3">
+          <InputElement
+            name="RugReturnAddress"
+            Icon={MdGpsFixed}
+            errors={errors}
+            register={register}
+            placeholder="Rug Return Address"
+          />
+          <InputElement
+            name="RugReturnAddressPostCode"
+            Icon={FaMapLocationDot}
+            errors={errors}
+            register={register}
+            placeholder="Post Code"
+            containerStyles={{
+              w: "250px",
+            }}
+          />
+        </Flex>
+      )}
     </>
   );
 };

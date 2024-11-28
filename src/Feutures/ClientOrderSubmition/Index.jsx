@@ -2,12 +2,13 @@ import {
   Button,
   Flex,
   Heading,
+  Input,
   Skeleton,
   Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { lazy, useEffect } from "react";
 import { ChakraDatePicker } from "../../Components/Common/ChakraDatePicker/ChakraDatePicker";
 import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithLines/CenteredTextWithLines";
 import { useGetDoc } from "../../@Firebase/Hooks/Common/useGetDoc/useGetDoc";
@@ -18,6 +19,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { schema } from "./schema";
 import { ErrorText } from "../../Components/Common/ErrorText/ErrorText";
 import { Order } from "../../@Firebase/Utils/Order/Order";
+import { InvoicePDF } from "../../Components/Common/InvoicePdf/InvoicePdf";
+import { useGetCollectionWithPaginationInCursors } from "../../@Firebase/Hooks/Common/useCollectionWithPagination(Cursors)/useCollectionWithPagination(Cursors)";
+import { Rugs } from "./Parts/Rugs/Rugs";
+const processRugImages = (images) =>
+  images?.map((image) => ({
+    value: image.URL,
+    id: image.URL,
+  })) ?? [];
+
+const formatRugsUploadedData = (rugsData) =>
+  rugsData?.map((rug) => ({
+    value: {
+      ...rug,
+      RugCleaningOption: {
+        ...rug.RugCleaningOption,
+        RugImages: processRugImages(rug?.RugCleaningOption?.RugImages),
+        RugReceivedImages: processRugImages(
+          rug?.RugCleaningOption?.RugReceivedImages
+        ),
+      },
+    },
+    id: rug.id,
+  }));
+
 export default function Index() {
   const { id } = useParams();
   const toast = useToast({
@@ -39,18 +64,30 @@ export default function Index() {
     __collection__: "Orders",
     docId: id,
   });
+  const {
+    data: RugsUploaded,
+    loading: RugUploadedLoading,
+    error: RugsUploadedError,
+  } = useGetCollectionWithPaginationInCursors({
+    __collection__: `Orders/${id}/RugsUploaded`,
+    size: 30,
+    orderByQueries: [],
+  });
+
   useEffect(() => {
+    const formattedRugs = formatRugsUploadedData(RugsUploaded);
     if (data) {
       reset({
+        ...data,
         collectionDate: data?.collectionDate,
         returnDate: data?.returnDate,
+        RugsUploaded: formattedRugs,
       });
     }
-  }, [JSON.stringify(data)]);
+  }, [JSON.stringify(data), JSON.stringify(RugsUploaded)]);
 
   const collectionDate = useWatch({ name: "collectionDate", control });
   const ReturnDate = useWatch({ name: "returnDate", control });
-  console.log(collectionDate);
   const HandleChangeStartDate = (selectedDate) => {
     setValue("collectionDate", new Date(selectedDate)?.toLocaleString());
   };
@@ -62,6 +99,7 @@ export default function Index() {
     try {
       const Order_Init = new Order({
         status: "accepted",
+        ...data,
       });
       await Order_Init.onConfirmByClient({
         orderId: id,
@@ -80,6 +118,7 @@ export default function Index() {
       });
     }
   };
+  console.log(errors);
 
   return (
     <FormWrapper>
@@ -102,6 +141,7 @@ export default function Index() {
       >
         {data?.status === "accepted" && (
           <>
+            <Rugs setValue={setValue} control={control} errors={errors} />
             <Flex w="100%" flexWrap="wrap" gap="4" justifyContent="center">
               <Stack borderRadius="lg" bgColor="gray.100" p="3" flexGrow="1">
                 <CenteredTextWithLines TextAlign="left">
@@ -130,12 +170,11 @@ export default function Index() {
                 <ErrorText>{errors?.returnDate?.message}</ErrorText>
               </Stack>
             </Flex>
-            <Button variant="outline" w="100%" colorScheme="green">
-              Total Price : {data?.totalPrice}
-            </Button>
+
             <Button colorScheme="blackAlpha" variant="outline" w="100%">
               Click Here To See The Invoice Pdf
             </Button>
+            <Input placeholder="Apply A Coupon Code" />
             <Button
               isLoading={isSubmitting}
               onClick={handleSubmit(onSubmit)}

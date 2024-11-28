@@ -61,7 +61,7 @@ function ImageDisplayModal({ isOpen, onClose, src }) {
     </>
   );
 }
-export const ImageBox = ({ src, onRemove }) => {
+export const ImageBox = ({ src, onRemove, readOnly }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const renderedURL = useMemo(() => {
     return src;
@@ -75,16 +75,19 @@ export const ImageBox = ({ src, onRemove }) => {
         overflow="hidden"
         pos="relative"
       >
-        <IconButton
-          onClick={onRemove}
-          pos="absolute"
-          top="1"
-          right="1"
-          colorScheme="red"
-          zIndex="10"
-        >
-          <ImBin2 />
-        </IconButton>
+        {!readOnly && (
+          <IconButton
+            onClick={onRemove}
+            pos="absolute"
+            top="1"
+            right="1"
+            colorScheme="red"
+            zIndex="10"
+          >
+            <ImBin2 />
+          </IconButton>
+        )}
+
         <Image
           src={renderedURL}
           onClick={onOpen}

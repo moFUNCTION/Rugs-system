@@ -48,7 +48,8 @@ export const RugSchema = z.object({
 export const schema = z
   .object({
     title: z.string().min(1, { message: "please fill the Title field" }),
-    username: z.string().min(1, { message: "you must fill username field" }),
+    firstName: z.string().min(1, { message: "you must fill first name field" }),
+    lastName: z.string().min(1, { message: "you must fill last name field" }),
     email: z
       .string({ message: "you must fill the email field" })
       .email({ message: "in valid email" }),

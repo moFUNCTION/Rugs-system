@@ -3,7 +3,8 @@ import { auth, db } from "../../../Config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 export class Create_New_User {
   constructor({
-    username,
+    firstName,
+    lastName,
     email,
     phoneNumber,
     locationPostCode,
@@ -12,7 +13,8 @@ export class Create_New_User {
     title = "MR",
   }) {
     this.title = title;
-    this.username = username;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.locationAddress = locationAddress;
@@ -23,7 +25,9 @@ export class Create_New_User {
     const userDoc = doc(db, "Users", userID);
     await setDoc(userDoc, {
       title: this.title,
-      username: this.username,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      username: this.firstName + this.lastName,
       email: this.email,
       phoneNumber: this.phoneNumber,
       locationAddress: this.locationAddress,

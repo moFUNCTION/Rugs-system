@@ -9,23 +9,17 @@ import {
   Box,
   Button,
   useDisclosure,
+  Input,
 } from "@chakra-ui/react";
 import { MdCancel } from "react-icons/md";
 import { RugModal } from "./RugModal";
-export const Rug = ({ onDelete, onUpdate, index, ...data }) => {
+export const Rug = ({ onDelete, onUpdate, index, totalPrice, ...data }) => {
   const {
     isOpen: isRugModalDetailsOpened,
     onOpen: onOpenRugModalDetails,
     onClose: onCloseReyugModalDetails,
   } = useDisclosure();
-  const {
-    RugCleaningOption,
-    width,
-    RugMaterial,
-    AdditionalServices,
-    length,
-    UnitSelector,
-  } = data;
+  const { RugCleaningOption, width, length, UnitSelector } = data;
   return (
     <>
       <RugModal
@@ -46,7 +40,16 @@ export const Rug = ({ onDelete, onUpdate, index, ...data }) => {
         alignItems="center"
         flexWrap="wrap"
       >
-        {RugCleaningOption?.RugImages.length >= 1 &&
+        <IconButton
+          colorScheme="red"
+          pos="absolute"
+          top="1"
+          right="1"
+          onClick={onDelete}
+        >
+          <MdCancel />
+        </IconButton>
+        {RugCleaningOption?.RugImages?.length >= 1 &&
           RugCleaningOption?.name !==
             "General (Deep Wash) Rug Cleaning Works ONLY" && (
             <Image
@@ -71,6 +74,15 @@ export const Rug = ({ onDelete, onUpdate, index, ...data }) => {
               Length : {length} {UnitSelector}
             </Text>
           </Flex>
+          {totalPrice ? (
+            <Button onClick={onOpenRugModalDetails} mr="auto" variant="link">
+              Total Price is {totalPrice}
+            </Button>
+          ) : (
+            <Button onClick={onOpenRugModalDetails} mr="auto" variant="link">
+              Total Price Not Set please Click Here To Set It
+            </Button>
+          )}
 
           <Button
             onClick={onOpenRugModalDetails}
@@ -81,6 +93,27 @@ export const Rug = ({ onDelete, onUpdate, index, ...data }) => {
             Click Here To see all order details
           </Button>
         </Stack>
+
+        {/* <Stack gap="0">
+        <Heading size="sm">Rug {index + 1}</Heading>
+        <Text size="sm">
+          Rug Width : {width} {UnitSelector}
+        </Text>
+        <Text size="sm">
+          Rug length : {length} {UnitSelector}{" "}
+        </Text>
+        <Text size="sm">Rug Material : {RugMaterial} </Text>
+        <Stack>
+          <Text>Additional Services Selected :</Text>
+          {AdditionalServices.map((value) => {
+            return (
+              <Box bgColor="gray.100" p="2" key={value.label}>
+                {value.label}
+              </Box>
+            );
+          })}
+        </Stack>
+      </Stack> */}
       </Flex>
     </>
   );

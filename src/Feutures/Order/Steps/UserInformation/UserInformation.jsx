@@ -25,19 +25,27 @@ export const UserInformation = ({ register, errors }) => {
         </Stack>
 
         <InputElement
-          name="username"
+          placeholder="First Name"
+          name="firstName"
           Icon={FaUser}
           errors={errors}
           register={register}
         />
         <InputElement
-          name="email"
-          Icon={MdOutlineAlternateEmail}
+          placeholder="Last Name"
+          name="lastName"
+          Icon={FaUser}
           errors={errors}
           register={register}
         />
       </Flex>
-
+      <InputElement
+        placeholder="Email"
+        name="email"
+        Icon={MdOutlineAlternateEmail}
+        errors={errors}
+        register={register}
+      />
       <InputElement
         name="phoneNumber"
         placeholder="phone number"

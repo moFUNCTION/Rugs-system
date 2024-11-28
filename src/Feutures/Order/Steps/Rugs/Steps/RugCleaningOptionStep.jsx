@@ -1,4 +1,11 @@
-import { Checkbox, Radio, RadioGroup, Stack, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Checkbox,
+  Radio,
+  RadioGroup,
+  Stack,
+  Textarea,
+} from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { MultiImageUploader } from "../../../../../Components/Common/MultiImagesUploader/MultiImagesUploader";
@@ -80,17 +87,18 @@ const CleaningOption = ({
               {...register("RugCleaningOption.RugImagesDescription")}
             />
           )}
-          {text && (
-            <Text
-              bgColor="white"
-              p="2"
-              color="gray.600"
-              border="2px"
-              borderColor="gray.300"
-            >
-              {text}
-            </Text>
-          )}
+          <Box
+            bgColor="white"
+            p="3"
+            color="gray.500"
+            border="2px"
+            borderColor="black"
+          >
+            {text &&
+              text?.split("\n").map((TextChild, index) => {
+                return <Text key={index}>{TextChild}</Text>;
+              })}
+          </Box>
         </Stack>
       )}
     </Stack>
