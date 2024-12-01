@@ -91,5 +91,6 @@ export const sumTotalPrice = (rugs) => {
   }, 0);
 
   // Round to 2 decimal places
-  return parseFloat(totalPrice.toFixed(2));
+
+  return Number(parseFloat(totalPrice.toFixed(2)));
 };

@@ -11,7 +11,6 @@ export const FormWrapper = ({ children }) => {
       pos="relative"
       zIndex="2"
       p="4"
-      bgColor="gray.100"
     >
       {children}
     </Stack>

@@ -63,7 +63,7 @@ export const MultiImageUploader = ({
               onRemove={() => HandleRemoveItem({ index, item: images[index] })}
               key={image.id}
               src={image.value}
-              readOnly
+              readOnly={readOnly}
             />
           );
         })}

@@ -127,8 +127,10 @@ export default function Index() {
         p="3"
         borderRadius="lg"
         pos="relative"
+        border="1px"
+        borderColor="gray.300"
       >
-        <Badge colorScheme="red" size="lg" pos="absolute" top="2" left="2">
+        <Badge colorScheme="red" size="lg" pos="absolute" top="3" left="3">
           {data?.status}
         </Badge>
         <ProgressBar
@@ -145,17 +147,17 @@ export default function Index() {
         isLoaded={!loading && !RugUploadedLoading}
         justifyContent="center"
         alignItems="center"
-        borderRadius="lg"
         bgColor="white"
         w="100%"
         maxW="800px"
         gap="4"
-        boxShadow="lg"
         pos="relative"
         p="4"
         pt="6"
         overflowX="hidden"
         overflowY="hidden"
+        border="2px"
+        borderColor="gray.300"
       >
         <Progress
           pos="absolute"

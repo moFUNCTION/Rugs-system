@@ -94,7 +94,7 @@ export default function Index() {
   });
 
   return (
-    <Stack p="3" alignItems="center" minH="calc(100vh - 95px)">
+    <Stack p="3" alignItems="center">
       <Flex
         justifyContent="center"
         p="3"

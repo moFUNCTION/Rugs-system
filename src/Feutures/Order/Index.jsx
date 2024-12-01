@@ -89,6 +89,8 @@ export default function Index() {
         RugCollectionAddress: user.data?.locationAddress,
         RugCollectionAddressPostCode: user.data?.locationPostCode,
         title: user?.data?.title,
+        firstName: user.data?.firstName,
+        lastName: user.data?.lastName,
       });
     }
   }, [user.data]);

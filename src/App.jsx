@@ -6,6 +6,8 @@ import { Header } from "./Components/Layout/Header/Header";
 import { OrderPageBtnNavigation } from "./Components/Common/OrderPageBtnNavigation/OrderPageBtnNavigation";
 import { ProtectedRoute } from "./Utils/ProtectedRoute/ProtectedRoute";
 import { useUserData } from "./Context/UserDataProvider/UserDataProvider";
+import { LogoHeader } from "./Components/Layout/LogoHeader/LogoHeader";
+import { Footer } from "./Components/Layout/Footer/Footer";
 // Order
 const OrderRequest = lazy(() => import("./Feutures/Order/Index"));
 // Register
@@ -31,6 +33,7 @@ function App() {
   return (
     <>
       <Header />
+      <LogoHeader />
       <OrderPageBtnNavigation />
       <LazyPageWrapper>
         <Routes>
@@ -86,6 +89,7 @@ function App() {
           />
         </Routes>
       </LazyPageWrapper>
+      <Footer />
     </>
   );
 }

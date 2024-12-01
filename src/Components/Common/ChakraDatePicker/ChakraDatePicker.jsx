@@ -29,10 +29,16 @@ export const ChakraDatePicker = ({
   ...rest
 }) => {
   const [selectedDate, setSelectedDate] = useState(
-    value instanceof Date ? value : new Date(value)
+    (() => {
+      if (value) {
+        return value instanceof Date ? value : new Date(value);
+      }
+    })()
   );
   useEffect(() => {
-    setSelectedDate(value instanceof Date ? value : new Date(value));
+    if (value) {
+      setSelectedDate(value instanceof Date ? value : new Date(value));
+    }
   }, [JSON.stringify(value)]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const { isOpen, onOpen, onClose } = useDisclosure();
