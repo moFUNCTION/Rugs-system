@@ -8,6 +8,7 @@ import {
   query,
   startAfter,
   where,
+  or as OrQuery,
 } from "firebase/firestore";
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { db } from "../../../Config.js";
@@ -16,7 +17,6 @@ import {
   INITIAL_STATE,
 } from "./@Reducer/GetPaginatedDataReducer.js";
 import { useCollectionCount } from "../useCollectionCount/useCollectionCount.jsx";
-
 export const useGetCollectionWithPaginationInCursors = ({
   size = 6,
   orderByQueries = [{ field: "createdAt", direction: "desc" }],
@@ -51,13 +51,28 @@ export const useGetCollectionWithPaginationInCursors = ({
       q = query(q, orderBy(field, direction));
     });
 
-    memoWhereQueries.forEach(({ field, operator, value } = {}) => {
+    memoWhereQueries.forEach(({ field, operator, value, or } = {}) => {
       if (
         field !== undefined &&
         value !== undefined &&
         operator !== undefined
       ) {
-        q = query(q, where(field, operator, value));
+        if (
+          or &&
+          or.field !== undefined &&
+          or.value !== undefined &&
+          or.operator !== undefined
+        ) {
+          q = query(
+            q,
+            OrQuery(
+              where(field, operator, value),
+              where(or.field, or.operator, or.value)
+            )
+          );
+        } else {
+          q = query(q, where(field, operator, value));
+        }
       }
     });
 

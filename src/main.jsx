@@ -8,6 +8,18 @@ import { UserDataProvider } from "./Context/UserDataProvider/UserDataPRovider.js
 const theme = extendTheme({
   components: {
     MultiSelect: MultiSelectTheme,
+    Input: {
+      baseStyle: {
+        border: "1px",
+        borderRadius: "sm",
+      },
+    },
+    Select: {
+      baseStyle: {
+        border: "1px",
+        borderRadius: "sm",
+      },
+    },
   },
 });
 createRoot(document.getElementById("root")).render(

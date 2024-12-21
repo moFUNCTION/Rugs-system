@@ -60,6 +60,19 @@ export class Order {
       const UserID = {
         value: this.userId,
       };
+      const Data = {
+        username: this.firstName + this.lastName,
+        firstName: this.firstName + this.lastName,
+        email: this.email,
+        phoneNumber: this.phoneNumber,
+        RugCollectionAddress: this.RugCollectionAddress,
+        RugCollectionAddressPostCode: this.RugCollectionAddressPostCode,
+        status: "pending",
+        createdAt: serverTimestamp(),
+        userId: UserID.value,
+        title: this.title,
+      };
+
       if (!this.isSignedIn) {
         const User_Register_Init = new Create_New_User({
           firstName: this.firstName,
@@ -86,6 +99,7 @@ export class Order {
                 return image.value;
               }),
             });
+            Data.OrderImages = RugImagesLinks;
             return {
               ...RugUploaded.value,
               RugCleaningOption: {
@@ -97,26 +111,6 @@ export class Order {
           return RugUploaded.value;
         })
       );
-
-      const {
-        docs: [lastDoc],
-      } = await getDocs(
-        query(collection(db, "Orders"), limit(1), orderBy("createdAt", "desc"))
-      );
-
-      const Data = {
-        username: this.firstName + this.lastName,
-        firstName: this.firstName + this.lastName,
-        email: this.email,
-        phoneNumber: this.phoneNumber,
-        RugCollectionAddress: this.RugCollectionAddress,
-        RugCollectionAddressPostCode: this.RugCollectionAddressPostCode,
-        status: "pending",
-        createdAt: serverTimestamp(),
-        userId: UserID.value,
-        title: this.title,
-        invoiceNo: (lastDoc?.data()?.uniqueId || 0) + 1,
-      };
 
       if (this.RugReturnAddress && this.RugReturnAddressPostCode) {
         Data.RugReturnAddress = this.RugReturnAddress;
@@ -180,17 +174,33 @@ export class Order {
     }
 
     try {
-      // Process all rugs data
-      const RugsUploaded = await Promise.all(
-        this.RugsUploaded.map(async (RugUploaded) => {
-          const Data = {
-            ...RugUploaded.value,
-            id: RugUploaded.id || v4(),
-            updatedAt: serverTimestamp(),
-          };
-          return await this.processRugImages(Data);
-        })
-      );
+      // Start batch write
+      const batch = writeBatch(db);
+
+      if (this.RugsUploaded?.length >= 1) {
+        const RugsUploaded = await Promise.all(
+          this.RugsUploaded.map(async (RugUploaded) => {
+            const Data = {
+              ...RugUploaded.value,
+              id: RugUploaded.id || v4(),
+              updatedAt: serverTimestamp(),
+            };
+            return await this.processRugImages(Data);
+          })
+        );
+        const existingRugsSnapshot = await getDocs(
+          collection(db, `Orders/${orderId}/RugsUploaded`)
+        );
+        existingRugsSnapshot.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+
+        const rugsCollection = collection(db, `Orders/${orderId}/RugsUploaded`);
+        RugsUploaded.forEach((rug) => {
+          const newRugRef = doc(rugsCollection);
+          batch.set(newRugRef, rug);
+        });
+      }
 
       const orderData = {
         status: this.status,
@@ -211,27 +221,9 @@ export class Order {
         orderData.RugReturnAddressPostCode = this.RugReturnAddressPostCode;
       }
 
-      // Start batch write
-      const batch = writeBatch(db);
-
       // Update main order document
       const orderRef = doc(db, "Orders", orderId);
       batch.update(orderRef, orderData);
-
-      // Delete existing rugs
-      const existingRugsSnapshot = await getDocs(
-        collection(db, `Orders/${orderId}/RugsUploaded`)
-      );
-      existingRugsSnapshot.forEach((doc) => {
-        batch.delete(doc.ref);
-      });
-
-      // Add new rugs
-      const rugsCollection = collection(db, `Orders/${orderId}/RugsUploaded`);
-      RugsUploaded.forEach((rug) => {
-        const newRugRef = doc(rugsCollection);
-        batch.set(newRugRef, rug);
-      });
 
       // Commit all changes
       await batch.commit();
@@ -239,7 +231,6 @@ export class Order {
       return {
         success: true,
         orderId,
-        rugsCount: RugsUploaded.length,
       };
     } catch (error) {
       console.error("Error updating order:", error);

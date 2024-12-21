@@ -109,7 +109,7 @@ export default function Index() {
         description:
           "Order Submited Successfully we will Respond As soon As possible To You",
       });
-      Navigate("/orders");
+      Navigate("/thanks-page");
     } catch (err) {
       setError("root", { message: err.message });
       HandleChangeCurrentStepIndex(errorNavigation[err.message] - 1);

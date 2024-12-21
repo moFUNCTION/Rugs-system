@@ -2,8 +2,16 @@ import { Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { TreatmentSelected } from "./Treatment";
 import { sumTotalPrice } from "../../../../Utils/RugsTotalPrice/RugsTotalPrice";
-export const Rug = ({ RugData, index, onDeleteTreatment, id }) => {
-  const { width, length, UnitSelector, RugCleaningOption } = RugData;
+import { AdditionalServicesSelected } from "./AditionalServices";
+export const Rug = ({
+  RugData,
+  index,
+  onDeleteTreatment,
+  onDeleteService,
+  id,
+}) => {
+  const { width, length, UnitSelector, RugCleaningOption, AdditionalServices } =
+    RugData;
   return (
     <Stack
       alignItems="start"
@@ -49,6 +57,26 @@ export const Rug = ({ RugData, index, onDeleteTreatment, id }) => {
                 onDeleteTreatment({
                   RugIndex: index,
                   TreatmentValue: treatment.value,
+                  RugId: id,
+                })
+              }
+            />
+          );
+        })}
+      </Stack>
+      <Stack borderRadius="md" gap="3" border="1px" w="100%" p="3">
+        <Text>Additional Services Selected</Text>
+        {AdditionalServices?.map((service) => {
+          return (
+            <AdditionalServicesSelected
+              key={service.value}
+              label={service.label}
+              value={service?.value}
+              price={service?.price}
+              onDelete={() =>
+                onDeleteService({
+                  RugIndex: index,
+                  ServiceValue: service.value,
                   RugId: id,
                 })
               }

@@ -16,3 +16,9 @@
 ::-webkit-scrollbar-thumb {
   background-color: rgb(73, 0, 24);
 }
+select:not(.multi-select select, .multi-select),
+input,
+textarea {
+  border: 1px rgb(48, 48, 48) solid !important;
+  border-radius: 0 !important;
+}

@@ -66,7 +66,16 @@ export default function Index() {
         operator: "==",
         value: statusSelected[0],
       },
-      { field: "email", operator: "==", value: user.data?.email },
+      {
+        field: "email",
+        operator: "==",
+        value: user.data?.email,
+        or: {
+          field: "userId",
+          operator: "==",
+          value: user.data?.uid,
+        },
+      },
     ];
     const QuerySelected = orderStatusTypes.find((orderStatus) => {
       return orderStatus.value === statusSelected.join("-");

@@ -28,7 +28,7 @@ export const InputElement = forwardRef(
   ) => {
     return (
       <Stack w="100%" {...containerStyles}>
-        <InputGroup border="1px" size={size} variant="filled">
+        <InputGroup size={size} variant="filled">
           <InputLeftElement pointerEvents="none">
             {Icon && (
               <Icon

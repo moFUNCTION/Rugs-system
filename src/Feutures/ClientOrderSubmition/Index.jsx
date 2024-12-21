@@ -23,7 +23,7 @@ import { ChakraDatePicker } from "../../Components/Common/ChakraDatePicker/Chakr
 import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithLines/CenteredTextWithLines";
 import { useGetDoc } from "../../@Firebase/Hooks/Common/useGetDoc/useGetDoc";
 import { FormWrapper } from "./FormWrapper/FormWrapper";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema } from "./schema";
@@ -87,7 +87,7 @@ const formatRugsUploadedData = (rugsData) =>
 
 export default function Index() {
   const { id } = useParams();
-
+  const Navigate = useNavigate();
   const toast = useToast({
     position: "top-right",
     duration: 3000,
@@ -153,7 +153,9 @@ export default function Index() {
           "Order Submited Successfully we will send a deleivery to collect the order",
         status: "success",
       });
+      Navigate("/thanks-page");
     } catch (err) {
+      console.log(err);
       toast({
         title: "error in submiting the request",
         status: "error",
@@ -204,6 +206,30 @@ export default function Index() {
       })
     );
   };
+
+  const onDeleteService = ({ RugId, ServiceValue }) => {
+    replace(
+      Rugs.map((rug) => {
+        console.log(rug.id, RugId);
+        if (rug.id === RugId) {
+          return {
+            ...rug,
+            value: {
+              ...rug.value,
+              AdditionalServices: rug.value.AdditionalServices.filter(
+                (service) => {
+                  return service.value !== ServiceValue;
+                }
+              ),
+            },
+          };
+        } else {
+          return rug;
+        }
+      })
+    );
+  };
+
   const TotalPrice = sumTotalPrice(
     Rugs.map((Rug) => {
       console.log(Rug.value);
@@ -263,6 +289,7 @@ export default function Index() {
                     control={control}
                     id={rugUploaded.id}
                     onDeleteTreatment={onDeleteTreatment}
+                    onDeleteService={onDeleteService}
                   />
                 );
               })}
