@@ -41,7 +41,6 @@ export const sumTotalPrice = (rugs) => {
 
     const rugSize = calculateRugSize(rug.width, rug.length, rug.UnitSelector);
     let rugTotal = 0;
-    console.log(rugSize);
 
     // Cleaning Option Pricing
     switch (rug.RugCleaningOption?.name) {
@@ -49,7 +48,6 @@ export const sumTotalPrice = (rugs) => {
         if (Array.isArray(rug.RugCleaningOption?.Treatment)) {
           rugTotal += rug.RugCleaningOption.Treatment.reduce(
             (treatmentTotal, treatment) => {
-              console.log(treatment.price);
               if (!treatment) return treatmentTotal;
 
               switch (treatment.value) {
@@ -71,7 +69,6 @@ export const sumTotalPrice = (rugs) => {
 
       case "Rug Repairs and Restoration Works ONLY":
       case "Rug Alteration Works ONLY":
-        console.log("saas", rugs.RugCleaningOption);
         rugTotal += safeParseFloat(rug.RugCleaningOption?.price);
         break;
 

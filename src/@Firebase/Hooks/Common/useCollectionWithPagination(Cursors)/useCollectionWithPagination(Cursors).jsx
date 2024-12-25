@@ -24,7 +24,6 @@ export const useGetCollectionWithPaginationInCursors = ({
   isDependantLoading,
   __collection__,
 }) => {
-  console.log(whereQueries);
   if (!orderByQueries) {
     orderByQueries = [{ field: "createdAt", direction: "desc" }];
   }
@@ -42,7 +41,6 @@ export const useGetCollectionWithPaginationInCursors = ({
     () => whereQueries,
     [JSON.stringify(whereQueries)]
   );
-  console.log(memoWhereQueries);
 
   const createQuery = () => {
     let q = query(DocumnetsCollection, limit(size));

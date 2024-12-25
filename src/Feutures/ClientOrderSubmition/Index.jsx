@@ -17,6 +17,8 @@ import {
   useDisclosure,
   InputGroup,
   InputRightAddon,
+  Radio,
+  RadioGroup,
 } from "@chakra-ui/react";
 import React, { lazy, useEffect } from "react";
 import { ChakraDatePicker } from "../../Components/Common/ChakraDatePicker/ChakraDatePicker";
@@ -24,7 +26,7 @@ import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithL
 import { useGetDoc } from "../../@Firebase/Hooks/Common/useGetDoc/useGetDoc";
 import { FormWrapper } from "./FormWrapper/FormWrapper";
 import { useNavigate, useParams } from "react-router-dom";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema } from "./schema";
 import { ErrorText } from "../../Components/Common/ErrorText/ErrorText";
@@ -100,6 +102,7 @@ export default function Index() {
     formState: { errors, isSubmitting },
     reset,
     getValues,
+    register,
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -143,17 +146,23 @@ export default function Index() {
         ),
         ...data,
       });
+
       await Order_Init.onConfirmByClient({
         orderId: id,
         collectionDate: data.collectionDate,
         returnDate: data.returnDate,
+        billingAddress: data.billingAddress,
+        isThereDifferentBillingAddress: data.isThereDifferentBillingAddress,
+        isThereInvoiceRef: data.isThereInvoiceRef,
+        InvoiceRef: data.InvoiceRef,
       });
+
       toast({
         title:
           "Order Submited Successfully we will send a deleivery to collect the order",
         status: "success",
       });
-      Navigate("/thanks-page");
+      Navigate(`/orders/${id}/invoice-pdf`);
     } catch (err) {
       console.log(err);
       toast({
@@ -179,12 +188,10 @@ export default function Index() {
     onOpen: onOpenInvoicePdf,
     onClose: onCloseInvoicePdf,
   } = useDisclosure();
-  console.log(RugsUploaded);
 
   const onDeleteTreatment = ({ RugId, TreatmentValue }) => {
     replace(
       Rugs.map((rug) => {
-        console.log(rug.id, RugId);
         if (rug.id === RugId) {
           return {
             ...rug,
@@ -210,7 +217,6 @@ export default function Index() {
   const onDeleteService = ({ RugId, ServiceValue }) => {
     replace(
       Rugs.map((rug) => {
-        console.log(rug.id, RugId);
         if (rug.id === RugId) {
           return {
             ...rug,
@@ -232,13 +238,22 @@ export default function Index() {
 
   const TotalPrice = sumTotalPrice(
     Rugs.map((Rug) => {
-      console.log(Rug.value);
       return Rug.value;
     })
   );
+  console.log(errors);
 
   const { user } = useUserData();
-
+  console.log(data, "saas");
+  if (data?.isAcceptedByClient) {
+    return (
+      <Stack p="3" alignItems="center">
+        <Heading size="md" p="3" border="1px">
+          Form Has Been Submited
+        </Heading>
+      </Stack>
+    );
+  }
   return (
     <>
       <InvoicePdf
@@ -280,7 +295,6 @@ export default function Index() {
                 View Invoice Pdf
               </Button>
               {Rugs.map((rugUploaded, index) => {
-                console.log(rugUploaded);
                 return (
                   <Rug
                     RugData={rugUploaded?.value}
@@ -325,17 +339,110 @@ export default function Index() {
                 <Input placeholder="Enter the Voucher Code" />
                 <InputRightAddon as={Button}>Apply</InputRightAddon>
               </InputGroup>
-              <Button w="100%" colorScheme="green">
+              <Button w="100%" borderRadius="0">
                 Total Price {TotalPrice} £
               </Button>
-              <Button
-                isLoading={isSubmitting}
-                onClick={handleSubmit(onSubmit)}
-                w="100%"
-                colorScheme="orange"
-              >
-                Submit
-              </Button>
+              <Text>Do you have a different Invoice | Billing Address?</Text>
+              <Controller
+                control={control}
+                name="isThereDifferentBillingAddress"
+                render={({ field }) => {
+                  return (
+                    <>
+                      <RadioGroup
+                        value={field.value || "No"}
+                        onChange={(value) => field.onChange(value)}
+                      >
+                        <Flex gap="3">
+                          <Radio value="No">No</Radio>
+                          <Radio value="Yes">Yes</Radio>
+                        </Flex>
+                      </RadioGroup>
+                      {field.value === "Yes" && (
+                        <Flex gap="4" alignItems="start">
+                          <Stack w="100%">
+                            <Input
+                              {...register("billingAddress.fullName")}
+                              placeholder="Full name"
+                            />
+                            <ErrorText>
+                              {errors?.billingAddress?.fullName?.message}
+                            </ErrorText>
+                          </Stack>
+                          <Stack w="100%">
+                            <Input
+                              {...register("billingAddress.fullAddress")}
+                              placeholder="Full Address"
+                            />
+                            <ErrorText>
+                              {errors?.billingAddress?.fullName?.message}
+                            </ErrorText>
+                          </Stack>
+                          <Stack w="100%">
+                            <Input
+                              {...register("billingAddress.postCode")}
+                              placeholder="Post Code"
+                            />
+                            <ErrorText>
+                              {errors?.billingAddress?.fullName?.message}
+                            </ErrorText>
+                          </Stack>
+                        </Flex>
+                      )}
+                    </>
+                  );
+                }}
+              />
+              <Text>
+                Do you have an order/works/job no. to add for invoice reference?
+              </Text>
+              <Controller
+                control={control}
+                name="isThereInvoiceRef"
+                render={({ field }) => {
+                  return (
+                    <>
+                      <RadioGroup
+                        value={field.value || "No"}
+                        onChange={(value) => field.onChange(value)}
+                      >
+                        <Flex gap="3">
+                          <Radio value="No">No</Radio>
+                          <Radio value="Yes">Yes</Radio>
+                        </Flex>
+                      </RadioGroup>
+                      {field.value === "Yes" && (
+                        <Stack alignItems="center">
+                          <Input
+                            {...register("InvoiceRef.name")}
+                            placeholder="Order / Work /Jop /No"
+                          />
+                          <ErrorText>
+                            {errors?.InvoiceRef?.name?.message}
+                          </ErrorText>
+                        </Stack>
+                      )}
+                    </>
+                  );
+                }}
+              />
+              <Flex mt="7" alignItems="center" justifyContent="center" gap="3">
+                <Button
+                  size="lg"
+                  isLoading={isSubmitting}
+                  onClick={handleSubmit(onSubmit)}
+                  w="100%"
+                  maxW="300px"
+                  p="10"
+                  colorScheme="yellow"
+                  bgColor="rgb(238 211 145)"
+                  whiteSpace="wrap"
+                >
+                  Confirm Works To Book Rug Collection
+                </Button>
+                <Text>Or</Text>
+                <Button>Cancel Work</Button>
+              </Flex>
             </>
           )}
           {data?.status !== "accepted" && data?.status && (

@@ -60,19 +60,6 @@ export class Order {
       const UserID = {
         value: this.userId,
       };
-      const Data = {
-        username: this.firstName + this.lastName,
-        firstName: this.firstName + this.lastName,
-        email: this.email,
-        phoneNumber: this.phoneNumber,
-        RugCollectionAddress: this.RugCollectionAddress,
-        RugCollectionAddressPostCode: this.RugCollectionAddressPostCode,
-        status: "pending",
-        createdAt: serverTimestamp(),
-        userId: UserID.value,
-        title: this.title,
-      };
-
       if (!this.isSignedIn) {
         const User_Register_Init = new Create_New_User({
           firstName: this.firstName,
@@ -88,6 +75,18 @@ export class Order {
         const req = await User_Register_Init.onCreate();
         UserID.value = req;
       }
+      const Data = {
+        username: this.firstName + this.lastName,
+        firstName: this.firstName + this.lastName,
+        email: this.email,
+        phoneNumber: this.phoneNumber,
+        RugCollectionAddress: this.RugCollectionAddress,
+        RugCollectionAddressPostCode: this.RugCollectionAddressPostCode,
+        status: "pending",
+        createdAt: serverTimestamp(),
+        userId: UserID.value,
+        title: this.title,
+      };
 
       const RugsUploaded = await Promise.all(
         this.RugsUploaded.map(async (RugUploaded) => {
@@ -237,12 +236,31 @@ export class Order {
       throw new Error(`Failed to update order: ${error.message}`);
     }
   }
-  async onConfirmByClient({ orderId, returnDate, collectionDate }) {
-    await this.onUpdate(orderId, {
+  async onConfirmByClient({
+    orderId,
+    returnDate,
+    collectionDate,
+    billingAddress,
+    InvoiceRef,
+    isThereDifferentBillingAddress,
+    isThereInvoiceRef,
+  }) {
+    const Data = {
       isAcceptedByClient: true,
       returnDate,
       collectionDate,
-    });
+
+      InvoiceRef,
+      isThereDifferentBillingAddress,
+      isThereInvoiceRef,
+    };
+    if (isThereDifferentBillingAddress && billingAddress.fullName) {
+      Data.billingAddress = billingAddress;
+    }
+    if (isThereInvoiceRef && InvoiceRef.name) {
+      Data.InvoiceRef = InvoiceRef;
+    }
+    await this.onUpdate(orderId, Data);
   }
   async onRemove(orderId) {
     if (!orderId) {

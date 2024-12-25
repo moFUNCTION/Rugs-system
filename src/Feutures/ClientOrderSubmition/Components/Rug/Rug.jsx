@@ -42,7 +42,9 @@ export const Rug = ({
       </Flex>
       <Stack borderRadius="md" gap="5" border="1px" w="100%" p="3">
         <Text>{RugCleaningOption.name}</Text>
-        <Text ml="auto">{RugCleaningOption.price} £ </Text>
+        {!isNaN(RugCleaningOption.price) && (
+          <Text ml="auto">{RugCleaningOption.price} £ </Text>
+        )}
       </Stack>
 
       <Stack borderRadius="md" gap="3" border="1px" w="100%" p="3">

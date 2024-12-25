@@ -27,6 +27,8 @@ const OrderSubmition = lazy(() =>
 const ThanksPage = lazy(() => import("./Feutures/ThanksPage/Index"));
 // Order Dates
 const OrderCalenderDates = lazy(() => import("./Feutures/OrderCalender/Index"));
+// Order Pdf
+const OrderInvoicePdf = lazy(() => import("./Feutures/OrderInvoicePdf/Index"));
 function App() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -92,6 +94,7 @@ function App() {
             element={<OrderSubmition />}
           />
           <Route path="orders/:id/time" element={<OrderCalenderDates />} />
+          <Route path="orders/:id/invoice-pdf" element={<OrderInvoicePdf />} />
           <Route path="thanks-page" element={<ThanksPage />} />
         </Routes>
       </LazyPageWrapper>

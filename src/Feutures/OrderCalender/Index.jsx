@@ -87,7 +87,7 @@ export default function Index() {
           {new Date(data?.collectionDate).toCustomDateString()}
         </Heading>
         <Heading border="1px" p="3" size="md" fontWeight="600">
-          {data?.collectionTime}
+          From : {data?.collectionTimeFrom} , To : {data?.collectionTimeTo}
         </Heading>
       </Flex>
       <CenteredTextWithLines w="100%" maxW="500px">
@@ -100,12 +100,10 @@ export default function Index() {
           {new Date(data?.returnDate).toCustomDateString()}
         </Heading>
         <Heading border="1px" p="3" size="md" fontWeight="600">
-          {data?.returnTime}
+          From : {data?.returnTimeFrom} , To : {data?.returnTimeTo}
         </Heading>
       </Flex>
-      <CenteredTextWithLines w="100%" maxW="500px">
-        <Text flexShrink="0">Do You Want To Change Date ?</Text>
-      </CenteredTextWithLines>
+
       <Button
         onClick={onConfirm}
         variant="outline"
@@ -115,6 +113,9 @@ export default function Index() {
       >
         Confirm
       </Button>
+      <CenteredTextWithLines w="100%" maxW="500px">
+        <Text flexShrink="0">Do You Want To Change Date ?</Text>
+      </CenteredTextWithLines>
       <Button variant="outline" colorScheme="blackAlpha" color="black">
         Click Here If You Want To Change The Date
       </Button>

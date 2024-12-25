@@ -1,4 +1,10 @@
+import { any } from "prop-types";
 import { z } from "zod";
+const BillingAddressSchema = z.object({
+  fullName: z.any(),
+  fullAddress: z.any(),
+  postCode: z.any(),
+});
 export const RugSchema = z.object({
   UnitSelector: z.enum(["cms", "inches"], {
     message: "please choose the unit either its inch or cms",
@@ -45,16 +51,61 @@ export const RugSchema = z.object({
   Comment: z.any(),
 });
 
-export const schema = z.object({
-  collectionDate: z
-    .string({
-      message: "please fill the date of collection the Rugs",
-    })
-    .min(1, { message: "please fill the date of collection the Rugs" }),
-  returnDate: z
-    .string({ message: "please fill the date of returning the Rugs" })
-    .min(1, { message: "please fill the date of returning the Rugs" }),
-  RugsUploaded: z
-    .array(z.any())
-    .min(1, { message: "please upload 1 rug at least" }),
-});
+export const schema = z
+  .object({
+    collectionDate: z
+      .string({
+        message: "please fill the date of collection the Rugs",
+      })
+      .min(1, { message: "please fill the date of collection the Rugs" }),
+    returnDate: z
+      .string({ message: "please fill the date of returning the Rugs" })
+      .min(1, { message: "please fill the date of returning the Rugs" }),
+    RugsUploaded: z
+      .array(z.any())
+      .min(1, { message: "please upload 1 rug at least" }),
+    isThereDifferentBillingAddress: z.any(),
+    billingAddress: BillingAddressSchema.optional(),
+    isThereInvoiceRef: z.any(),
+    InvoiceRef: z
+      .object({
+        name: z.any(),
+      })
+      .optional(),
+  })
+  .superRefine((value, ctx) => {
+    const {
+      isThereDifferentBillingAddress,
+      billingAddress,
+      isThereInvoiceRef,
+      InvoiceRef,
+    } = value;
+    if (isThereDifferentBillingAddress === "Yes") {
+      if (!billingAddress?.fullName) {
+        ctx.addIssue({
+          message: "please fill the full name field",
+          path: ["billingAddress", "fullName"],
+        });
+      }
+      if (!billingAddress?.fullAddress) {
+        ctx.addIssue({
+          message: "please fill the full address field",
+          path: ["billingAddress", "fullAddress"],
+        });
+      }
+      if (!billingAddress?.postCode) {
+        ctx.addIssue({
+          message: "please fill the post code field",
+          path: ["billingAddress", "postCode"],
+        });
+      }
+    }
+    if (isThereInvoiceRef === "Yes") {
+      if (!InvoiceRef.name) {
+        ctx.addIssue({
+          message: "please fill the name field",
+          path: ["InvoiceRef", "name"],
+        });
+      }
+    }
+  });
