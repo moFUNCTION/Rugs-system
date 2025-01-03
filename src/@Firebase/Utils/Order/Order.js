@@ -238,7 +238,7 @@ export class Order {
   }
   async onConfirmByClient({
     orderId,
-    returnDate,
+    collectionDate2,
     collectionDate,
     billingAddress,
     InvoiceRef,
@@ -247,7 +247,7 @@ export class Order {
   }) {
     const Data = {
       isAcceptedByClient: true,
-      returnDate,
+      collectionDate2,
       collectionDate,
     };
     if (isThereDifferentBillingAddress && billingAddress.fullName) {

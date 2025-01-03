@@ -58,9 +58,11 @@ export const schema = z
         message: "please fill the date of collection the Rugs",
       })
       .min(1, { message: "please fill the date of collection the Rugs" }),
-    returnDate: z
-      .string({ message: "please fill the date of returning the Rugs" })
-      .min(1, { message: "please fill the date of returning the Rugs" }),
+    collectionDate2: z
+      .string({
+        message: "please fill the date of collection the Rugs 2",
+      })
+      .min(1, { message: "please fill the date of collection the Rugs 2" }),
     RugsUploaded: z
       .array(z.any())
       .min(1, { message: "please upload 1 rug at least" }),

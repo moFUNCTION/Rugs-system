@@ -121,7 +121,7 @@ export default function Index() {
   });
 
   const collectionDate = useWatch({ name: "collectionDate", control });
-  const ReturnDate = useWatch({ name: "returnDate", control });
+  const collectionDate2 = useWatch({ name: "collectionDate2", control });
 
   const { fields: Rugs, replace } = useFieldArray({
     control,
@@ -131,8 +131,8 @@ export default function Index() {
   const HandleChangeStartDate = (selectedDate) => {
     setValue("collectionDate", new Date(selectedDate)?.toLocaleString());
   };
-  const HandleChangeEndDate = (selectedDate) => {
-    setValue("returnDate", new Date(selectedDate)?.toLocaleString());
+  const HandleChangeCollectionDate2 = (selectedDate) => {
+    setValue("collectionDate2", new Date(selectedDate)?.toLocaleString());
   };
 
   const onSubmit = async (data) => {
@@ -150,7 +150,7 @@ export default function Index() {
       await Order_Init.onConfirmByClient({
         orderId: id,
         collectionDate: data.collectionDate,
-        returnDate: data.returnDate,
+        collectionDate2: data.collectionDate2,
         billingAddress: data.billingAddress,
         isThereDifferentBillingAddress: data.isThereDifferentBillingAddress,
         isThereInvoiceRef: data.isThereInvoiceRef,
@@ -323,16 +323,16 @@ export default function Index() {
                 </Stack>
                 <Stack borderRadius="lg" bgColor="gray.100" p="3" flexGrow="1">
                   <CenteredTextWithLines TextAlign="left">
-                    <Text flexShrink="0">Date Of Returning Order</Text>
+                    <Text flexShrink="0">Date Of Recieving Order 2</Text>
                   </CenteredTextWithLines>
                   <ChakraDatePicker
                     minDate={Date.now()}
                     bgColor="white"
-                    placeholder="Date Of Returning Order"
-                    onChange={HandleChangeEndDate}
-                    value={ReturnDate}
+                    placeholder="Date Of Recieving Order 2"
+                    onChange={HandleChangeCollectionDate2}
+                    value={collectionDate2}
                   />
-                  <ErrorText>{errors?.returnDate?.message}</ErrorText>
+                  <ErrorText>{errors?.collectionDate2?.message}</ErrorText>
                 </Stack>
               </Flex>
               <InputGroup>
