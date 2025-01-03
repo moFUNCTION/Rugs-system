@@ -8,6 +8,7 @@ import { ProtectedRoute } from "./Utils/ProtectedRoute/ProtectedRoute";
 import { useUserData } from "./Context/UserDataProvider/UserDataProvider";
 import { LogoHeader } from "./Components/Layout/LogoHeader/LogoHeader";
 import { Footer } from "./Components/Layout/Footer/Footer";
+import { OurClients } from "./Components/Layout/OurClients/OurClients";
 // Order
 const OrderRequest = lazy(() => import("./Feutures/Order/Index"));
 // Register
@@ -98,6 +99,7 @@ function App() {
           <Route path="thanks-page" element={<ThanksPage />} />
         </Routes>
       </LazyPageWrapper>
+      <OurClients />
       <Footer />
     </>
   );

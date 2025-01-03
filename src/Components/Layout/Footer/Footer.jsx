@@ -138,7 +138,12 @@ function FooterAddresses() {
       <Box width="full" px={[4, 50]}>
         <Grid
           gap={[6, 10]}
-          templateColumns={["repeat(2, 1fr)", "repeat(4, 1fr)"]}
+          templateColumns={{
+            base: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(3, 1fr)",
+            lg: "repeat(4, 1fr)",
+          }}
           fontFamily="Arial, Helvetica, Arial, Lucida, sans-serif"
           lineHeight="1.6em"
         >

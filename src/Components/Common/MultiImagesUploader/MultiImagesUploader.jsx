@@ -24,6 +24,7 @@ export const MultiImageUploader = ({
 }) => {
   const [isPhoneQuery] = useMediaQuery("(max-width: 800px)");
   const renderedImages = useMemo(() => {
+    console.log(images);
     return images instanceof Array
       ? images?.map((image) => {
           return {
@@ -31,7 +32,9 @@ export const MultiImageUploader = ({
             value:
               image?.value instanceof File
                 ? URL.createObjectURL(image?.value)
-                : image?.value,
+                : image.ImageDataURL
+                ? image.ImageDataURL
+                : typeof image.value === "string" && image.value,
           };
         })
       : undefined;

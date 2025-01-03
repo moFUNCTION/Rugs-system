@@ -63,7 +63,14 @@ export const Rug = ({ onDelete, onUpdate, index, ...data }) => {
               w="120px"
               h="120px"
               objectFit="cover"
-              src={URL.createObjectURL(RugCleaningOption?.RugImages[0]?.value)}
+              src={(() => {
+                const Images = RugCleaningOption?.RugImages;
+                return Images[0].value instanceof File
+                  ? URL.createObjectURL(Images[0]?.value)
+                  : Images[0]?.ImageDataURL
+                  ? Images[0].ImageDataURL
+                  : Images[0].value;
+              })()}
             />
           )}
         <Stack w="100%" maxW="500px">

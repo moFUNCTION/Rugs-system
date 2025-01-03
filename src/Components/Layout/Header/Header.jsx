@@ -47,6 +47,7 @@ export const Header = () => {
         px={{ base: "4", md: "8" }}
         py="3"
         gap="10"
+        flexWrap="wrap"
       >
         {/* Logo */}
         <Logo w="120px" />
@@ -132,10 +133,10 @@ export const Header = () => {
 
           {/* User Account */}
           <Menu>
-            <MenuButton
-              as={Avatar}
+            <Avatar
+              as={MenuButton}
               src={user?.data?.photoURL}
-              name={user?.data?.username}
+              name={user?.data?.username[0]}
               size="sm"
               cursor="pointer"
             />

@@ -249,10 +249,6 @@ export class Order {
       isAcceptedByClient: true,
       returnDate,
       collectionDate,
-
-      InvoiceRef,
-      isThereDifferentBillingAddress,
-      isThereInvoiceRef,
     };
     if (isThereDifferentBillingAddress && billingAddress.fullName) {
       Data.billingAddress = billingAddress;

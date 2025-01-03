@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { FormWrapper } from "./FormWrapper/FormWrapper";
 import {
   Button,
@@ -25,14 +25,24 @@ import { UserLocation } from "./Steps/UserLocation/UserLocation";
 import { schema } from "./schema";
 import localforage from "localforage";
 import { Order } from "../../@Firebase/Utils/Order/Order";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithLines/CenteredTextWithLines";
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
 import { UserPassword } from "./Steps/UserPassword/UserPassword";
+import { debounce } from "lodash";
+import { IndexedDB } from "../../Utils/IndexDbClass/IndexDb";
+import {
+  getImage,
+  saveImage,
+} from "../../Utils/SaveImagesToIndexDb/SaveImagesToIndexDb";
+import { v4 } from "uuid";
 
 const errorNavigation = {
   "auth/email-already-in-use": 2,
 };
+function isEmptyObject(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
 export default function Index() {
   const Navigate = useNavigate();
   const toast = useToast({
@@ -57,6 +67,8 @@ export default function Index() {
     reset,
     HandleChangeCurrentStepIndex,
     setError,
+    getValues,
+    watch,
   } = useMultipleFormSteps({
     steps: [
       {
@@ -78,7 +90,109 @@ export default function Index() {
     ],
     schema: schema,
     mode: "onBlur",
+    defaultValues: async () => {
+      const OrderData = localStorage.getItem("Order-Saved");
+      if (OrderData) {
+        const Data = JSON.parse(OrderData);
+        const RugsUploadedWithImagesUploadedToIndexDb = await Promise.all(
+          Data.RugsUploaded?.map(async (Item) => {
+            const RugImages = Item.value.RugCleaningOption.RugImages;
+            if (RugImages) {
+              const UploadedRugImages = await Promise.all(
+                RugImages.map(async (RugImage) => {
+                  if (RugImage.ImageUploadKey) {
+                    const ImageDataURL = await getImage(
+                      RugImage.ImageUploadKey
+                    );
+                    return {
+                      ...RugImage,
+                      value: ImageDataURL,
+                    };
+                  }
+                  return RugImage;
+                })
+              );
+              return {
+                ...Item,
+                value: {
+                  ...Item.value,
+                  RugCleaningOption: {
+                    ...Item.value.RugCleaningOption,
+                    RugImages: UploadedRugImages,
+                  },
+                },
+              };
+            } else {
+              return Item;
+            }
+          })
+        );
+        return {
+          ...Data,
+          RugsUploaded: RugsUploadedWithImagesUploadedToIndexDb,
+        };
+      }
+    },
   });
+  const form = watch();
+  const [debouncedForm, setDebouncedForm] = useState(form);
+
+  useEffect(() => {
+    if (!isEmptyObject(form)) {
+      const debouncedUpdate = debounce(() => {
+        setDebouncedForm(form);
+      }, 1000);
+      debouncedUpdate();
+      return () => {
+        debouncedUpdate.cancel();
+      };
+    }
+  }, [JSON.stringify(form)]);
+
+  useEffect(() => {
+    if (!isEmptyObject(debouncedForm)) {
+      (async function () {
+        const Order = debouncedForm;
+        const DataSaved = { ...Order };
+        if (Order.RugsUploaded) {
+          const RugsUploadedWithImagesUploadedToIndexDb = await Promise.all(
+            Order.RugsUploaded.map(async (Item) => {
+              const RugImages = Item.value.RugCleaningOption.RugImages;
+              if (RugImages) {
+                const UploadedRugImages = await Promise.all(
+                  RugImages.map(async (RugImage) => {
+                    if (!RugImage.ImageUploadKey) {
+                      const ImageUploadKey = v4();
+                      await saveImage(ImageUploadKey, RugImage.value);
+                      return {
+                        ...RugImage,
+                        ImageUploadKey,
+                      };
+                    }
+                    return RugImage;
+                  })
+                );
+                return {
+                  ...Item,
+                  value: {
+                    ...Item.value,
+                    RugCleaningOption: {
+                      ...Item.value.RugCleaningOption,
+                      RugImages: UploadedRugImages,
+                    },
+                  },
+                };
+              } else {
+                return Item;
+              }
+            })
+          );
+          DataSaved.RugsUploaded = RugsUploadedWithImagesUploadedToIndexDb;
+        }
+        localStorage.setItem("Order-Saved", JSON.stringify(DataSaved));
+      })();
+    }
+  }, [JSON.stringify(debouncedForm)]);
 
   useEffect(() => {
     if (user.data) {
@@ -91,6 +205,7 @@ export default function Index() {
         title: user?.data?.title,
         firstName: user.data?.firstName,
         lastName: user.data?.lastName,
+        ...getValues(),
       });
     }
   }, [user.data]);
@@ -110,6 +225,7 @@ export default function Index() {
           "Order Submited Successfully we will Respond As soon As possible To You",
       });
       Navigate("/thanks-page");
+      localStorage.removeItem("Order-Saved");
     } catch (err) {
       setError("root", { message: err.message });
       HandleChangeCurrentStepIndex(errorNavigation[err.message] - 1);
