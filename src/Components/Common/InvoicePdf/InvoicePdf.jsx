@@ -347,8 +347,8 @@ export const InvoicePDF = ({ data }) => {
                     <Text style={styles.cellTextP}>£</Text>
                   </View>
                 </View>
-                {data.RugsUploaded &&
-                  data.RugsUploaded.map((rug, rugIndex) => (
+                {data?.RugsUploaded &&
+                  data.RugsUploaded?.map((rug, rugIndex) => (
                     <React.Fragment key={rugIndex}>
                       <View style={styles.row}>
                         <View style={styles.leftColumnRUG}>
@@ -376,7 +376,7 @@ export const InvoicePDF = ({ data }) => {
                           </Text>
                         </View>
                       </View>
-                      {rug.RugCleaningOption.Treatment.length > 0 && (
+                      {rug.RugCleaningOption?.Treatment?.length > 0 && (
                         <React.Fragment>
                           <View style={styles.row}>
                             <View style={styles.leftColumn}>
@@ -407,7 +407,7 @@ export const InvoicePDF = ({ data }) => {
                           )}
                         </React.Fragment>
                       )}
-                      {rug.AdditionalServices.length > 0 && (
+                      {rug.AdditionalServices?.length > 0 && (
                         <React.Fragment>
                           <View style={styles.row}>
                             <View style={styles.leftColumn}>
