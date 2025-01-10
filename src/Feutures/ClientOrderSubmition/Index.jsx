@@ -20,7 +20,7 @@ import {
   Radio,
   RadioGroup,
 } from "@chakra-ui/react";
-import React, { lazy, useEffect } from "react";
+import React, { lazy, useEffect, useRef, useState } from "react";
 import { ChakraDatePicker } from "../../Components/Common/ChakraDatePicker/ChakraDatePicker";
 import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithLines/CenteredTextWithLines";
 import { useGetDoc } from "../../@Firebase/Hooks/Common/useGetDoc/useGetDoc";
@@ -37,6 +37,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 import { Rug } from "./Components/Rug/Rug";
 import { sumTotalPrice } from "../../Utils/RugsTotalPrice/RugsTotalPrice";
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
+import { Discount } from "../../@Firebase/Utils/Discount/Discount";
 const InvoicePdf = ({ onClose, isOpen, data }) => {
   return (
     <Modal
@@ -138,7 +139,7 @@ export default function Index() {
   const onSubmit = async (data) => {
     try {
       const Order_Init = new Order({
-        status: "accepted",
+        status: "order",
         totalPrice: sumTotalPrice(
           data.RugsUploaded.map((rug) => {
             return rug.value;
@@ -162,7 +163,7 @@ export default function Index() {
           "Order Submited Successfully we will send a deleivery to collect the order",
         status: "success",
       });
-      Navigate(`/orders/${id}/invoice-pdf`);
+      Navigate(`/orders/${id}/receipt-pdf`);
     } catch (err) {
       console.log(err);
       toast({
@@ -183,11 +184,6 @@ export default function Index() {
       });
     }
   }, [JSON.stringify(data), JSON.stringify(RugsUploaded)]);
-  const {
-    isOpen: isInvoicePdfOpened,
-    onOpen: onOpenInvoicePdf,
-    onClose: onCloseInvoicePdf,
-  } = useDisclosure();
 
   const onDeleteTreatment = ({ RugId, TreatmentValue }) => {
     replace(
@@ -241,10 +237,42 @@ export default function Index() {
       return Rug.value;
     })
   );
-  console.log(errors);
 
-  const { user } = useUserData();
-  console.log(data, "saas");
+  const DiscountBoxRef = useRef();
+
+  const [isLoadingDiscount, setIsLoadingDiscount] = useState(false);
+
+  const onApplyDiscount = async () => {
+    try {
+      setIsLoadingDiscount(true);
+      const res = await Discount.GetDiscount({
+        id: DiscountBoxRef.current.value,
+      });
+      if (res.isExist === false) {
+        toast({
+          status: "error",
+          title: "In Valid Discount",
+        });
+        return;
+      }
+      if (res.isExpired === true) {
+        toast({
+          status: "error",
+          title: "Expired Discount",
+        });
+        return;
+      }
+      toast({
+        status: "success",
+        title: "Discount Have Applied Successfully",
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoadingDiscount(false);
+    }
+  };
+
   if (data?.isAcceptedByClient) {
     return (
       <Stack p="3" alignItems="center">
@@ -254,16 +282,9 @@ export default function Index() {
       </Stack>
     );
   }
+
   return (
     <>
-      <InvoicePdf
-        isOpen={isInvoicePdfOpened}
-        onClose={onCloseInvoicePdf}
-        data={{
-          ...data,
-          RugsUploaded,
-        }}
-      />
       <FormWrapper>
         <Stack
           as={Skeleton}
@@ -284,16 +305,8 @@ export default function Index() {
           borderColor="gray.300"
           maxW="1400px"
         >
-          {data?.status === "accepted" && (
+          {data?.status === "qutation" && (
             <>
-              <Button
-                colorScheme="blackAlpha"
-                onClick={onOpenInvoicePdf}
-                variant="outline"
-                w="100%"
-              >
-                View Invoice Pdf
-              </Button>
               {Rugs.map((rugUploaded, index) => {
                 return (
                   <Rug
@@ -336,8 +349,17 @@ export default function Index() {
                 </Stack>
               </Flex>
               <InputGroup>
-                <Input placeholder="Enter the Voucher Code" />
-                <InputRightAddon as={Button}>Apply</InputRightAddon>
+                <Input
+                  ref={DiscountBoxRef}
+                  placeholder="Enter the Voucher Code"
+                />
+                <InputRightAddon
+                  isLoading={isLoadingDiscount}
+                  onClick={onApplyDiscount}
+                  as={Button}
+                >
+                  Apply
+                </InputRightAddon>
               </InputGroup>
               <Button w="100%" borderRadius="0">
                 Total Price {TotalPrice} £
@@ -445,7 +467,7 @@ export default function Index() {
               </Flex>
             </>
           )}
-          {data?.status !== "accepted" && data?.status && (
+          {data?.status !== "qutation" && data?.status && (
             <Heading size="md">
               The Order Status is {data?.status} Take A Screen And Contant With
               Us

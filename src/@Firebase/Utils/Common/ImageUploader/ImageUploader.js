@@ -4,8 +4,14 @@ import { v4 } from "uuid";
 export const ImageUploader = async ({ path, files }) => {
   try {
     const imageUploading = files.map(async (file) => {
-      if (file instanceof File) {
-        const filePath = `${path}/${file.name + v4()}`;
+      const dataUrlRegex =
+        /^data:([a-zA-Z0-9+\/-]+\/[a-zA-Z0-9+\/-]+)?(;[a-zA-Z-]+=[a-zA-Z0-9-]+)*(;base64)?,[a-zA-Z0-9+/=]*$/;
+      if (
+        file instanceof File ||
+        file instanceof Blob ||
+        dataUrlRegex.test(file)
+      ) {
+        const filePath = `${path}/${(file.name || "DATA_URL") + v4()}`;
         const fileRef = ref(storage, filePath);
         await uploadBytes(fileRef, file);
         const URL = await getDownloadURL(fileRef);

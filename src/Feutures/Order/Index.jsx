@@ -104,6 +104,7 @@ export default function Index() {
                     const ImageDataURL = await getImage(
                       RugImage.ImageUploadKey
                     );
+
                     return {
                       ...RugImage,
                       value: ImageDataURL,

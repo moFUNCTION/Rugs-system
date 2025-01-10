@@ -8,25 +8,11 @@ localforage.config({
 
 export const saveImage = async (key, imageFile) => {
   try {
-    const reader = new FileReader();
+    await localforage.setItem(key, imageFile);
 
-    return new Promise((resolve, reject) => {
-      reader.onload = async (event) => {
-        try {
-          const imageData = event.target.result;
-          await localforage.setItem(key, imageData);
-          resolve({
-            key,
-          });
-        } catch (err) {
-          reject(err);
-        }
-      };
-
-      reader.onerror = () => reject(reader.error);
-
-      reader.readAsDataURL(imageFile);
-    });
+    return {
+      key,
+    };
   } catch (err) {
     console.error("Error saving image:", err);
     throw err;

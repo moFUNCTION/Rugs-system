@@ -37,7 +37,7 @@ export default function Index() {
   const onConfirm = async () => {
     try {
       const order_init = new Order({
-        status: "accepted",
+        status: "order",
       });
       await order_init.onUpdate(id, {
         isOrderCollectionDateConfirmed: true,

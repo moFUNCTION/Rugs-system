@@ -12,6 +12,7 @@ import {
   query,
   serverTimestamp,
   updateDoc,
+  where,
   writeBatch,
 } from "firebase/firestore";
 import { db } from "../../Config";
@@ -82,10 +83,11 @@ export class Order {
         phoneNumber: this.phoneNumber,
         RugCollectionAddress: this.RugCollectionAddress,
         RugCollectionAddressPostCode: this.RugCollectionAddressPostCode,
-        status: "pending",
+        status: "request",
         createdAt: serverTimestamp(),
         userId: UserID.value,
         title: this.title,
+        isArchived: false,
       };
 
       const RugsUploaded = await Promise.all(
@@ -98,6 +100,7 @@ export class Order {
                 return image.value;
               }),
             });
+            console.log(RugImagesLinks);
             Data.OrderImages = RugImagesLinks;
             return {
               ...RugUploaded.value,
@@ -245,11 +248,33 @@ export class Order {
     isThereDifferentBillingAddress,
     isThereInvoiceRef,
   }) {
+    const OrdersCollection = collection(db, "Orders");
+    const LastDocumentQuery = query(
+      OrdersCollection,
+      limit(1),
+      orderBy("createdAt", "desc"),
+      where("status", "==", "order")
+    );
+
+    const LastDoc = await getDocs(LastDocumentQuery);
+
     const Data = {
       isAcceptedByClient: true,
       collectionDate2,
       collectionDate,
+      receiptNo: 1,
+      SelectedDateOfRecievingOrder: null,
     };
+
+    if (!LastDoc.empty) {
+      Data.receiptNo =
+        orderId === LastDoc.docs[0].id
+          ? isNaN(LastDoc.docs[0].data().receiptNo)
+            ? 1
+            : LastDoc.docs[0].data().receiptNo
+          : LastDoc.docs[0].data().receiptNo + 1;
+    }
+
     if (isThereDifferentBillingAddress && billingAddress.fullName) {
       Data.billingAddress = billingAddress;
     }

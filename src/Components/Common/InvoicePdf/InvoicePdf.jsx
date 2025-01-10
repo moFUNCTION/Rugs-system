@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const InvoicePDF = ({ data }) => {
+export const InvoicePDF = ({ data, isInvoice = true }) => {
   console.log(data);
   if (!data) {
     return <div>Loading...</div>;
@@ -296,7 +296,12 @@ export const InvoicePDF = ({ data }) => {
             <Image src={footerImage} style={styles.image} />
           </View>
           <View style={styles.invoiceDetails}>
-            <Text>INVOICE | MH {data.userId}</Text>
+            {isInvoice ? (
+              <Text>INVOICE | MH {data.invoiceNo}</Text>
+            ) : (
+              <Text>RECEIPT | MH {data.receiptNo}</Text>
+            )}
+
             <Text>CUSTOMER REF.</Text>
             <Text>DATE: {new Date().toLocaleDateString()}</Text>
           </View>

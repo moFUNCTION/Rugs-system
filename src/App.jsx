@@ -30,6 +30,7 @@ const ThanksPage = lazy(() => import("./Feutures/ThanksPage/Index"));
 const OrderCalenderDates = lazy(() => import("./Feutures/OrderCalender/Index"));
 // Order Pdf
 const OrderInvoicePdf = lazy(() => import("./Feutures/OrderInvoicePdf/Index"));
+const OrderReceiptPdf = lazy(() => import("./Feutures/OrderRecieptPdf/Index"));
 function App() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -96,6 +97,7 @@ function App() {
           />
           <Route path="orders/:id/time" element={<OrderCalenderDates />} />
           <Route path="orders/:id/invoice-pdf" element={<OrderInvoicePdf />} />
+          <Route path="orders/:id/receipt-pdf" element={<OrderReceiptPdf />} />
           <Route path="thanks-page" element={<ThanksPage />} />
         </Routes>
       </LazyPageWrapper>
