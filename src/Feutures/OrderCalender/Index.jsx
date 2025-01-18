@@ -90,29 +90,7 @@ export default function Index() {
           From : {data?.collectionTimeFrom} , To : {data?.collectionTimeTo}
         </Heading>
       </Flex>
-      <CenteredTextWithLines w="100%" maxW="500px">
-        <Heading size="md" fontWeight="600" flexShrink="0">
-          Return Date
-        </Heading>
-      </CenteredTextWithLines>
-      <Flex gap="3">
-        <Heading border="1px" p="3" size="md" fontWeight="600">
-          {new Date(data?.returnDate).toCustomDateString()}
-        </Heading>
-        <Heading border="1px" p="3" size="md" fontWeight="600">
-          From : {data?.returnTimeFrom} , To : {data?.returnTimeTo}
-        </Heading>
-      </Flex>
 
-      <Button
-        onClick={onConfirm}
-        variant="outline"
-        w="100%"
-        maxW="350px"
-        colorScheme="red"
-      >
-        Confirm
-      </Button>
       <CenteredTextWithLines w="100%" maxW="500px">
         <Text flexShrink="0">Do You Want To Change Date ?</Text>
       </CenteredTextWithLines>

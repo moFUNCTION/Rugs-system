@@ -24,6 +24,9 @@ const UserProfile = lazy(() => import("./Feutures/UserProfile/UserProfile"));
 const OrderSubmition = lazy(() =>
   import("./Feutures/ClientOrderSubmition/Index")
 );
+const OrderReverify = lazy(() =>
+  import("./Feutures/ClientOrderReverify/Index")
+);
 // Thanks Page
 const ThanksPage = lazy(() => import("./Feutures/ThanksPage/Index"));
 // Order Dates
