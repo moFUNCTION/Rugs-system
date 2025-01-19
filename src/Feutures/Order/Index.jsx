@@ -25,7 +25,7 @@ import { UserLocation } from "./Steps/UserLocation/UserLocation";
 import { schema } from "./schema";
 import localforage from "localforage";
 import { Order } from "../../@Firebase/Utils/Order/Order";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithLines/CenteredTextWithLines";
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
 import { UserPassword } from "./Steps/UserPassword/UserPassword";
@@ -45,6 +45,21 @@ function isEmptyObject(obj) {
 }
 export default function Index() {
   const Navigate = useNavigate();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const AffilateSearch = searchParams.get("Affiliate");
+  useEffect(() => {
+    if (AffilateSearch) {
+      localStorage.setItem("Affiliate", AffilateSearch);
+    }
+  }, [AffilateSearch]);
+
+  useEffect(() => {
+    if (localStorage.getItem("Affiliate") && !AffilateSearch) {
+      Navigate("?Affiliate=pks@gmail.com");
+    }
+  }, []);
+
   const toast = useToast({
     position: "top-right",
     duration: 3000,
@@ -216,6 +231,7 @@ export default function Index() {
         ...data,
         isSignedIn: user.data ? true : false,
         userId: user.data?.uid,
+        affiliate: AffilateSearch,
       });
       await OrderInit.onAdd();
 
@@ -227,6 +243,7 @@ export default function Index() {
       });
       Navigate("/thanks-page");
       localStorage.removeItem("Order-Saved");
+      localStorage.removeItem("Affiliate");
     } catch (err) {
       setError("root", { message: err.message });
       HandleChangeCurrentStepIndex(errorNavigation[err.message] - 1);

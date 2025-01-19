@@ -35,6 +35,7 @@ export class Order {
     title,
     status = "pending",
     totalPrice,
+    affiliate,
   } = {}) {
     this.firstName = firstName;
     this.lastName = lastName;
@@ -52,6 +53,7 @@ export class Order {
     this.title = title;
     this.status = status;
     this.totalPrice = totalPrice;
+    this.affiliate = affiliate;
   }
   #getAllParams() {
     return { ...this };
@@ -89,6 +91,9 @@ export class Order {
         title: this.title,
         isArchived: false,
       };
+      if (this.affiliate) {
+        Data.affiliate = this.affiliate;
+      }
 
       const RugsUploaded = await Promise.all(
         this.RugsUploaded.map(async (RugUploaded) => {

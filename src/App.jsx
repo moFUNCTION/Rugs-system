@@ -61,7 +61,9 @@ function App() {
                 <UserProfile />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="*" element />
+          </Route>
           <Route path="/" element={<OrderRequest />} />
           <Route path="order" element={<OrderRequest />} />
           <Route
