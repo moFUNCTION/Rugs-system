@@ -98,7 +98,7 @@ function FooterAddresses() {
         >
           {/* London Central */}
           <Box textAlign="start" w="175px">
-            <Text color="red.500" fontWeight="bold" fontSize="lg">
+            <Text color="red.700" fontWeight="bold" fontSize="md">
               LONDON CENTRAL
             </Text>
             <Text fontSize="xs" color="gray.700">
@@ -117,7 +117,7 @@ function FooterAddresses() {
 
           {/* Oxford */}
           <Box textAlign="start">
-            <Text color="red.500" fontWeight="bold" fontSize="lg">
+            <Text color="red.700" fontWeight="bold" fontSize="md">
               OXFORD
             </Text>
             <Text fontSize="xs" color="gray.700">
@@ -136,7 +136,7 @@ function FooterAddresses() {
 
           {/* Surrey */}
           <Box textAlign="start">
-            <Text color="red.500" fontWeight="bold" fontSize="lg">
+            <Text color="red.700" fontWeight="bold" fontSize="md">
               SURREY
             </Text>
             <Text fontSize="xs" color="gray.700">
@@ -155,7 +155,7 @@ function FooterAddresses() {
 
           {/* North London */}
           <Box textAlign="start" w="150px">
-            <Text color="red.500" fontWeight="bold" fontSize="lg">
+            <Text color="red.700" fontWeight="bold" fontSize="md">
               NORTH LONDON
             </Text>
             <Text fontSize="xs" color="gray.700">
@@ -174,7 +174,7 @@ function FooterAddresses() {
 
           {/* Magic Hand Ltd */}
           <Box textAlign="start">
-            <Text color="red.500" fontWeight="bold" fontSize="lg">
+            <Text color="red.700" fontWeight="bold" fontSize="md">
               MAGIC HAND LTD
             </Text>
             <Text fontSize="xs" color="gray.700">
@@ -185,7 +185,7 @@ function FooterAddresses() {
             </Text>
             <Text fontSize="xs" color="gray.700">
               EMAIL{" "}
-              <Text as="span" color="red.500">
+              <Text as="span" color="red.700">
                 rugs@magichand.co.uk
               </Text>
             </Text>

@@ -301,8 +301,17 @@ export default function Index() {
         />
 
         <Flex direction="column" align="center" justify="center" color="black">
-          <Box fontSize={{ base: "20px", md: "24px" }}>
-            <Text fontSize={{ base: "20px", md: "24px" }} textAlign="center">
+          {/* Heading */}
+          <Box
+            fontFamily="Times New Roman, Georgia, serif"
+            fontSize={{ base: "20px", md: "24px" }}
+          >
+            <Text
+              fontFamily="mgichand"
+              fontSize={{ base: "20px", md: "24px" }}
+              textAlign="center"
+              fontWeight="500"
+            >
               Rug Works and Services
             </Text>
           </Box>
@@ -310,13 +319,11 @@ export default function Index() {
           {/* Subheading */}
           <Flex direction="column" justify="center" mx={11} pt={4}>
             <Text
-              display="flex"
-              alignItems="center"
+              fontFamily="Arial, Helvetica, sans-serif"
               fontSize="sm"
               textAlign="center"
-              gap="1"
             >
-              <Text as="span" color="#b81918" mx={1}>
+              <Text as="span" color="#b81918" lineHeight="1.6em" mx={1}>
                 ●
               </Text>
               FREE ONLINE ESTIMATE | ORDER REQUEST FORM

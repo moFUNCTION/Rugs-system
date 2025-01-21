@@ -87,13 +87,7 @@ const CleaningOption = ({
               {...register("RugCleaningOption.RugImagesDescription")}
             />
           )}
-          <Box
-            bgColor="white"
-            p="3"
-            color="gray.500"
-            border="2px"
-            borderColor="black"
-          >
+          <Box bgColor="white" p="3" color="black" border="3px solid black">
             {text &&
               text?.split("\n").map((TextChild, index) => {
                 return <Text key={index}>{TextChild}</Text>;
@@ -155,40 +149,36 @@ export const RugCleaningOptionStep = ({
 
   return (
     <>
-      <Text>
-        Choose one of the following Rug Cleaning options below...
-        <br />
-        Either tick option 1:
-        <br />
-        Or tick option 2:
-        <br />
-        Or tick option 3:
-        <br />
-        Or tick option 4:
-      </Text>
+      <Text>Choose one of the following Rug Cleaning options below...</Text>
       <RadioGroup
         value={RugCleaningOption?.name}
         onChange={(value) => setValue("RugCleaningOption.name", value)}
       >
         <Stack gap="3">
           <ErrorText>{errors?.RugCleaningOption?.name?.message}</ErrorText>
-          {RugOptions.map((option) => {
+          {RugOptions.map((option, index) => {
             const isSelected = RugCleaningOption?.name === option.name;
             return (
-              <CleaningOption
-                onRemoveTreatment={HandleRemoveTreatment}
-                onChooseTreatment={HandleAddTreatment}
-                onChangeRugImagesSelected={HandleAddImage}
-                RugImagesUploaded={RugImagesUploaded.fields}
-                TreatmentsSelected={treatments.fields}
-                onRemoveRugImage={HandleRemoveImage}
-                onRemoveAllRugImages={HandleRemoveAllImages}
-                key={option.name}
-                isSelected={isSelected}
-                errors={errors}
-                register={register}
-                {...option}
-              />
+              <>
+                <Text>
+                  {index === 0 && `Either`}
+                  {index !== 0 && "Or "} {`tick option ${index + 1}:`}
+                </Text>
+                <CleaningOption
+                  onRemoveTreatment={HandleRemoveTreatment}
+                  onChooseTreatment={HandleAddTreatment}
+                  onChangeRugImagesSelected={HandleAddImage}
+                  RugImagesUploaded={RugImagesUploaded.fields}
+                  TreatmentsSelected={treatments.fields}
+                  onRemoveRugImage={HandleRemoveImage}
+                  onRemoveAllRugImages={HandleRemoveAllImages}
+                  key={option.name}
+                  isSelected={isSelected}
+                  errors={errors}
+                  register={register}
+                  {...option}
+                />
+              </>
             );
           })}
         </Stack>

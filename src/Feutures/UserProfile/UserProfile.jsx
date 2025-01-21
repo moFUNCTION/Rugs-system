@@ -171,11 +171,6 @@ const TabsLinks = [
     href: "orders",
   },
   {
-    title: "Notifications",
-    Icon: MdNotifications,
-    href: "notifications",
-  },
-  {
     title: "Chat With Us",
     Icon: BiChat,
     href: "chat",
@@ -189,11 +184,6 @@ const TabsLinks = [
     title: "Receipts",
     Icon: MdFileOpen,
     href: "receipts",
-  },
-  {
-    title: "Reviews",
-    Icon: LiaStarSolid,
-    href: "reviews",
   },
   {
     title: "Logout",
