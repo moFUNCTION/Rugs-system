@@ -7,7 +7,7 @@ export const FormWrapper = ({ children }) => {
       justifyContent="center"
       alignItems="center"
       w="100%"
-      minH="calc(100vh - 50px)"
+      minH="70vh"
       pos="relative"
       zIndex="2"
       p="4"

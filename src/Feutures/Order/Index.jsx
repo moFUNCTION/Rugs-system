@@ -13,6 +13,7 @@ import {
   AlertTitle,
   AlertDescription,
   Skeleton,
+  Box,
 } from "@chakra-ui/react";
 import { useMultipleFormSteps } from "../../Hooks/useMultipleFormSteps/useMultipleFormSteps";
 import { UserInformation } from "./Steps/UserInformation/UserInformation";
@@ -298,14 +299,34 @@ export default function Index() {
           transition="0.3s"
           value={(currentStepIndex / 2) * 100}
         />
-        <Heading size="md" color="gray.600">
-          Rug Works and Services
-        </Heading>
-        <CenteredTextWithLines>
-          <Text flexShrink="0" size="sm">
-            FREE ONLINE ESTIMATE | ORDER REQUEST FORM
-          </Text>
-        </CenteredTextWithLines>
+
+        <Flex direction="column" align="center" justify="center" color="black">
+          <Box fontSize={{ base: "20px", md: "24px" }}>
+            <Text fontSize={{ base: "20px", md: "24px" }} textAlign="center">
+              Rug Works and Services
+            </Text>
+          </Box>
+
+          {/* Subheading */}
+          <Flex direction="column" justify="center" mx={11} pt={4}>
+            <Text
+              display="flex"
+              alignItems="center"
+              fontSize="sm"
+              textAlign="center"
+              gap="1"
+            >
+              <Text as="span" color="#b81918" mx={1}>
+                ●
+              </Text>
+              FREE ONLINE ESTIMATE | ORDER REQUEST FORM
+              <Text as="span" color="#b81918" mx={1}>
+                ●
+              </Text>
+            </Text>
+          </Flex>
+        </Flex>
+
         {errors.root && (
           <Alert status="error">
             <AlertIcon />

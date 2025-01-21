@@ -17,9 +17,15 @@ html {
 .scroll-x::-webkit-scrollbar-thumb {
   background-color: gainsboro;
 }
-::-webkit-scrollbar-thumb {
-  background-color: rgb(73, 0, 24);
+
+*:not(.scrollable)::-webkit-scrollbar {
+  height: 15px !important;
 }
+*:not(.scrollable)::-webkit-scrollbar-thumb {
+  background-color: gainsboro;
+  border-radius: 5px;
+}
+
 select:not(.multi-select select, .multi-select),
 input,
 textarea {

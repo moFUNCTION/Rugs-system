@@ -7,9 +7,12 @@ import {
   Icon,
   HStack,
   Stack,
+  Flex,
+  IconButton,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaFacebookF } from "react-icons/fa6";
 
 function FooterPolicy() {
   const policyLinks = [
@@ -37,6 +40,7 @@ function FooterPolicy() {
       py={[2, 3]} // Added vertical padding
       display="flex"
       alignItems="center"
+      bgColor="gray.200"
     >
       <Box width="full" px={[4, 50]}>
         <Grid
@@ -55,7 +59,7 @@ function FooterPolicy() {
               >
                 <Text
                   color="footerptcolor"
-                  fontSize={["xs", "sm"]}
+                  fontSize={["xs", "md"]}
                   textAlign="center"
                 >
                   {link.text}
@@ -70,134 +74,155 @@ function FooterPolicy() {
 }
 
 function FooterAddresses() {
-  const locations = [
-    {
-      region: "LONDON CENTRAL",
-      address: [
-        "65 Sloane Street",
-        "Knightsbridge",
-        "London SW1X 9SH",
-        "T: 0203 740 6642",
-      ],
-    },
-    {
-      region: "OXFORD",
-      address: [
-        "Clarendon House",
-        "52 Cornmarket Street",
-        "Oxford OX1 3HJ",
-        "T: 0186 598 5779",
-      ],
-    },
-    {
-      region: "SURREY",
-      address: [
-        "St. Martin's House",
-        "Ockham Road South",
-        "Surrey KT24 6RX",
-        "T: 020 8800 3377",
-      ],
-    },
-    {
-      region: "NORTH LONDON",
-      address: [
-        "Building A, OCC",
-        "102 Vale Road",
-        "London N4 1FL",
-        "T: 0208 800 3377",
-      ],
-    },
-  ];
-
-  const socialLinks = [
-    {
-      icon: FaFacebook,
-      href: "https://www.facebook.com/MagicHandLtd/",
-      title: "Follow on Facebook",
-    },
-    {
-      icon: FaInstagram,
-      href: "https://www.instagram.com/magichandltd/",
-      title: "Follow on Instagram",
-    },
-    {
-      icon: FaYoutube,
-      href: "https://www.youtube.com/channel/UCgR8T356ZF4xQAaNiVUqvJQ",
-      title: "Follow on Youtube",
-    },
-  ];
-
   return (
-    <Box
-      display="flex"
-      backgroundColor="logoheaderbg"
-      borderTopWidth="1px"
-      borderTopColor="borderbo"
-      py={[4, 6]} // Added vertical padding
-    >
-      <Box width="full" px={[4, 50]}>
+    <Box bg="#f8f9fa" borderTop="1px" borderColor="gray.300" h="auto" py={5}>
+      <Flex
+        w="full"
+        px={{ base: 4, md: 12, xl: 50 }}
+        pb={4}
+        direction="column"
+        align="center"
+      >
         <Grid
-          gap={[6, 10]}
           templateColumns={{
-            base: "repeat(1, 1fr)",
-            sm: "repeat(2, 1fr)",
-            md: "repeat(3, 1fr)",
-            lg: "repeat(4, 1fr)",
+            base: "repeat(2, 1fr)",
+            md: "repeat(4, 1fr)",
+            xl: "repeat(5, 1fr)",
           }}
-          fontFamily="Arial, Helvetica, Arial, Lucida, sans-serif"
+          gap={{ base: 6, md: 10, xl: 20 }}
+          mt={5}
+          maxW="1200px"
+          mx="auto"
+          fontFamily="Arial, Helvetica, sans-serif"
           lineHeight="1.6em"
         >
-          {locations.map((location, index) => (
-            <GridItem key={index} textAlign="start">
-              <Text color="red.700" fontSize="lg" fontWeight="bold" mb={2}>
-                {location.region}
-              </Text>
-              {location.address.map((line, lineIndex) => (
-                <Text key={lineIndex} color="bordertop" fontSize="fzmn" mb={1}>
-                  {line}
-                </Text>
-              ))}
-            </GridItem>
-          ))}
+          {/* London Central */}
+          <Box textAlign="start" w="175px">
+            <Text color="red.500" fontWeight="bold" fontSize="lg">
+              LONDON CENTRAL
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              65 Sloane Street
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              Knightsbridge
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              London SW1X 9SH
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              T: 0203 740 6642
+            </Text>
+          </Box>
 
-          <GridItem textAlign="start">
-            <Text color="fred" fontWeight="bold" mb={2}>
+          {/* Oxford */}
+          <Box textAlign="start">
+            <Text color="red.500" fontWeight="bold" fontSize="lg">
+              OXFORD
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              Clarendon House
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              52 Cornmarket Street
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              Oxford OX1 3HJ
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              T: 0186 598 5779
+            </Text>
+          </Box>
+
+          {/* Surrey */}
+          <Box textAlign="start">
+            <Text color="red.500" fontWeight="bold" fontSize="lg">
+              SURREY
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              St. Martin's House
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              Ockham Road South
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              Surrey KT24 6RX
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              T: 020 8800 3377
+            </Text>
+          </Box>
+
+          {/* North London */}
+          <Box textAlign="start" w="150px">
+            <Text color="red.500" fontWeight="bold" fontSize="lg">
+              NORTH LONDON
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              Building A, OCC
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              102 Vale Road
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              London N4 1FL
+            </Text>
+            <Text fontSize="xs" color="gray.700">
+              T: 0208 800 3377
+            </Text>
+          </Box>
+
+          {/* Magic Hand Ltd */}
+          <Box textAlign="start">
+            <Text color="red.500" fontWeight="bold" fontSize="lg">
               MAGIC HAND LTD
             </Text>
-            <Text color="bordertop" fontSize="fzmn" mb={1}>
+            <Text fontSize="xs" color="gray.700">
               FREE Collection & Delivery
             </Text>
-            <Text color="bordertop" fontSize="fzmn" mb={1}>
+            <Text fontSize="xs" color="gray.700">
               OPEN 7 days
             </Text>
-            <Text color="bordertop" fontSize="fzmn" mb={2}>
+            <Text fontSize="xs" color="gray.700">
               EMAIL{" "}
-              <Text as="span" color="fred">
+              <Text as="span" color="red.500">
                 rugs@magichand.co.uk
               </Text>
             </Text>
 
-            <HStack spacing={3} mt={2}>
-              {socialLinks.map((social, index) => (
-                <Link
-                  key={index}
-                  href={social.href}
-                  isExternal
-                  title={social.title}
-                >
-                  <Icon
-                    as={social.icon}
-                    w={6}
-                    h={6}
-                    color="gray.500"
-                    _hover={{ color: "gray.700" }}
-                  />
-                </Link>
-              ))}
+            <HStack mt="4" spacing={3}>
+              <Link
+                href="https://www.facebook.com/MagicHandLtd/"
+                title="Follow on Facebook"
+                isExternal
+                ml={8}
+              >
+                <IconButton variant="outline">
+                  <FaFacebookF />
+                </IconButton>
+              </Link>
+              <Link
+                href="https://www.instagram.com/magichandltd/"
+                title="Follow on Instagram"
+                isExternal
+              >
+                <IconButton variant="outline">
+                  <FaInstagram />
+                </IconButton>
+              </Link>
+              <Link
+                href="https://www.youtube.com/channel/UCgR8T356ZF4xQAaNiVUqvJQ"
+                title="Follow on Youtube"
+                isExternal
+              >
+                <IconButton variant="outline">
+                  <FaYoutube />
+                </IconButton>
+              </Link>
             </HStack>
-          </GridItem>
+          </Box>
         </Grid>
-      </Box>
+      </Flex>
     </Box>
   );
 }

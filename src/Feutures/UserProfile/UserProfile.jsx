@@ -31,29 +31,18 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { BiChat, BiPencil } from "react-icons/bi";
-import {
-  MdAssignment,
-  MdAutorenew,
-  MdCategory,
-  MdFileOpen,
-  MdNotifications,
-  MdShop,
-  MdShop2,
-  MdStar,
-  MdStart,
-} from "react-icons/md";
-import { LazyLoadedImage } from "../../Components/Common/LazyLoadedImage/LazyLoadedImage";
-import { PiCertificateThin } from "react-icons/pi";
-import { LiaStarSolid } from "react-icons/lia";
+import { MdFileOpen, MdNotifications, MdShop } from "react-icons/md";
+import { LiaJediOrder, LiaStarSolid } from "react-icons/lia";
 import { IoIosLogOut } from "react-icons/io";
-import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
+import { CiShop } from "react-icons/ci";
 const CoverImage = () => {
   return (
     <Box
       w="100%"
       h={{ base: "200px", md: "280px" }}
-      bgGradient="linear(to-r, orange.400, red.300, red.600)"
+      bgColor="gray.300"
       position="relative"
       borderRadius="lg"
     >
@@ -81,7 +70,7 @@ const ProfileImage = ({ src, name }) => {
         name={name}
         src={src}
         alt="Profile"
-        bgColor="red.600"
+        bgColor="gray.500"
         color="white"
         size="2xl"
         w={{ base: "150px", md: "195px" }}
@@ -169,15 +158,6 @@ const ProfileInfo = () => {
           align={{ base: "center", md: "center" }}
           w={{ base: "full", md: "auto" }}
         >
-          <Button
-            leftIcon={<BiChat />}
-            colorScheme="red"
-            variant="outline"
-            size={{ base: "sm", md: "md" }}
-            w={{ base: "full", md: "auto" }}
-          >
-            Chat With Us
-          </Button>
           <SocialLinks />
         </Flex>
       </Flex>
@@ -187,7 +167,7 @@ const ProfileInfo = () => {
 const TabsLinks = [
   {
     title: "Requested Orders",
-    Icon: MdShop,
+    Icon: CiShop,
     href: "orders",
   },
   {
@@ -234,7 +214,6 @@ const TabsMenu = () => {
               as={Link}
               to={href}
               variant={route === href ? "solid" : "ghost"}
-              colorScheme={route === href ? "red" : "gray"}
               gap="3"
               justifyContent="start"
               key={title}
@@ -260,8 +239,7 @@ export default function Index() {
   }, [pathname]);
   return (
     <Stack p="4" alignItems="center">
-      <CoverImage />
-      <Container maxW="container.xl" mt="-40px">
+      <Container maxW="container.xl">
         <ProfileInfo />
       </Container>
       <Flex alignItems="start" gap="4" w="100%" maxW="container.xl">

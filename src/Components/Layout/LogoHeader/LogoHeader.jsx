@@ -6,10 +6,6 @@ import { useScroll, useTransform, motion } from "framer-motion";
 export const LogoHeader = () => {
   const { scrollYProgress } = useScroll();
 
-  // Transform the scroll progress into values for logo width and opacity
-  const logoWidth = useTransform(scrollYProgress, [0, 0.7], [193.7, 90]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const height = useTransform(scrollYProgress, [0, 0.2], [50, 0]);
   const backgroundColor = useTransform(
     scrollYProgress,
     [0, 0.3],
@@ -20,9 +16,6 @@ export const LogoHeader = () => {
     <motion.div
       style={{
         backgroundColor,
-        position: "sticky",
-        top: 0,
-        zIndex: 10,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -36,7 +29,7 @@ export const LogoHeader = () => {
       <Box display="flex" justifyContent="center">
         <motion.div
           style={{
-            width: logoWidth,
+            width: "193px",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -54,9 +47,7 @@ export const LogoHeader = () => {
       </Box>
       <motion.div
         style={{
-          opacity: textOpacity,
           paddingX: "44px",
-          height,
           overflow: "hidden",
         }}
       >

@@ -2,222 +2,211 @@ import React, { useState } from "react";
 import {
   Box,
   Flex,
-  IconButton,
-  VStack,
   Text,
-  HStack,
-  Avatar,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Stack,
+  IconButton,
   useDisclosure,
-  Button,
+  VStack,
+  HStack,
+  Divider,
+  Stack,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import { FaFacebookF } from "react-icons/fa";
-import { BsYoutube, BsInstagram } from "react-icons/bs";
-import { IoCloseOutline } from "react-icons/io5";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { Logo } from "../../Common/Logo/Logo";
+import { FaFacebookF, FaInstagram, FaUser, FaYoutube } from "react-icons/fa";
 import { useUserData } from "../../../Context/UserDataProvider/UserDataPRovider";
-import { useLogout } from "../../../@Firebase/Hooks/Auth/useLogout/useLogout";
+import { Link } from "react-router-dom";
 export const Header = () => {
   const { isOpen, onToggle } = useDisclosure();
   const { user } = useUserData();
-  const { onLogout } = useLogout();
   return (
-    <Box
-      as="header"
+    <Stack
+      justifyContent="center"
+      p="3"
       w="full"
       borderBottom="1px"
       borderColor="gray.200"
-      bg="white"
-      shadow="sm"
-      zIndex="sticky"
-      position="relative"
     >
       <Flex
-        pos="relative"
         justify="space-between"
-        align="center"
-        maxW="1200px"
+        alignItems="center"
+        maxW={{ base: "100%", "2xl": "82%" }}
         mx="auto"
-        px={{ base: "4", md: "8" }}
-        py="3"
-        gap="10"
-        flexWrap="wrap"
+        px="15px"
       >
-        {/* Logo */}
-        <Logo w="120px" />
-
         {/* Mobile Menu Toggle */}
-        <Box display={{ base: "block", lg: "none" }}>
+        <Flex
+          display={{
+            base: "flex",
+            md: "none",
+          }}
+          alignItems="center"
+        >
           <IconButton
-            icon={isOpen ? <IoCloseOutline /> : <RxHamburgerMenu />}
+            aria-label="Toggle Menu"
+            icon={
+              isOpen ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                  width="28px"
+                  height="28px"
+                >
+                  <path
+                    d="M289.94 256l95-95A24 24 0 0 0 351 127l-95 95l-95-95a24 24 0 0 0-34 34l95 95l-95 95a24 24 0 1 0 34 34l95-95l95 95a24 24 0 0 0 34-34z"
+                    fill="currentColor"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="28px"
+                  height="28px"
+                >
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M4 6h16" />
+                    <path d="M4 12h16" />
+                    <path d="M4 18h16" />
+                  </g>
+                </svg>
+              )
+            }
             onClick={onToggle}
-            aria-label="Toggle Navigation"
             variant="ghost"
-            size="lg"
           />
+
+          {isOpen && (
+            <VStack
+              p={6}
+              bg="white"
+              border="1px"
+              borderColor="gray.200"
+              position="absolute"
+              top="70px"
+              left={0}
+              mx={1}
+              my={2}
+              minW="140px"
+              rounded="xl"
+              zIndex={40}
+              align="start"
+            >
+              <Text fontSize="16px" fontWeight="medium" color="gray.500">
+                OPEN 7 DAYS
+              </Text>
+              <Text fontSize="14px" mt={5} color="gray.500">
+                <Text as="span" color="red.500">
+                  LONDON{" "}
+                </Text>
+                020 8800 3377
+              </Text>
+              <Text fontSize="14px" mt={5} color="gray.500">
+                <Text as="span" color="red.500">
+                  OXFORD{" "}
+                </Text>
+                0186 598 5779
+              </Text>
+              <Text fontSize="14px" mt={5} color="gray.500">
+                <Text as="span" color="red.500">
+                  SURREY{" "}
+                </Text>
+                020 8800 3377
+              </Text>
+              <Text fontSize="14px" mt={5} color="gray.500">
+                <Text as="span" color="red.500">
+                  EMAIL{" "}
+                </Text>
+                <Link href="mailto:rugs@magichand.co.uk">
+                  rugs@magichand.co.uk
+                </Link>
+              </Text>
+              <Text fontSize="14px" mt={5} color="gray.500">
+                FREE COLLECTION & DELIVERY
+              </Text>
+            </VStack>
+          )}
+        </Flex>
+
+        {/* Desktop Menu */}
+        <Box
+          display={{ base: "none", lg: "block" }}
+          flex="1"
+          textAlign="center"
+          ml={{ xl: "30px" }}
+        >
+          <HStack spacing={{ base: 3, lg: 5, xl: 9, "2xl": 10 }}>
+            <Text fontSize="sm">
+              <Text as="span" fontSize="md">
+                OPEN 7 DAYS
+              </Text>
+            </Text>
+            <Text>
+              <Text as="span" color="red.500">
+                LONDON{" "}
+              </Text>
+              020 8800 3377
+            </Text>
+            <Text>
+              <Text as="span" color="red.500">
+                OXFORD{" "}
+              </Text>
+              0186 598 5779
+            </Text>
+            <Text>
+              <Text as="span" color="red.500">
+                SURREY{" "}
+              </Text>
+              020 8800 3377
+            </Text>
+            <Text>
+              <Text as="span" color="red.500">
+                EMAIL{" "}
+              </Text>
+              <a href="mailto:rugs@magichand.co.uk" color="black">
+                rugs@magichand.co.uk
+              </a>
+            </Text>
+            <Text fontSize="md">FREE COLLECTION & DELIVERY</Text>
+          </HStack>
         </Box>
 
-        {/* Desktop Info */}
-        <HStack
-          display={{ base: "none", lg: "flex" }}
-          flex="1"
-          justify="center"
-          spacing="6"
-        >
-          <Text fontWeight="medium" color="gray.700">
-            OPEN 7 DAYS
-          </Text>
-          <Text>
-            <Text as="span" color="red.500">
-              LONDON{" "}
-            </Text>
-            020 8800 3377
-          </Text>
-          <Text>
-            <Text as="span" color="red.500">
-              OXFORD{" "}
-            </Text>
-            0186 598 5779
-          </Text>
-          <Text>
-            <Text as="span" color="red.500">
-              SURREY{" "}
-            </Text>
-            020 8800 3377
-          </Text>
-          <Text>
-            <Text as="span" color="red.500">
-              EMAIL{" "}
-            </Text>
-            <Link href="mailto:rugs@magichand.co.uk" color="blue.500">
-              rugs@magichand.co.uk
-            </Link>
-          </Text>
-          <Text fontWeight="medium" color="gray.700">
-            FREE COLLECTION & DELIVERY
-          </Text>
-        </HStack>
-
-        {/* User & Social Icons */}
-        <HStack spacing="4" align="center">
-          {/* Social Icons */}
-          <HStack spacing="2">
-            <Link
+        {/* Social Icons */}
+        <Box>
+          <HStack spacing={3}>
+            <a
               href="https://www.facebook.com/MagicHandLtd/"
               title="Follow on Facebook"
-              target="_blank"
             >
-              <FaFacebookF size="20" />
-            </Link>
-            <Link
+              <IconButton variant="outline">
+                <FaFacebookF />
+              </IconButton>
+            </a>
+            <a
               href="https://www.instagram.com/magichandltd/"
               title="Follow on Instagram"
-              target="_blank"
             >
-              <BsInstagram size="20" />
-            </Link>
-            <Link
+              <IconButton variant="outline">
+                <FaInstagram />
+              </IconButton>
+            </a>
+            <a
               href="https://www.youtube.com/channel/UCgR8T356ZF4xQAaNiVUqvJQ"
               title="Follow on Youtube"
-              target="_blank"
             >
-              <BsYoutube size="20" />
-            </Link>
+              <IconButton variant="outline">
+                <FaYoutube />
+              </IconButton>
+            </a>
+            <IconButton as={Link} to="/user" variant="outline">
+              <FaUser />
+            </IconButton>
           </HStack>
-
-          {/* User Account */}
-          <Menu>
-            <Avatar
-              as={MenuButton}
-              src={user?.data?.photoURL}
-              name={user?.data?.username[0]}
-              size="sm"
-              cursor="pointer"
-            />
-            <MenuList>
-              {user.data ? (
-                <>
-                  <MenuItem as={Link} to="/user">
-                    Profile
-                  </MenuItem>
-                  <MenuItem onClick={onLogout}>Logout</MenuItem>
-                  <MenuItem as={Link} to="/orders">
-                    Orders
-                  </MenuItem>
-                </>
-              ) : (
-                <>
-                  <MenuItem as={Link} to="/login">
-                    Login
-                  </MenuItem>
-                  <MenuItem as={Link} to="/register">
-                    Register
-                  </MenuItem>
-                </>
-              )}
-              <MenuItem as={Link} href="https://www.facebook.com/MagicHandLtd/">
-                Chat With Us
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </HStack>
+        </Box>
       </Flex>
-
-      {/* Mobile Sidebar */}
-      {isOpen && (
-        <VStack
-          pos="absolute"
-          top="100%"
-          w="full"
-          bg="white"
-          border="1px"
-          borderColor="gray.200"
-          p="4"
-          spacing="4"
-          shadow="md"
-          rounded="md"
-          zIndex="10"
-        >
-          <Text fontWeight="medium" color="gray.700">
-            OPEN 7 DAYS
-          </Text>
-          <Text>
-            <Text as="span" color="red.500">
-              LONDON{" "}
-            </Text>
-            020 8800 3377
-          </Text>
-          <Text>
-            <Text as="span" color="red.500">
-              OXFORD{" "}
-            </Text>
-            0186 598 5779
-          </Text>
-          <Text>
-            <Text as="span" color="red.500">
-              SURREY{" "}
-            </Text>
-            020 8800 3377
-          </Text>
-          <Text>
-            <Text as="span" color="red.500">
-              EMAIL{" "}
-            </Text>
-            <Link href="mailto:rugs@magichand.co.uk" color="blue.500">
-              rugs@magichand.co.uk
-            </Link>
-          </Text>
-          <Text fontWeight="medium" color="gray.700">
-            FREE COLLECTION & DELIVERY
-          </Text>
-        </VStack>
-      )}
-    </Box>
+    </Stack>
   );
 };

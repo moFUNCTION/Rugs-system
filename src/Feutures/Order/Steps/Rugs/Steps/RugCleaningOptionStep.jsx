@@ -155,7 +155,17 @@ export const RugCleaningOptionStep = ({
 
   return (
     <>
-      <Text>Choose one of the following Rug Cleaning options below...</Text>
+      <Text>
+        Choose one of the following Rug Cleaning options below...
+        <br />
+        Either tick option 1:
+        <br />
+        Or tick option 2:
+        <br />
+        Or tick option 3:
+        <br />
+        Or tick option 4:
+      </Text>
       <RadioGroup
         value={RugCleaningOption?.name}
         onChange={(value) => setValue("RugCleaningOption.name", value)}

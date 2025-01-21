@@ -20,6 +20,13 @@ const Orders = lazy(() => import("./Feutures/Orders/Index"));
 const OrderWatch = lazy(() => import("./Feutures/OrderUpdate/Index"));
 // User profile
 const UserProfile = lazy(() => import("./Feutures/UserProfile/UserProfile"));
+const UserOrders = lazy(() => import("./Feutures/UserProfile/__Nested/Orders"));
+const UserInvoices = lazy(() =>
+  import("./Feutures/UserProfile/__Nested/Invoices")
+);
+const UserReceipts = lazy(() =>
+  import("./Feutures/UserProfile/__Nested/Receipts")
+);
 // Order Submition
 const OrderSubmition = lazy(() =>
   import("./Feutures/ClientOrderSubmition/Index")
@@ -63,6 +70,9 @@ function App() {
             }
           >
             <Route path="*" element />
+            <Route path="orders" element={<UserOrders />} />
+            <Route path="invoices" element={<UserInvoices />} />
+            <Route path="receipts" element={<UserReceipts />} />
           </Route>
           <Route path="/" element={<OrderRequest />} />
           <Route path="order" element={<OrderRequest />} />
