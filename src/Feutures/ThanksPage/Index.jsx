@@ -16,7 +16,6 @@ export default function Index() {
       px="2"
       minH="500px"
     >
-      <Logo w="150px" mb="6" />
       <CenteredTextWithLines w="100%" maxWidth="400px" mb="22">
         <Text
           fontSize={{ base: "22px", sm: "26px" }}
@@ -24,7 +23,7 @@ export default function Index() {
           textAlign="center"
           flexShrink="0"
         >
-          Dear {user.data?.firstName}
+          Dear {user.data?.title} {user.data?.firstName} ,
         </Text>
       </CenteredTextWithLines>
 
