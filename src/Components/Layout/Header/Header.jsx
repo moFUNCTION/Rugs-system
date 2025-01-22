@@ -28,7 +28,7 @@ export const Header = () => {
       <Flex
         justify="space-between"
         alignItems="center"
-        maxW={{ base: "100%", "2xl": "82%" }}
+        maxW={{ base: "100%", "2xl": "92%" }}
         mx="auto"
         px="15px"
         gap="10"
@@ -92,19 +92,19 @@ export const Header = () => {
               left={0}
               mx={1}
               my={2}
-              minW="140px"
+              minW="1400px"
               rounded="xl"
               zIndex={40}
               align="start"
             >
-              <Text fontSize="16px" fontWeight="medium" color="gray.500">
+              <Text fontSize="14px" fontWeight="medium" color="gray.500">
                 OPEN 7 DAYS
               </Text>
               <Text fontSize="14px" mt={5} color="gray.500">
                 <Text as="span" color="red.600" ml="1">
                   LONDON{" "}
                 </Text>
-                020 8800 3377
+                020 3740 6642
               </Text>
               <Text fontSize="14px" mt={5} color="gray.500">
                 <Text as="span" color="red.600" ml="1">
@@ -138,41 +138,45 @@ export const Header = () => {
           display={{ base: "none", lg: "block" }}
           flex="1"
           textAlign="center"
-          ml={{ xl: "30px" }}
+          ml={{ xl: "10px" }}
         >
           <HStack spacing={{ base: 3, lg: 5, xl: 9, "2xl": 10 }}>
-            <Text fontSize="18px">
-              <Text as="span" fontSize="md">
+            <Text fontSize="14px">
+              <Text as="span" fontSize="14px">
                 OPEN 7 DAYS
               </Text>
             </Text>
-            <Text>
-              <Text as="span" color="red.600" ml="1">
+            <Text fontSize="12px">
+              <Text as="span" color="red.600" ml="1" fontSize="12px">
                 LONDON{" "}
               </Text>
-              020 8800 3377
+              020 3740 6642
             </Text>
-            <Text>
-              <Text as="span" color="red.600" ml="1">
+            <Text fontSize="12px">
+              <Text as="span" color="red.600" ml="1" fontSize="12px">
                 OXFORD{" "}
               </Text>
               0186 598 5779
             </Text>
-            <Text>
-              <Text as="span" color="red.600" ml="1">
+            <Text fontSize="12px">
+              <Text as="span" color="red.600" ml="1" fontSize="12px">
                 SURREY{" "}
               </Text>
               020 8800 3377
             </Text>
-            <Text>
-              <Text as="span" color="red.600" ml="1">
+            <Text fontSize="12px">
+              <Text as="span" color="red.600" ml="1" fontSize="12px">
                 EMAIL{" "}
               </Text>
-              <a href="mailto:rugs@magichand.co.uk" color="black">
+              <a
+                href="mailto:rugs@magichand.co.uk"
+                color="black"
+                fontSize="12px"
+              >
                 rugs@magichand.co.uk
               </a>
             </Text>
-            <Text fontSize="md">FREE COLLECTION & DELIVERY</Text>
+            <Text fontSize="12px">FREE COLLECTION & DELIVERY</Text>
           </HStack>
         </Box>
 
