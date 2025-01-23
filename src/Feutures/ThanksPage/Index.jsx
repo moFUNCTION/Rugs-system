@@ -16,16 +16,15 @@ export default function Index() {
       px="2"
       minH="500px"
     >
-      <CenteredTextWithLines w="100%" maxWidth="400px" mb="22">
-        <Text
-          fontSize={{ base: "22px", sm: "26px" }}
-          color="black"
-          textAlign="center"
-          flexShrink="0"
-        >
-          Dear {user.data?.title} {user.data?.firstName} {user.data?.lastName} ,
-        </Text>
-      </CenteredTextWithLines>
+      <Text
+        fontSize={{ base: "22px", sm: "26px" }}
+        color="black"
+        textAlign="center"
+        flexShrink="0"
+        mb="5"
+      >
+        Dear {user.data?.title} {user.data?.firstName} {user.data?.lastName} ,
+      </Text>
 
       <Text
         fontSize={{ base: "14px", sm: "18px" }}
