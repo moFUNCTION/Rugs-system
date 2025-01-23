@@ -23,7 +23,7 @@ export default function Index() {
           textAlign="center"
           flexShrink="0"
         >
-          Dear {user.data?.title} {user.data?.firstName} ,
+          Dear {user.data?.title} {user.data?.firstName} {user.data?.lastName} ,
         </Text>
       </CenteredTextWithLines>
 

@@ -84,8 +84,9 @@ export class Order {
         UserID.value = req;
       }
       const Data = {
-        username: this.firstName + this.lastName,
-        firstName: this.firstName + this.lastName,
+        username: this.firstName.toUpperCase() + this.lastName.toUpperCase(),
+        firstName: this.firstName,
+        lastName: this.lastName,
         email: this.email,
         phoneNumber: this.phoneNumber,
         RugCollectionAddress: this.RugCollectionAddress,
@@ -145,6 +146,7 @@ export class Order {
       //   sname: Data.lastName,
       //   mobile: Data.phoneNumber,
       // });
+      console.log(Data);
       await SendSMS({
         title: Data.title,
         fname: Data.firstName,

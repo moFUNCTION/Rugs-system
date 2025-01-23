@@ -7,7 +7,6 @@ const SendSMS = async ({ title, fname, sname, mobile }) => {
   const applicationId = import.meta.env.VITE_BULKGATE_APP_ID;
   const applicationToken = import.meta.env.VITE_BULKGATE_APP_TOKEN;
   try {
-    console.log(mobile);
     const result = await axios
       .get("https://portal.bulkgate.com/api/1.0/simple/promotional", {
         params: {
