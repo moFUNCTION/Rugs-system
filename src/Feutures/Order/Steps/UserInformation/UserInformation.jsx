@@ -16,7 +16,7 @@ export const UserInformation = ({ register, errors }) => {
         <Stack w="sm">
           <Select variant="filled" placeholder="Title" {...register("title")}>
             <option value="Miss">Miss</option>
-            <option value="Mr">Mr</option>
+            <option value="MR">Mr</option>
             <option value="Mrs">Mrs</option>
             <option value="Ms">Ms</option>
             <option value="Dr">Dr</option>
@@ -52,7 +52,6 @@ export const UserInformation = ({ register, errors }) => {
         Icon={MdOutlineAlternateEmail}
         errors={errors}
         register={register}
-        type="number"
       />
       {!user.data && (
         <CenteredTextWithLines>

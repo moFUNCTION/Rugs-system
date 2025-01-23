@@ -21,13 +21,22 @@ export default function Index() {
     size: 30,
     orderByQueries: [],
   });
+  const {
+    data: DiscountData,
+    loading: DiscountLoading,
+    error: DiscountError,
+  } = useGetDoc({
+    __collection__: "Discounts",
+    docId: data?.discount,
+  });
   return (
-    <Skeleton height="100vh" isLoaded={!RugUploadedLoading}>
+    <Skeleton height="100vh" isLoaded={!RugUploadedLoading && !DiscountLoading}>
       <PDFViewer height="100%" width="100%">
         <InvoicePDF
           data={{
             ...data,
             RugsUploaded,
+            discount: DiscountData?.discount,
           }}
           isInvoice={false}
         />

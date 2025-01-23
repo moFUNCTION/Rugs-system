@@ -17,6 +17,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../../Config";
 import { Create_New_User } from "../Auth/Register/Register";
+import SendSMSAdmin from "../sms/SRequestToAdmin";
+import SendSMS from "../sms/SRequestToUser";
+import SendEmailAdmin from "../email/RequestToAdmin";
 
 export class Order {
   constructor({
@@ -36,6 +39,7 @@ export class Order {
     status = "pending",
     totalPrice,
     affiliate,
+    discount,
   } = {}) {
     this.firstName = firstName;
     this.lastName = lastName;
@@ -54,6 +58,7 @@ export class Order {
     this.status = status;
     this.totalPrice = totalPrice;
     this.affiliate = affiliate;
+    this.discount = discount;
   }
   #getAllParams() {
     return { ...this };
@@ -91,6 +96,8 @@ export class Order {
         title: this.title,
         isArchived: false,
       };
+      console.log(Data);
+
       if (this.affiliate) {
         Data.affiliate = this.affiliate;
       }
@@ -132,6 +139,18 @@ export class Order {
       for (let RugUploaded of RugsUploaded) {
         await addDoc(RugsUploadedCollection, RugUploaded);
       }
+      // await SendSMSAdmin({
+      //   title: Data.title,
+      //   fname: Data.firstName,
+      //   sname: Data.lastName,
+      //   mobile: Data.phoneNumber,
+      // });
+      await SendSMS({
+        title: Data.title,
+        fname: Data.firstName,
+        sname: Data.lastName,
+        mobile: Data.phoneNumber,
+      });
     } catch (Err) {
       throw new Error(Err.message);
     }

@@ -37,6 +37,7 @@ import { IoIosLogOut } from "react-icons/io";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
 import { CiShop } from "react-icons/ci";
+import { useLogout } from "../../@Firebase/Hooks/Auth/useLogout/useLogout";
 const CoverImage = () => {
   return (
     <Box
@@ -141,13 +142,22 @@ const ProfileInfo = () => {
             gap="2"
             direction={{ base: "column", md: "row" }}
           >
-            <Text
-              fontSize={{ base: "2xl", md: "3xl" }}
-              fontWeight="bold"
-              textAlign={{ base: "center", md: "left" }}
-            >
-              {user.data?.firstName + " " + user.data?.lastName}
-            </Text>
+            <Box>
+              <Text
+                fontSize={{ base: "2xl", md: "3xl" }}
+                fontWeight="bold"
+                textAlign={{ base: "center", md: "left" }}
+              >
+                {user.data?.firstName + " " + user.data?.lastName}
+              </Text>
+              <Text
+                fontSize={{ base: "lg", md: "xl" }}
+                textAlign={{ base: "center", md: "left" }}
+              >
+                {user.data?.email}
+              </Text>
+            </Box>
+
             <Button ml="2">Client</Button>
           </Flex>
         </VStack>
@@ -185,15 +195,11 @@ const TabsLinks = [
     Icon: MdFileOpen,
     href: "receipts",
   },
-  {
-    title: "Logout",
-    Icon: IoIosLogOut,
-  },
 ];
 const TabsMenu = () => {
   const { pathname } = useLocation();
   const [route] = pathname.split("/").slice(-1);
-
+  const { loading, error, onLogout } = useLogout();
   return (
     <Stack w="100%" maxW="300px">
       {TabsLinks.map((link) => {
@@ -217,6 +223,19 @@ const TabsMenu = () => {
           </>
         );
       })}
+      <Button
+        colorScheme="red"
+        gap="3"
+        justifyContent="start"
+        size="lg"
+        w="100%"
+        variant="outline"
+        onClick={onLogout}
+        isLoading={loading}
+      >
+        <IoIosLogOut />
+        Logout
+      </Button>
     </Stack>
   );
 };

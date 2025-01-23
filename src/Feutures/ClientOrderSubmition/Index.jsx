@@ -19,6 +19,11 @@ import {
   InputRightAddon,
   Radio,
   RadioGroup,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  IconButton,
 } from "@chakra-ui/react";
 import React, { lazy, useEffect, useRef, useState } from "react";
 import { ChakraDatePicker } from "../../Components/Common/ChakraDatePicker/ChakraDatePicker";
@@ -38,6 +43,8 @@ import { Rug } from "./Components/Rug/Rug";
 import { sumTotalPrice } from "../../Utils/RugsTotalPrice/RugsTotalPrice";
 import { useUserData } from "../../Context/UserDataProvider/UserDataPRovider";
 import { Discount } from "../../@Firebase/Utils/Discount/Discount";
+import { MdCancel } from "react-icons/md";
+import SendEmailAdmin from "../../@Firebase/Utils/email/RequestToAdmin";
 const InvoicePdf = ({ onClose, isOpen, data }) => {
   return (
     <Modal
@@ -90,6 +97,7 @@ const formatRugsUploadedData = (rugsData) =>
 
 export default function Index() {
   const { id } = useParams();
+  const { user } = useUserData();
   const Navigate = useNavigate();
   const toast = useToast({
     position: "top-right",
@@ -145,6 +153,7 @@ export default function Index() {
             return rug.value;
           })
         ),
+        discount: DiscountData.id,
         ...data,
       });
 
@@ -156,6 +165,11 @@ export default function Index() {
         isThereDifferentBillingAddress: data.isThereDifferentBillingAddress,
         isThereInvoiceRef: data.isThereInvoiceRef,
         InvoiceRef: data.InvoiceRef,
+      });
+      await SendEmailAdmin({
+        title: user.data.title,
+        fname: user.data.firstName,
+        sname: user.data.lastName,
       });
 
       toast({
@@ -239,6 +253,7 @@ export default function Index() {
   );
 
   const DiscountBoxRef = useRef();
+  const [DiscountData, setDiscountData] = useState();
 
   const [isLoadingDiscount, setIsLoadingDiscount] = useState(false);
 
@@ -262,6 +277,7 @@ export default function Index() {
         });
         return;
       }
+      setDiscountData(res);
       toast({
         status: "success",
         title: "Discount Have Applied Successfully",
@@ -282,6 +298,7 @@ export default function Index() {
       </Stack>
     );
   }
+  console.log(DiscountData);
 
   return (
     <>
@@ -348,22 +365,49 @@ export default function Index() {
                   <ErrorText>{errors?.collectionDate2?.message}</ErrorText>
                 </Stack>
               </Flex>
-              <InputGroup>
-                <Input
-                  ref={DiscountBoxRef}
-                  placeholder="Enter the Voucher Code"
-                />
-                <InputRightAddon
-                  isLoading={isLoadingDiscount}
-                  onClick={onApplyDiscount}
-                  as={Button}
-                >
-                  Apply
-                </InputRightAddon>
-              </InputGroup>
+              {DiscountData && (
+                <Alert status="success">
+                  <AlertIcon />
+                  Discount Applied {DiscountData.discount}{" "}
+                  {DiscountData.discountType === "percent" ? "%" : "£"}
+                  <IconButton
+                    onClick={() => setDiscountData(undefined)}
+                    ml="auto"
+                    colorScheme="red"
+                  >
+                    <MdCancel />
+                  </IconButton>
+                </Alert>
+              )}
+              {!DiscountData && (
+                <InputGroup>
+                  <Input
+                    ref={DiscountBoxRef}
+                    placeholder="Enter the Voucher Code"
+                  />
+                  <InputRightAddon
+                    isLoading={isLoadingDiscount}
+                    onClick={onApplyDiscount}
+                    as={Button}
+                  >
+                    Apply
+                  </InputRightAddon>
+                </InputGroup>
+              )}
+
               <Button w="100%" borderRadius="0">
-                Total Price {TotalPrice} £
+                {DiscountData ? (
+                  <s>Total Price {TotalPrice} £</s>
+                ) : (
+                  `Total Price ${TotalPrice} £`
+                )}
               </Button>
+              {DiscountData && (
+                <Button colorScheme="green" w="100%" borderRadius="0">
+                  Total Price{" "}
+                  {TotalPrice - TotalPrice * (DiscountData.discount / 100)} £
+                </Button>
+              )}
               <Text>Do you have a different Invoice | Billing Address?</Text>
               <Controller
                 control={control}
@@ -467,6 +511,7 @@ export default function Index() {
               </Flex>
             </>
           )}
+
           {data?.status !== "qutation" && data?.status && (
             <Heading size="md">
               The Order Status is {data?.status} Take A Screen And Contant With

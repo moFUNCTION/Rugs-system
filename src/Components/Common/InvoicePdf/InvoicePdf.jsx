@@ -289,6 +289,12 @@ export const InvoicePDF = ({ data, isInvoice = true }) => {
   if (!data) {
     return <div>Loading...</div>;
   } else {
+    // Calculate discounted total price
+    const discountPercentage = data.discount || 0; // Default to 0 if no discount
+    const originalTotalPrice = parseFloat(data.totalPrice);
+    const discountAmount = (originalTotalPrice * discountPercentage) / 100;
+    const discountedTotalPrice = originalTotalPrice - discountAmount;
+
     return (
       <Document>
         <Page size="A4" title={`MH${data.userId}`} style={styles.page} wrap>
@@ -455,13 +461,29 @@ export const InvoicePDF = ({ data, isInvoice = true }) => {
                     <Text style={styles.cellTextPrice}>FREE</Text>
                   </View>
                 </View>
+                {/* Add Discount Row */}
+                {discountPercentage > 0 && (
+                  <View style={styles.row}>
+                    <View style={styles.leftColumnFDL}>
+                      <Text style={styles.cellTextRugN}>
+                        DISCOUNT ({discountPercentage}%)
+                      </Text>
+                    </View>
+                    <View style={styles.rightColumnFDL}>
+                      <Text style={styles.cellTextPrice}>
+                        -£{discountAmount.toFixed(2)}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                {/* Display Total After Discount */}
                 <View style={styles.row}>
                   <View style={styles.leftColumnFDLB}>
                     <Text style={styles.cellTextRugNBF}>TOTAL TO PAY</Text>
                   </View>
                   <View style={styles.rightColumnFDLB}>
                     <Text style={styles.cellTextPriceBR}>
-                      {data.totalPrice}
+                      £{discountedTotalPrice.toFixed(2)}
                     </Text>
                   </View>
                 </View>

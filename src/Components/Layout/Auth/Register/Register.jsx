@@ -36,7 +36,11 @@ const RegisterBox = ({ ...rest }) => {
   });
   const onSubmit = async (data) => {
     try {
-      const user_create_init = new Create_New_User(data);
+      const user_create_init = new Create_New_User({
+        ...data,
+        firstName: data.username.split(" ")[0],
+        lastName: data.username.split(" ").slice(-1)[0],
+      });
       await user_create_init.onCreate();
       toast({
         title: "register successfully",
