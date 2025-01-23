@@ -40,7 +40,7 @@ function FooterPolicy() {
       py={[2, 3]} // Added vertical padding
       display="flex"
       alignItems="center"
-      bgColor="gray.200"
+      bgColor="#cccccc"
     >
       <Box width="full" px={[4, 50]}>
         <Grid
@@ -59,7 +59,7 @@ function FooterPolicy() {
               >
                 <Text
                   color="footerptcolor"
-                  fontSize={["xs", "md"]}
+                  fontSize={["xs", "xs"]}
                   textAlign="center"
                 >
                   {link.text}
@@ -75,7 +75,15 @@ function FooterPolicy() {
 
 function FooterAddresses() {
   return (
-    <Box bg="#f8f9fa" borderTop="1px" borderColor="gray.300" h="auto" py={5}>
+    <Box
+      bg="#f8f9fa"
+      borderTop="1px"
+      borderColor="gray.300"
+      h="auto"
+      py={5}
+      bgColor="#f2f2f2"
+      mt={50}
+    >
       <Flex
         w="full"
         px={{ base: 4, md: 12, xl: 50 }}
@@ -98,94 +106,94 @@ function FooterAddresses() {
         >
           {/* London Central */}
           <Box textAlign="start" w="175px">
-            <Text color="red.700" fontWeight="bold" fontSize="md">
+            <Text color="red.600" fontSize="md">
               LONDON CENTRAL
             </Text>
-            <Text fontSize="xs" color="gray.700">
-              65 Sloane Street
+            <Text fontSize="sm" color="gray.700">
+              45 Pont Street
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               Knightsbridge
             </Text>
-            <Text fontSize="xs" color="gray.700">
-              London SW1X 9SH
+            <Text fontSize="sm" color="gray.700">
+              London SW1X 0BD
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               T: 0203 740 6642
             </Text>
           </Box>
 
           {/* Oxford */}
           <Box textAlign="start">
-            <Text color="red.700" fontWeight="bold" fontSize="md">
+            <Text color="red.600" fontSize="md">
               OXFORD
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               Clarendon House
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               52 Cornmarket Street
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               Oxford OX1 3HJ
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               T: 0186 598 5779
             </Text>
           </Box>
 
           {/* Surrey */}
           <Box textAlign="start">
-            <Text color="red.700" fontWeight="bold" fontSize="md">
+            <Text color="red.600" fontSize="md">
               SURREY
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               St. Martin's House
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               Ockham Road South
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               Surrey KT24 6RX
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               T: 020 8800 3377
             </Text>
           </Box>
 
           {/* North London */}
           <Box textAlign="start" w="150px">
-            <Text color="red.700" fontWeight="bold" fontSize="md">
+            <Text color="red.600" fontSize="md">
               NORTH LONDON
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               Building A, OCC
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               102 Vale Road
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               London N4 1FL
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               T: 0208 800 3377
             </Text>
           </Box>
 
           {/* Magic Hand Ltd */}
           <Box textAlign="start">
-            <Text color="red.700" fontWeight="bold" fontSize="md">
+            <Text color="red.600" fontSize="md">
               MAGIC HAND LTD
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               FREE Collection & Delivery
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               OPEN 7 days
             </Text>
-            <Text fontSize="xs" color="gray.700">
+            <Text fontSize="sm" color="gray.700">
               EMAIL{" "}
-              <Text as="span" color="red.700">
+              <Text as="span" color="red.600">
                 rugs@magichand.co.uk
               </Text>
             </Text>
@@ -233,10 +241,11 @@ function FooterRights() {
       display="flex"
       backgroundColor="borderbo"
       py={3} // Replaced fixed height with padding
+      bgColor="#b5b5b5"
     >
       <Box width="full" px={[4, 50]}>
-        <Text color="slate.100" fontSize="11px">
-          © 2021 Magic Hand Ltd. All rights reserved
+        <Text color="white" fontSize="11px">
+          © 2025 Magic Hand Ltd. All rights reserved
         </Text>
       </Box>
     </Box>
