@@ -1,20 +1,15 @@
 import { z } from "zod";
+
 export const RugSchema = z.object({
   UnitSelector: z.enum(["cms", "inches"], {
-    message: "please choose the unit either its inch or cms",
+    message: "required",
   }),
-  length: z
-    .number({ message: "please fill the length field in the rug" })
-    .min(1, { message: "the least number in length is 1m" }),
-  width: z
-    .number({ message: "please fill the width field in the rug" })
-    .min(1, { message: "the least number in width is 1m" }),
-  RugMaterial: z.string().min(1, { message: "please choose the Rug Material" }),
+  length: z.number({ message: "required" }).min(1, { message: "required" }),
+  width: z.number({ message: "required" }).min(1, { message: "required" }),
+  RugMaterial: z.string().min(1, { message: "required" }),
   RugCleaningOption: z
     .object({
-      name: z
-        .string({ message: "please choose the Rug cleaning option" })
-        .min(1, { message: "please choose the Rug cleaning option" }),
+      name: z.string({ message: "required" }).min(1, { message: "required" }),
       RugImagesDescription: z.any(),
       Treatment: z.any(),
       RugImages: z.any(),
@@ -24,7 +19,7 @@ export const RugSchema = z.object({
       if (name !== "General (Deep Wash) Rug Cleaning Works ONLY") {
         if (RugImages?.length < 3) {
           ctx.addIssue({
-            message: "please upload at least 3 photos of your Rug",
+            message: "required",
             path: ["RugImages"],
           });
         }
@@ -35,7 +30,7 @@ export const RugSchema = z.object({
       ) {
         if (Treatment?.length === 0) {
           ctx.addIssue({
-            message: "please choose the Treatment you want",
+            message: "required",
             path: ["Treatment"],
           });
         }
@@ -47,35 +42,29 @@ export const RugSchema = z.object({
 
 export const schema = z
   .object({
-    title: z.string().min(2, { message: "please fill the Title field" }),
-    firstName: z.string().min(1, { message: "you must fill first name field" }),
-    lastName: z.string().min(1, { message: "you must fill last name field" }),
-    email: z
-      .string({ message: "you must fill the email field" })
-      .email({ message: "in valid email" }),
-    phoneNumber: z.string({ message: "please fill the phone number field" }),
-    RugCollectionAddress: z
-      .string()
-      .min(1, { message: "you must fill the Rug Collection Address Field" }),
+    title: z.string().min(2, { message: "required" }),
+    firstName: z.string().min(1, { message: "required" }),
+    lastName: z.string().min(1, { message: "required" }),
+    email: z.string({ message: "required" }).email({ message: "required" }),
+    phoneNumber: z.string({ message: "required" }),
+    RugCollectionAddress: z.string().min(1, { message: "required" }),
     RugReturnAddress: z.any(),
     isSameRugCollectionAddress: z.any(),
-    RugsUploaded: z
-      .array(z.any())
-      .min(1, { message: "please upload 1 rug at least" }),
+    RugsUploaded: z.array(z.any()).min(1, { message: "required" }),
 
     RugCollectionAddressPostCode: z
       .string()
       .regex(/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/, {
-        message: "Invalid UK postal code format",
+        message: "required",
       }),
     RugReturnAddressPostCode: z.any(),
     password: z
       .string({
-        message: "please fill the password field",
+        message: "required",
       })
-      .min(8, { message: "password must be more than 8 characters" }),
-    confirmPassword: z.string({ message: "please confirm password" }).min(1, {
-      message: "please confirm password",
+      .min(8, { message: "required" }),
+    confirmPassword: z.string({ message: "required" }).min(1, {
+      message: "required",
     }),
   })
   .superRefine((value, ctx) => {
@@ -90,7 +79,7 @@ export const schema = z
     if (isSameRugCollectionAddress === "No") {
       if (!RugReturnAddress) {
         ctx.addIssue({
-          message: "you must fill the Rug Return Address Field",
+          message: "required",
           path: ["RugReturnAddress"],
         });
       }
@@ -98,14 +87,14 @@ export const schema = z
         !/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/.test(RugReturnAddressPostCode)
       ) {
         ctx.addIssue({
-          message: "Invalid UK postal code format",
+          message: "required",
           path: ["RugReturnAddressPostCode"],
         });
       }
     }
     if (password !== confirmPassword) {
       ctx.addIssue({
-        message: "please rewrite the password correctly",
+        message: "required",
         path: ["confirmPassword"],
       });
     }
