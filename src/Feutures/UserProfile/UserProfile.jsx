@@ -180,11 +180,11 @@ const TabsLinks = [
     Icon: CiShop,
     href: "orders",
   },
-  {
-    title: "Chat With Us",
-    Icon: BiChat,
-    href: "chat",
-  },
+  // {
+  //   title: "Chat With Us",
+  //   Icon: BiChat,
+  //   href: "chat",
+  // },
   {
     title: "Invoices",
     Icon: MdFileOpen,
