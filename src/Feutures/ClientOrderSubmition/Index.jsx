@@ -159,7 +159,7 @@ export default function Index() {
             return rug.value;
           })
         ),
-        [DiscountData && "discount"]: DiscountData.id,
+        [DiscountData && "discount"]: DiscountData?.id,
         ...data,
       });
 
