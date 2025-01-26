@@ -24,6 +24,9 @@ import {
   AlertTitle,
   AlertDescription,
   IconButton,
+  Divider,
+  Checkbox,
+  Tooltip,
 } from "@chakra-ui/react";
 import React, { lazy, useEffect, useRef, useState } from "react";
 import { IoCloseOutline } from "react-icons/io5";
@@ -97,6 +100,8 @@ const formatRugsUploadedData = (rugsData) =>
   }));
 
 export default function Index() {
+  const [isAcceptedTermsAndConditions, setIsAcceptedTermsAndConditions] =
+    useState(false);
   const { id } = useParams();
   const { user } = useUserData();
   const Navigate = useNavigate();
@@ -340,37 +345,80 @@ export default function Index() {
                   />
                 );
               })}
-              <Flex w="100%" flexWrap="wrap" gap="4" justifyContent="center">
-                <Stack borderRadius="lg" bgColor="gray.100" p="3" flexGrow="1">
-                  <CenteredTextWithLines TextAlign="left">
-                    <Text flexShrink="0">Date Of Receiving Order</Text>
-                  </CenteredTextWithLines>
-                  <ChakraDatePicker
-                    bgColor="white"
-                    placeholder="Date Of Recieving Order"
-                    minDate={Date.now()}
-                    onChange={HandleChangeStartDate}
-                    value={collectionDate}
-                  />
-                  <ErrorText>{errors?.collectionDate?.message}</ErrorText>
-                </Stack>
-                <Stack borderRadius="lg" bgColor="gray.100" p="3" flexGrow="1">
-                  <CenteredTextWithLines TextAlign="left">
-                    <Text flexShrink="0">Date Of Recieving Order 2</Text>
-                  </CenteredTextWithLines>
-                  <ChakraDatePicker
-                    minDate={Date.now()}
-                    bgColor="white"
-                    placeholder="Date Of Recieving Order 2"
-                    onChange={HandleChangeCollectionDate2}
-                    value={collectionDate2}
-                  />
-                  <ErrorText>{errors?.collectionDate2?.message}</ErrorText>
-                </Stack>
-              </Flex>
 
+              <Button
+                justifyContent="end"
+                size="lg"
+                bgColor="rgb(229 231 235)"
+                w="100%"
+                borderRadius="0"
+                pointerEvents="none"
+              >
+                <Flex
+                  justifyContent="space-between"
+                  style={{ width: "100%", maxWidth: "500px" }}
+                >
+                  Rug Works and Services Costs <span>{TotalPrice}£</span>
+                </Flex>
+              </Button>
+              {DiscountData && (
+                <>
+                  <Button
+                    justifyContent="end"
+                    colorScheme="orange"
+                    variant="outline"
+                    size="lg"
+                    w="100%"
+                    borderRadius="0"
+                  >
+                    <IconButton
+                      borderRadius="0"
+                      colorScheme="orange"
+                      variant="ghost"
+                      onClick={() => setDiscountData(undefined)}
+                      mr="auto"
+                    >
+                      <IoCloseOutline />
+                    </IconButton>
+                    <Flex
+                      justifyContent="space-between"
+                      style={{ width: "100%", maxWidth: "500px" }}
+                    >
+                      VIP Discount Voucher @ {DiscountData?.discount}%
+                      <span
+                        style={{
+                          marginLeft: "auto",
+                        }}
+                      >
+                        {(TotalPrice * DiscountData?.discount) / 100} £
+                      </span>
+                    </Flex>
+                  </Button>
+
+                  <Button
+                    justifyContent="end"
+                    size="lg"
+                    bgColor="rgb(229 231 235)"
+                    w="100%"
+                    borderRadius="0"
+                    pointerEvents="none"
+                  >
+                    <Flex
+                      justifyContent="space-between"
+                      style={{ width: "100%", maxWidth: "500px" }}
+                    >
+                      Total Estimate Cost (excluding VAT):{" "}
+                      <span>
+                        {TotalPrice -
+                          (TotalPrice * DiscountData?.discount) / 100}
+                        £
+                      </span>
+                    </Flex>
+                  </Button>
+                </>
+              )}
               {!DiscountData && (
-                <InputGroup>
+                <InputGroup size="lg">
                   <Input
                     ref={DiscountBoxRef}
                     placeholder="Enter the Voucher Code"
@@ -384,63 +432,52 @@ export default function Index() {
                   </InputRightAddon>
                 </InputGroup>
               )}
-
-              <Button
-                justifyContent="start"
-                size="lg"
-                gap="3"
-                w="100%"
-                borderRadius="0"
-              >
-                Rug Works and Services Costs:{" "}
-                <span style={{ marginLeft: "auto" }}>{TotalPrice}£</span>
-              </Button>
-              {DiscountData && (
-                <>
-                  <Button
-                    justifyContent="start"
-                    colorScheme="orange"
-                    variant="outline"
-                    size="lg"
-                    w="100%"
-                    borderRadius="0"
+              {!DiscountData && (
+                <Button
+                  justifyContent="end"
+                  size="lg"
+                  bgColor="rgb(229 231 235)"
+                  w="100%"
+                  borderRadius="0"
+                  pointerEvents="none"
+                >
+                  <Flex
+                    justifyContent="space-between"
+                    style={{ width: "100%", maxWidth: "500px" }}
                   >
-                    <IconButton
-                      borderRadius="0"
-                      colorScheme="orange"
-                      variant="ghost"
-                      onClick={() => setDiscountData(undefined)}
-                    >
-                      <IoCloseOutline />
-                    </IconButton>
-                    VIP Discount Voucher @ {DiscountData?.discount}%
-                    <span
-                      style={{
-                        marginLeft: "auto",
-                      }}
-                    >
-                      {(TotalPrice * DiscountData?.discount) / 100} £
-                    </span>
-                  </Button>
-                  <Button
-                    justifyContent="start"
-                    size="lg"
-                    gap="3"
-                    w="100%"
-                    borderRadius="0"
-                  >
-                    Total Estimate Cost (excluding VAT):
-                    <span
-                      style={{
-                        marginLeft: "auto",
-                      }}
-                    >
-                      {TotalPrice - (TotalPrice * DiscountData?.discount) / 100}
-                      £
-                    </span>
-                  </Button>
-                </>
+                    Total Estimate Cost (excluding VAT):{" "}
+                    <span>{TotalPrice}£</span>
+                  </Flex>
+                </Button>
               )}
+
+              <Text my="2" fontSize="lg">
+                Please select two alternative dates for rug collection:
+              </Text>
+
+              <Flex w="100%" flexWrap="wrap" gap="4" justifyContent="center">
+                <Stack borderRadius="lg" bgColor="gray.100" p="3" flexGrow="1">
+                  <ChakraDatePicker
+                    bgColor="white"
+                    placeholder="Select First Date"
+                    minDate={Date.now()}
+                    onChange={HandleChangeStartDate}
+                    value={collectionDate}
+                  />
+                  <ErrorText>{errors?.collectionDate?.message}</ErrorText>
+                </Stack>
+                <Stack borderRadius="lg" bgColor="gray.100" p="3" flexGrow="1">
+                  <ChakraDatePicker
+                    minDate={Date.now()}
+                    bgColor="white"
+                    placeholder="Select Second Date"
+                    onChange={HandleChangeCollectionDate2}
+                    value={collectionDate2}
+                  />
+                  <ErrorText>{errors?.collectionDate2?.message}</ErrorText>
+                </Stack>
+              </Flex>
+              <Divider />
 
               <Text>Do you have a different Invoice | Billing Address?</Text>
               <Controller
@@ -526,24 +563,64 @@ export default function Index() {
                   );
                 }}
               />
-              <Flex mt="7" alignItems="center" justifyContent="center" gap="3">
-                <Button
-                  size="lg"
-                  isLoading={isSubmitting}
-                  onClick={handleSubmit(onSubmit)}
-                  w="100%"
-                  maxW="300px"
-                  p="10"
-                  colorScheme="yellow"
-                  bgColor="rgb(238 211 145)"
-                  whiteSpace="wrap"
+              <Divider w="100%" maxW="500px" my="6" />
+              <Checkbox
+                onChange={(e) =>
+                  setIsAcceptedTermsAndConditions(e.target.checked)
+                }
+                size="lg"
+                isChecked={isAcceptedTermsAndConditions}
+              >
+                Accept
+                <a
+                  style={{
+                    textDecoration: "underline",
+                    color: "blue",
+                    marginLeft: "6px",
+                  }}
+                  target="_blank"
+                  href="https://magichand.co.uk/terms-and-conditions"
                 >
-                  Confirm Works To Book Rug Collection
-                </Button>
+                  terms and conditions
+                </a>
+              </Checkbox>
+              <Flex mt="7" alignItems="center" justifyContent="center" gap="3">
+                <Tooltip
+                  label={
+                    !isAcceptedTermsAndConditions &&
+                    "please accept terms and conditions"
+                  }
+                >
+                  <Button
+                    isDisabled={!isAcceptedTermsAndConditions}
+                    size="lg"
+                    isLoading={isSubmitting}
+                    onClick={handleSubmit(onSubmit)}
+                    w="100%"
+                    maxW="300px"
+                    p="10"
+                    colorScheme="yellow"
+                    bgColor="rgb(238 211 145)"
+                    whiteSpace="wrap"
+                  >
+                    Confirm Works To Book Rug Collection
+                  </Button>
+                </Tooltip>
                 <Text>Or</Text>
-                <Button as={Link} to={`/orders/${id}/cancel`}>
-                  Cancel Work
-                </Button>
+                <Tooltip
+                  label={
+                    !isAcceptedTermsAndConditions &&
+                    "please accept terms and conditions"
+                  }
+                >
+                  <Button
+                    isDisabled={!isAcceptedTermsAndConditions}
+                    as={Link}
+                    to={`/orders/${id}/cancel`}
+                  >
+                    Cancel Work
+                  </Button>
+                </Tooltip>
               </Flex>
             </>
           )}

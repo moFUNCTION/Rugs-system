@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useGetDoc } from "../../@Firebase/Hooks/Common/useGetDoc/useGetDoc";
 import { useGetCollectionWithPaginationInCursors } from "../../@Firebase/Hooks/Common/useCollectionWithPagination(Cursors)/useCollectionWithPagination(Cursors)";
 import { Skeleton } from "@chakra-ui/react";
+import { sumTotalPrice } from "../../Utils/RugsTotalPrice/RugsTotalPrice";
 
 export default function Index() {
   const { id } = useParams();
@@ -29,6 +30,7 @@ export default function Index() {
     __collection__: "Discounts",
     docId: data?.discount,
   });
+  console.log("asas", sumTotalPrice(RugsUploaded));
   return (
     <Skeleton height="100vh" isLoaded={!RugUploadedLoading && !DiscountLoading}>
       <PDFViewer height="100%" width="100%">

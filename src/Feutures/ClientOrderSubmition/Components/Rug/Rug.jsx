@@ -86,9 +86,9 @@ export const Rug = ({
           );
         })}
       </Stack>
-      <Text borderRadius="md" gap="5" border="1px" w="100%" p="3">
+      {/* <Text borderRadius="md" gap="5" border="1px" w="100%" p="3">
         Total Price Of Rug : {sumTotalPrice([RugData])} £{" "}
-      </Text>
+      </Text> */}
     </Stack>
   );
 };
