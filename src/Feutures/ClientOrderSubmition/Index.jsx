@@ -26,11 +26,12 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import React, { lazy, useEffect, useRef, useState } from "react";
+import { IoCloseOutline } from "react-icons/io5";
 import { ChakraDatePicker } from "../../Components/Common/ChakraDatePicker/ChakraDatePicker";
 import { CenteredTextWithLines } from "../../Components/Common/CenteredTextWithLines/CenteredTextWithLines";
 import { useGetDoc } from "../../@Firebase/Hooks/Common/useGetDoc/useGetDoc";
 import { FormWrapper } from "./FormWrapper/FormWrapper";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema } from "./schema";
@@ -298,7 +299,9 @@ export default function Index() {
       </Stack>
     );
   }
-  console.log(DiscountData);
+  if (data?.email !== user?.data?.email) {
+    return <Heading>Permision Deneid</Heading>;
+  }
 
   return (
     <>
@@ -365,20 +368,7 @@ export default function Index() {
                   <ErrorText>{errors?.collectionDate2?.message}</ErrorText>
                 </Stack>
               </Flex>
-              {DiscountData && (
-                <Alert status="success">
-                  <AlertIcon />
-                  Discount Applied {DiscountData.discount}{" "}
-                  {DiscountData.discountType === "percent" ? "%" : "£"}
-                  <IconButton
-                    onClick={() => setDiscountData(undefined)}
-                    ml="auto"
-                    colorScheme="red"
-                  >
-                    <MdCancel />
-                  </IconButton>
-                </Alert>
-              )}
+
               {!DiscountData && (
                 <InputGroup>
                   <Input
@@ -395,19 +385,63 @@ export default function Index() {
                 </InputGroup>
               )}
 
-              <Button w="100%" borderRadius="0">
-                {DiscountData ? (
-                  <s>Total Price {TotalPrice} £</s>
-                ) : (
-                  `Total Price ${TotalPrice} £`
-                )}
+              <Button
+                justifyContent="start"
+                size="lg"
+                gap="3"
+                w="100%"
+                borderRadius="0"
+              >
+                Rug Works and Services Costs:{" "}
+                <span style={{ marginLeft: "auto" }}>{TotalPrice}£</span>
               </Button>
               {DiscountData && (
-                <Button colorScheme="green" w="100%" borderRadius="0">
-                  Total Price{" "}
-                  {TotalPrice - TotalPrice * (DiscountData.discount / 100)} £
-                </Button>
+                <>
+                  <Button
+                    justifyContent="start"
+                    colorScheme="orange"
+                    variant="outline"
+                    size="lg"
+                    w="100%"
+                    borderRadius="0"
+                  >
+                    <IconButton
+                      borderRadius="0"
+                      colorScheme="orange"
+                      variant="ghost"
+                      onClick={() => setDiscountData(undefined)}
+                    >
+                      <IoCloseOutline />
+                    </IconButton>
+                    VIP Discount Voucher @ {DiscountData?.discount}%
+                    <span
+                      style={{
+                        marginLeft: "auto",
+                      }}
+                    >
+                      {(TotalPrice * DiscountData?.discount) / 100} £
+                    </span>
+                  </Button>
+                  <Button
+                    justifyContent="start"
+                    size="lg"
+                    gap="3"
+                    w="100%"
+                    borderRadius="0"
+                  >
+                    Total Estimate Cost (excluding VAT):
+                    <span
+                      style={{
+                        marginLeft: "auto",
+                      }}
+                    >
+                      {TotalPrice - (TotalPrice * DiscountData?.discount) / 100}
+                      £
+                    </span>
+                  </Button>
+                </>
               )}
+
               <Text>Do you have a different Invoice | Billing Address?</Text>
               <Controller
                 control={control}
@@ -507,7 +541,9 @@ export default function Index() {
                   Confirm Works To Book Rug Collection
                 </Button>
                 <Text>Or</Text>
-                <Button>Cancel Work</Button>
+                <Button as={Link} to={`/orders/${id}/cancel`}>
+                  Cancel Work
+                </Button>
               </Flex>
             </>
           )}

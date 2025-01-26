@@ -34,6 +34,7 @@ const OrderSubmition = lazy(() =>
 const OrderReverify = lazy(() =>
   import("./Feutures/ClientOrderReverify/Index")
 );
+const OrderCancel = lazy(() => import("./Feutures/CancelOrder/Index"));
 // Thanks Page
 const ThanksPage = lazy(() => import("./Feutures/ThanksPage/Index"));
 // Order Dates
@@ -110,6 +111,8 @@ function App() {
             path="orders/:id/client-submition"
             element={<OrderSubmition />}
           />
+          <Route path="orders/:id/cancel" element={<OrderCancel />} />
+
           <Route path="orders/:id/time" element={<OrderCalenderDates />} />
           <Route path="orders/:id/invoice-pdf" element={<OrderInvoicePdf />} />
           <Route path="orders/:id/receipt-pdf" element={<OrderReceiptPdf />} />

@@ -309,6 +309,16 @@ export class Order {
     }
     await this.onUpdate(orderId, Data);
   }
+  static async onCancelWork({ cancelComment, cancelReasons, orderId }) {
+    const Order_Init = new Order({
+      status: "canceled",
+    });
+    await Order_Init.onUpdate(orderId, {
+      cancelComment,
+      cancelReasons,
+      status: "canceled",
+    });
+  }
   async onRemove(orderId) {
     if (!orderId) {
       throw new Error("Order ID is required");
