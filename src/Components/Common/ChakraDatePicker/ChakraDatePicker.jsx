@@ -28,22 +28,24 @@ export const ChakraDatePicker = ({
   maxDate,
   ...rest
 }) => {
-  const [selectedDate, setSelectedDate] = useState(
-    (() => {
-      if (value) {
-        return value instanceof Date ? value : new Date(value);
-      }
-    })()
-  );
+  const [selectedDate, setSelectedDate] = useState(() => {
+    if (value) {
+      return value instanceof Date ? value : new Date(value);
+    }
+    return null;
+  });
+
   useEffect(() => {
     if (value) {
       setSelectedDate(value instanceof Date ? value : new Date(value));
+    } else {
+      setSelectedDate(null);
     }
-  }, [JSON.stringify(value)]);
+  }, [value]);
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // Generate calendar days
   const generateCalendarDays = () => {
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
@@ -56,12 +58,10 @@ export const ChakraDatePicker = ({
 
     const days = [];
 
-    // Add padding days
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
 
-    // Add actual days
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day));
     }
@@ -69,21 +69,20 @@ export const ChakraDatePicker = ({
     return days;
   };
 
-  // Check if date is selectable
   const isDateSelectable = (date) => {
+    if (!date) return false;
     if (minDate && date < minDate) return false;
     if (maxDate && date > maxDate) return false;
     return true;
   };
 
-  // Handle date selection
   const handleDateSelect = (date) => {
+    if (!date) return;
     setSelectedDate(date);
     onChange?.(date);
-    onClose(); // Close modal after selection
+    onClose();
   };
 
-  // Navigate months
   const navigateMonth = (direction) => {
     setCurrentMonth((prev) => {
       const newMonth = new Date(prev);
@@ -104,7 +103,7 @@ export const ChakraDatePicker = ({
         <Input
           {...rest}
           placeholder={placeholder}
-          value={selectedDate ? selectedDate?.toLocaleDateString() : ""}
+          value={selectedDate ? selectedDate.toLocaleDateString() : ""}
           readOnly
           onClick={onOpen}
         />
@@ -137,7 +136,6 @@ export const ChakraDatePicker = ({
           </ModalHeader>
 
           <ModalBody>
-            {/* Weekday Headers */}
             <Flex
               mb={2}
               textAlign="center"
@@ -151,7 +149,6 @@ export const ChakraDatePicker = ({
               ))}
             </Flex>
 
-            {/* Calendar Grid */}
             <Flex flexWrap="wrap">
               {calendarDays.map((day, index) => (
                 <Box key={index} width="14.285%" textAlign="center" p={1}>
@@ -171,9 +168,7 @@ export const ChakraDatePicker = ({
                           ? "blue"
                           : "gray"
                       }
-                      onClick={() =>
-                        isDateSelectable(day) && handleDateSelect(day)
-                      }
+                      onClick={() => handleDateSelect(day)}
                       isDisabled={!isDateSelectable(day)}
                     >
                       {day.getDate()}
