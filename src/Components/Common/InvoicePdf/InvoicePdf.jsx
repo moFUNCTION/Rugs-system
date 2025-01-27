@@ -285,216 +285,274 @@ const styles = StyleSheet.create({
 });
 
 export const InvoicePDF = ({ data, isInvoice = true }) => {
-  console.log(data);
+  const [discountedTotalPrice, setDiscountedTotalPrice] = useState(0);
+  const [totalWithVat, setTotalWithVat] = useState(0);
+  const [vatAmount, setVatAmount] = useState(0);
+
+  useEffect(() => {
+    if (data) {
+      const discountPercentage = data.discount || 0;
+      const originalTotalPrice = parseFloat(data.totalPrice);
+      const discountAmount = (originalTotalPrice * discountPercentage) / 100;
+      const totalAfterDiscount = originalTotalPrice - discountAmount;
+
+      setDiscountedTotalPrice(totalAfterDiscount);
+      setVatAmount(totalAfterDiscount * 0.2);
+      setTotalWithVat(totalAfterDiscount * 1.2);
+    }
+  }, [data]);
+
   if (!data) {
     return <div>Loading...</div>;
-  } else {
-    // Calculate discounted total price
-    const discountPercentage = data.discount || 0; // Default to 0 if no discount
-    const originalTotalPrice = parseFloat(data.totalPrice);
-    const discountAmount = (originalTotalPrice * discountPercentage) / 100;
-    const discountedTotalPrice = originalTotalPrice - discountAmount;
+  }
 
-    return (
-      <Document>
-        <Page size="A4" title={`MH${data.userId}`} style={styles.page} wrap>
-          <View style={styles.header}>
-            <Image src={footerImage} style={styles.image} />
+  return (
+    <Document>
+      <Page
+        size="A4"
+        title={isInvoice ? `MH${data.invoiceNo}` : `MH${data.receiptNo}`}
+        style={styles.page}
+        wrap
+      >
+        <View style={styles.header}>
+          <Image src={headerImage} style={styles.image} />
+        </View>
+        <View style={styles.invoiceDetails}>
+          {isInvoice ? (
+            <Text>ESTIMATE RECEIPT | MH {data.invoiceNo}</Text>
+          ) : (
+            <Text>RECEIPT | MH {data.receiptNo}</Text>
+          )}
+          <Text>CUSTOMER REF.</Text>
+          <Text>DATE: {new Date().toLocaleDateString()}</Text>
+        </View>
+        <View style={styles.customerDetails}>
+          <View style={styles.detailRow}>
+            <Text style={styles.detailText}>Customer: {data.username}</Text>
           </View>
-          <View style={styles.invoiceDetails}>
-            {isInvoice ? (
-              <Text>INVOICE | MH {data.invoiceNo}</Text>
-            ) : (
-              <Text>RECEIPT | MH {data.receiptNo}</Text>
-            )}
-
-            <Text>CUSTOMER REF.</Text>
-            <Text>DATE: {new Date().toLocaleDateString()}</Text>
-          </View>
-          <View style={styles.customerDetails}>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailText}>Customer: {data.username}</Text>
-            </View>
-            <View style={styles.detailRow}>
-              <View style={styles.detailColumn}>
-                <Text style={styles.detailText}>
-                  Rug Collection Address: {data.RugCollectionAddress}
-                </Text>
-              </View>
-              <View style={styles.detailColumn}>
-                <Text style={styles.detailText}>
-                  Post Code: {data.RugCollectionAddressPostCode}
-                </Text>
-              </View>
-            </View>
-            {data.RugReturnAddress && data.RugReturnAddressPostCode && (
-              <View style={styles.detailRow}>
-                <View style={styles.detailColumn}>
-                  <Text style={styles.detailTextAddressD}>
-                    Return Address: {data.RugReturnAddress}
-                  </Text>
-                </View>
-                <View style={styles.detailColumn}>
-                  <Text style={styles.detailTextAddressD}>
-                    Post Code: {data.RugReturnAddressPostCode}
-                  </Text>
-                </View>
-              </View>
-            )}
-            <View style={styles.detailRow}>
+          <View style={styles.detailRow}>
+            <View style={styles.detailColumn}>
               <Text style={styles.detailText}>
-                Tel/Mobile: {data.phoneNumber} {"    "} Email: {data.email}
+                Collection Address: {data.RugCollectionAddress}
+              </Text>
+            </View>
+            <View style={styles.detailColumn}>
+              <Text style={styles.detailText}>
+                Post Code: {data.RugCollectionAddressPostCode}
               </Text>
             </View>
           </View>
-          <View style={styles.section}>
-            <View style={styles.rugDetails}>
-              <View style={styles.tableContainer}>
-                <View style={styles.row}>
-                  <View style={styles.leftColumn}>
-                    <Text style={styles.cellTextRug}>RUG WORKS & SERVICES</Text>
-                  </View>
-                  <View style={styles.CenterColumn}>
-                    <Text style={styles.cellTextP}>£</Text>
-                  </View>
+          {data.RugReturnAddress && data.RugReturnAddressPostCode && (
+            <View style={styles.detailRow}>
+              <View style={styles.detailColumn}>
+                <Text style={styles.detailTextAddressD}>
+                  Return Delivery Address: {data.RugReturnAddress}
+                </Text>
+              </View>
+              <View style={styles.detailColumn}>
+                <Text style={styles.detailTextAddressD}>
+                  Post Code: {data.RugReturnAddressPostCode}
+                </Text>
+              </View>
+            </View>
+          )}
+          <View style={styles.detailRow}>
+            <Text style={styles.detailText}>
+              Tel/Mobile: {data.phoneNumber} {"    "} Email: {data.email}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.section}>
+          <View style={styles.rugDetails}>
+            <View style={styles.tableContainer}>
+              <View style={styles.row}>
+                <View style={styles.leftColumn}>
+                  <Text style={styles.cellTextRug}>RUG WORKS & SERVICES</Text>
                 </View>
-                {data?.RugsUploaded &&
-                  data.RugsUploaded?.map((rug, rugIndex) => (
-                    <React.Fragment key={rugIndex}>
-                      <View style={styles.row}>
-                        <View style={styles.leftColumnRUG}>
-                          <Text style={styles.cellTextRug}>
-                            RUG: {rugIndex + 1}
-                          </Text>
-                        </View>
-                        <View style={styles.rightColumnRUG}>
-                          <Text style={styles.cellText}></Text>
-                        </View>
-                      </View>
+                <View style={styles.CenterColumn}>
+                  <Text style={styles.cellTextP}>£s</Text>
+                </View>
+              </View>
+              {data?.RugsUploaded?.map((rug, rugIndex) => (
+                <React.Fragment key={rugIndex}>
+                  <View style={styles.row}>
+                    <View style={styles.leftColumnRUG}>
+                      <Text style={styles.cellTextRug}>
+                        RUG: {rugIndex + 1}
+                      </Text>
+                    </View>
+                    <View style={styles.rightColumnRUG}>
+                      <Text style={styles.cellText}></Text>
+                    </View>
+                  </View>
+                  <View style={styles.row}>
+                    <View style={styles.leftColumn}>
+                      <Text style={styles.cellTextRugNG}>
+                        {rug.RugCleaningOption.name}
+                      </Text>
+                    </View>
+                    <View style={styles.CenterColumn}>
+                      <Text style={styles.cellTextPrice}>
+                        {(
+                          rug.length *
+                          rug.width *
+                          (rug.RugCleaningOption.price || 0)
+                        ).toFixed(2)}
+                      </Text>
+                    </View>
+                  </View>
+                  {rug.RugCleaningOption?.Treatment?.length > 0 && (
+                    <React.Fragment>
                       <View style={styles.row}>
                         <View style={styles.leftColumn}>
-                          <Text style={styles.cellTextRugNG}>
-                            {rug.RugCleaningOption.name}
-                          </Text>
+                          <Text style={styles.cellTextRugN}>TREATMENT</Text>
                         </View>
                         <View style={styles.CenterColumn}>
-                          <Text style={styles.cellTextPrice}>
-                            {(
-                              rug.length *
-                              rug.width *
-                              (rug.RugCleaningOption.price || 0)
-                            ).toFixed(2)}
-                          </Text>
+                          <Text style={styles.cellTextPrice}></Text>
                         </View>
                       </View>
-                      {rug.RugCleaningOption?.Treatment?.length > 0 && (
-                        <React.Fragment>
-                          <View style={styles.row}>
+                      {rug.RugCleaningOption.Treatment.map(
+                        (treat, treatIndex) => (
+                          <View
+                            style={styles.row}
+                            key={`treat-${rugIndex}-${treatIndex}`}
+                          >
                             <View style={styles.leftColumn}>
-                              <Text style={styles.cellTextRugN}>TREATMENT</Text>
+                              <Text style={styles.cellTextRugN}>
+                                {treat.value}
+                              </Text>
                             </View>
                             <View style={styles.CenterColumn}>
-                              <Text style={styles.cellTextPrice}></Text>
+                              <Text style={styles.cellTextPrice}>
+                                {treat.price.toFixed(2)}
+                              </Text>
                             </View>
                           </View>
-                          {rug.RugCleaningOption.Treatment.map(
-                            (treat, treatIndex) => (
-                              <View
-                                style={styles.row}
-                                key={`treat-${rugIndex}-${treatIndex}`}
-                              >
-                                <View style={styles.leftColumn}>
-                                  <Text style={styles.cellTextRugN}>
-                                    {treat.value}
-                                  </Text>
-                                </View>
-                                <View style={styles.CenterColumn}>
-                                  <Text style={styles.cellTextPrice}>
-                                    {treat.price.toFixed(2)}
-                                  </Text>
-                                </View>
-                              </View>
-                            )
-                          )}
-                        </React.Fragment>
-                      )}
-                      {rug.AdditionalServices?.length > 0 && (
-                        <React.Fragment>
-                          <View style={styles.row}>
-                            <View style={styles.leftColumn}>
-                              <Text style={styles.cellTextRugN}>SERVICES</Text>
-                            </View>
-                            <View style={styles.CenterColumn}>
-                              <Text style={styles.cellTextPrice}></Text>
-                            </View>
-                          </View>
-                          {rug.AdditionalServices.map(
-                            (service, serviceIndex) => (
-                              <View
-                                style={styles.row}
-                                key={`service-${rugIndex}-${serviceIndex}`}
-                              >
-                                <View style={styles.leftColumn}>
-                                  <Text style={styles.cellTextRugN}>
-                                    {service.label}
-                                  </Text>
-                                </View>
-                                <View style={styles.CenterColumn}>
-                                  <Text style={styles.cellTextPrice}>
-                                    {service.price.toFixed(2)}
-                                  </Text>
-                                </View>
-                              </View>
-                            )
-                          )}
-                        </React.Fragment>
+                        )
                       )}
                     </React.Fragment>
-                  ))}
+                  )}
+                  {rug.AdditionalServices?.length > 0 && (
+                    <React.Fragment>
+                      <View style={styles.row}>
+                        <View style={styles.leftColumn}>
+                          <Text style={styles.cellTextRugN}>SERVICES</Text>
+                        </View>
+                        <View style={styles.CenterColumn}>
+                          <Text style={styles.cellTextPrice}></Text>
+                        </View>
+                      </View>
+                      {rug.AdditionalServices.map((service, serviceIndex) => (
+                        <View
+                          style={styles.row}
+                          key={`service-${rugIndex}-${serviceIndex}`}
+                        >
+                          <View style={styles.leftColumn}>
+                            <Text style={styles.cellTextRugN}>
+                              {service.label}
+                            </Text>
+                          </View>
+                          <View style={styles.CenterColumn}>
+                            <Text style={styles.cellTextPrice}>
+                              {service.price.toFixed(2)}
+                            </Text>
+                          </View>
+                        </View>
+                      ))}
+                    </React.Fragment>
+                  )}
+                </React.Fragment>
+              ))}
+              <View style={styles.row}>
+                <View style={styles.leftColumnFDL}>
+                  <Text style={styles.cellTextRugN}>
+                    Rug Collection and Return Delivery Service Charge (to above
+                    address/other)
+                  </Text>
+                </View>
+                <View style={styles.rightColumnFDL}>
+                  <Text style={styles.cellTextPrice}>FREE</Text>
+                </View>
+              </View>
+              {data.discount > 0 && (
                 <View style={styles.row}>
                   <View style={styles.leftColumnFDL}>
                     <Text style={styles.cellTextRugN}>
-                      Rug Collection and Return Delivery Service Charge
+                      Voucher applied with {data.discount}% discount
                     </Text>
                   </View>
                   <View style={styles.rightColumnFDL}>
-                    <Text style={styles.cellTextPrice}>FREE</Text>
+                    <Text style={styles.cellTextPrice}>
+                      -£{(data.totalPrice * (data.discount / 100)).toFixed(2)}
+                    </Text>
                   </View>
                 </View>
-                {/* Add Discount Row */}
-                {discountPercentage > 0 && (
-                  <View style={styles.row}>
-                    <View style={styles.leftColumnFDL}>
-                      <Text style={styles.cellTextRugN}>
-                        DISCOUNT ({discountPercentage}%)
-                      </Text>
-                    </View>
-                    <View style={styles.rightColumnFDL}>
-                      <Text style={styles.cellTextPrice}>
-                        -£{discountAmount.toFixed(2)}
-                      </Text>
-                    </View>
-                  </View>
-                )}
-                {/* Display Total After Discount */}
-                <View style={styles.row}>
-                  <View style={styles.leftColumnFDLB}>
-                    <Text style={styles.cellTextRugNBF}>TOTAL TO PAY</Text>
-                  </View>
-                  <View style={styles.rightColumnFDLB}>
-                    <Text style={styles.cellTextPriceBR}>
-                      £{discountedTotalPrice.toFixed(2)}
+              )}
+              <View style={styles.row}>
+                <View style={styles.leftColumnFDLB}>
+                  <Text style={styles.cellTextRugNBF}>
+                    Total to Pay is paid in full in advance of any Return
+                    Delivery - either as a debit|credit card payment by
+                  </Text>
+                  <Text style={styles.cellTextRugNBF}>
+                    phone or by using the following
+                    <Text style={styles.CTextBl}> Magic Hand Ltd</Text> bank
+                    account details:
+                  </Text>
+                  <Text style={styles.cellTextRugNBF}>
+                    Barclays Bank Sort Code:
+                    <Text style={styles.CTextBl}> 20-32-06 </Text>
+                    Acc no. <Text style={styles.CTextBl}> 90480320 </Text>
+                    Pay ref: your MH
+                    <Text style={styles.CTextBl}>
+                      {" "}
+                      invoice no. MH {data.invoiceNo}
                     </Text>
+                  </Text>
+                  <Text style={styles.cellTextRugNBFP}>
+                    Prompt payment ensures prompt return delivery!
+                  </Text>
+                </View>
+                <View style={styles.rightColumnFDLB}>
+                  <View style={styles.rightColumnFDLBL}>
+                    <View style={styles.rightColumnFDLBLF}>
+                      <Text style={styles.cellTextPriceBL}>
+                        Works & Services
+                      </Text>
+                    </View>
+                    <View style={styles.rightColumnFDLBLF}>
+                      <Text style={styles.cellTextPriceBL}>VAT</Text>
+                    </View>
+                    <View style={styles.rightColumnFDLBLTh}>
+                      <Text style={styles.cellTextPriceBL}>TOTAL TO PAY</Text>
+                    </View>
+                  </View>
+                  <View style={styles.rightColumnFDLBR}>
+                    <View style={styles.rightColumnFDLBRF}>
+                      <Text style={styles.cellTextPriceBR}>
+                        {discountedTotalPrice.toFixed(2)}
+                      </Text>
+                    </View>
+                    <View style={styles.rightColumnFDLBRF}>
+                      <Text style={styles.cellTextPriceBR}>
+                        {vatAmount.toFixed(2)}
+                      </Text>
+                    </View>
+                    <View style={styles.rightColumnFDLBRTh}>
+                      <Text style={styles.cellTextPriceBR}>
+                        {totalWithVat.toFixed(2)}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
             </View>
           </View>
-          <View fixed style={styles.footer}>
-            <Image src={footerImage} style={styles.image} />
-          </View>
-        </Page>
-      </Document>
-    );
-  }
+        </View>
+        <View fixed style={styles.footer}>
+          <Image src={footerImage} style={styles.image} />
+        </View>
+      </Page>
+    </Document>
+  );
 };
