@@ -422,8 +422,10 @@ export const InvoicePDF = ({ data, isInvoice = true }) => {
                       </View>
                       <View style={styles.CenterColumn}>
                         <Text style={styles.cellTextPrice}>
-                          {safeParseFloat(rug.RugCleaningOption?.price) *
-                            rugSize}
+                          {Number(
+                            safeParseFloat(rug.RugCleaningOption?.price) *
+                              rugSize
+                          ).toFixed(2)}
                         </Text>
                       </View>
                     </View>
