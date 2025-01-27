@@ -304,9 +304,15 @@ export default function Index() {
       </Stack>
     );
   }
-  if (data?.email !== user?.data?.email) {
-    return <Heading>Permision Deneid</Heading>;
-  }
+  // if (data?.email !== user?.data?.email) {
+  //   return (
+  //     <Stack bgColor="red.100" p="3" alignItems="center">
+  //       <Heading size="md" p="3" border="1px">
+  //         Permision Denied
+  //       </Heading>
+  //     </Stack>
+  //   );
+  // }
 
   return (
     <>

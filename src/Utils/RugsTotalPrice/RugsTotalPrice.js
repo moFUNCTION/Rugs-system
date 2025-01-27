@@ -15,7 +15,6 @@ export const sumTotalPrice = (rugs) => {
     return !isNaN(parsed) ? parsed : fallback;
   };
 
-  // Helper function to calculate conversion factor
   const getConversionFactor = (unit) => {
     switch (unit) {
       case "cms":
@@ -27,7 +26,6 @@ export const sumTotalPrice = (rugs) => {
     }
   };
 
-  // Helper function to calculate rug size
   const calculateRugSize = (width, length, unit) => {
     const conversionFactor = getConversionFactor(unit);
     const widthInM = safeParseFloat(width) * conversionFactor;
@@ -38,16 +36,14 @@ export const sumTotalPrice = (rugs) => {
   // Calculate total price
   const totalPrice = rugs.reduce((total, rug) => {
     if (!rug) return total;
-
     const rugSize = calculateRugSize(rug.width, rug.length, rug.UnitSelector);
     let rugTotal = 0;
-
-    // Cleaning Option Pricing
     switch (rug.RugCleaningOption?.name) {
       case "Deep Wash Rug Cleaning and tick one or more Stain Treatments | Repairs or Restoration works | Alteration works":
         if (Array.isArray(rug.RugCleaningOption?.Treatment)) {
           rugTotal += rug.RugCleaningOption.Treatment.reduce(
             (treatmentTotal, treatment) => {
+              console.log(treatment.price);
               if (!treatment) return treatmentTotal;
 
               switch (treatment.value) {
@@ -65,11 +61,12 @@ export const sumTotalPrice = (rugs) => {
             0
           );
         }
+        rugTotal += safeParseFloat(rug.RugCleaningOption?.price) * rugSize;
         break;
 
       case "Rug Repairs and Restoration Works ONLY":
       case "Rug Alteration Works ONLY":
-        rugTotal += safeParseFloat(rug.RugCleaningOption?.price);
+        rugTotal += safeParseFloat(rug.RugCleaningOption?.price) * rugSize;
         break;
 
       case "General (Deep Wash) Rug Cleaning Works ONLY":
@@ -88,6 +85,5 @@ export const sumTotalPrice = (rugs) => {
   }, 0);
 
   // Round to 2 decimal places
-
-  return Number(parseFloat(totalPrice.toFixed(2)));
+  return parseFloat(totalPrice.toFixed(2));
 };
