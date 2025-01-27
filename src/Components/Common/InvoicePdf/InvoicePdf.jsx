@@ -284,6 +284,29 @@ const styles = StyleSheet.create({
   },
 });
 
+const safeParseFloat = (value, fallback = 0) => {
+  const parsed = parseFloat(value);
+  return !isNaN(parsed) ? parsed : fallback;
+};
+
+const getConversionFactor = (unit) => {
+  switch (unit) {
+    case "cms":
+      return 0.01;
+    case "inches":
+      return 0.0254;
+    default:
+      return 1;
+  }
+};
+
+const calculateRugSize = (width, length, unit) => {
+  const conversionFactor = getConversionFactor(unit);
+  const widthInM = safeParseFloat(width) * conversionFactor;
+  const lengthInM = safeParseFloat(length) * conversionFactor;
+  return widthInM * lengthInM;
+};
+
 export const InvoicePDF = ({ data, isInvoice = true }) => {
   const [discountedTotalPrice, setDiscountedTotalPrice] = useState(0);
   const [totalWithVat, setTotalWithVat] = useState(0);
@@ -373,96 +396,100 @@ export const InvoicePDF = ({ data, isInvoice = true }) => {
                   <Text style={styles.cellTextP}>£s</Text>
                 </View>
               </View>
-              {data?.RugsUploaded?.map((rug, rugIndex) => (
-                <React.Fragment key={rugIndex}>
-                  <View style={styles.row}>
-                    <View style={styles.leftColumnRUG}>
-                      <Text style={styles.cellTextRug}>
-                        RUG: {rugIndex + 1}
-                      </Text>
-                    </View>
-                    <View style={styles.rightColumnRUG}>
-                      <Text style={styles.cellText}></Text>
-                    </View>
-                  </View>
-                  <View style={styles.row}>
-                    <View style={styles.leftColumn}>
-                      <Text style={styles.cellTextRugNG}>
-                        {rug.RugCleaningOption.name}
-                      </Text>
-                    </View>
-                    <View style={styles.CenterColumn}>
-                      <Text style={styles.cellTextPrice}>
-                        {(
-                          rug.length *
-                          rug.width *
-                          (rug.RugCleaningOption.price || 0)
-                        ).toFixed(2)}
-                      </Text>
-                    </View>
-                  </View>
-                  {rug.RugCleaningOption?.Treatment?.length > 0 && (
-                    <React.Fragment>
-                      <View style={styles.row}>
-                        <View style={styles.leftColumn}>
-                          <Text style={styles.cellTextRugN}>TREATMENT</Text>
-                        </View>
-                        <View style={styles.CenterColumn}>
-                          <Text style={styles.cellTextPrice}></Text>
-                        </View>
+              {data?.RugsUploaded?.map((rug, rugIndex) => {
+                const rugSize = calculateRugSize(
+                  rug.width,
+                  rug.length,
+                  rug.UnitSelector
+                );
+                return (
+                  <React.Fragment key={rugIndex}>
+                    <View style={styles.row}>
+                      <View style={styles.leftColumnRUG}>
+                        <Text style={styles.cellTextRug}>
+                          RUG: {rugIndex + 1}
+                        </Text>
                       </View>
-                      {rug.RugCleaningOption.Treatment.map(
-                        (treat, treatIndex) => (
+                      <View style={styles.rightColumnRUG}>
+                        <Text style={styles.cellText}></Text>
+                      </View>
+                    </View>
+                    <View style={styles.row}>
+                      <View style={styles.leftColumn}>
+                        <Text style={styles.cellTextRugNG}>
+                          {rug.RugCleaningOption.name}
+                        </Text>
+                      </View>
+                      <View style={styles.CenterColumn}>
+                        <Text style={styles.cellTextPrice}>
+                          {safeParseFloat(rug.RugCleaningOption?.price) *
+                            rugSize}
+                        </Text>
+                      </View>
+                    </View>
+                    {rug.RugCleaningOption?.Treatment?.length > 0 && (
+                      <React.Fragment>
+                        <View style={styles.row}>
+                          <View style={styles.leftColumn}>
+                            <Text style={styles.cellTextRugN}>TREATMENT</Text>
+                          </View>
+                          <View style={styles.CenterColumn}>
+                            <Text style={styles.cellTextPrice}></Text>
+                          </View>
+                        </View>
+                        {rug.RugCleaningOption.Treatment.map(
+                          (treat, treatIndex) => (
+                            <View
+                              style={styles.row}
+                              key={`treat-${rugIndex}-${treatIndex}`}
+                            >
+                              <View style={styles.leftColumn}>
+                                <Text style={styles.cellTextRugN}>
+                                  {treat.value}
+                                </Text>
+                              </View>
+                              <View style={styles.CenterColumn}>
+                                <Text style={styles.cellTextPrice}>
+                                  {treat.price.toFixed(2)}
+                                </Text>
+                              </View>
+                            </View>
+                          )
+                        )}
+                      </React.Fragment>
+                    )}
+                    {rug.AdditionalServices?.length > 0 && (
+                      <React.Fragment>
+                        <View style={styles.row}>
+                          <View style={styles.leftColumn}>
+                            <Text style={styles.cellTextRugN}>SERVICES</Text>
+                          </View>
+                          <View style={styles.CenterColumn}>
+                            <Text style={styles.cellTextPrice}></Text>
+                          </View>
+                        </View>
+                        {rug.AdditionalServices.map((service, serviceIndex) => (
                           <View
                             style={styles.row}
-                            key={`treat-${rugIndex}-${treatIndex}`}
+                            key={`service-${rugIndex}-${serviceIndex}`}
                           >
                             <View style={styles.leftColumn}>
                               <Text style={styles.cellTextRugN}>
-                                {treat.value}
+                                {service.label}
                               </Text>
                             </View>
                             <View style={styles.CenterColumn}>
                               <Text style={styles.cellTextPrice}>
-                                {treat.price.toFixed(2)}
+                                {service.price.toFixed(2)}
                               </Text>
                             </View>
                           </View>
-                        )
-                      )}
-                    </React.Fragment>
-                  )}
-                  {rug.AdditionalServices?.length > 0 && (
-                    <React.Fragment>
-                      <View style={styles.row}>
-                        <View style={styles.leftColumn}>
-                          <Text style={styles.cellTextRugN}>SERVICES</Text>
-                        </View>
-                        <View style={styles.CenterColumn}>
-                          <Text style={styles.cellTextPrice}></Text>
-                        </View>
-                      </View>
-                      {rug.AdditionalServices.map((service, serviceIndex) => (
-                        <View
-                          style={styles.row}
-                          key={`service-${rugIndex}-${serviceIndex}`}
-                        >
-                          <View style={styles.leftColumn}>
-                            <Text style={styles.cellTextRugN}>
-                              {service.label}
-                            </Text>
-                          </View>
-                          <View style={styles.CenterColumn}>
-                            <Text style={styles.cellTextPrice}>
-                              {service.price.toFixed(2)}
-                            </Text>
-                          </View>
-                        </View>
-                      ))}
-                    </React.Fragment>
-                  )}
-                </React.Fragment>
-              ))}
+                        ))}
+                      </React.Fragment>
+                    )}
+                  </React.Fragment>
+                );
+              })}
               <View style={styles.row}>
                 <View style={styles.leftColumnFDL}>
                   <Text style={styles.cellTextRugN}>

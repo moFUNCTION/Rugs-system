@@ -135,20 +135,10 @@ export default function Index() {
     orderByQueries: [],
   });
 
-  const collectionDate = useWatch({ name: "collectionDate", control });
-  const collectionDate2 = useWatch({ name: "collectionDate2", control });
-
   const { fields: Rugs, replace } = useFieldArray({
     control,
     name: "RugsUploaded",
   });
-
-  const HandleChangeStartDate = (selectedDate) => {
-    setValue("collectionDate", new Date(selectedDate)?.toLocaleString());
-  };
-  const HandleChangeCollectionDate2 = (selectedDate) => {
-    setValue("collectionDate2", new Date(selectedDate)?.toLocaleString());
-  };
 
   const onSubmit = async (data) => {
     try {
@@ -304,15 +294,15 @@ export default function Index() {
       </Stack>
     );
   }
-  // if (data?.email !== user?.data?.email) {
-  //   return (
-  //     <Stack bgColor="red.100" p="3" alignItems="center">
-  //       <Heading size="md" p="3" border="1px">
-  //         Permision Denied
-  //       </Heading>
-  //     </Stack>
-  //   );
-  // }
+  if (data?.email !== user?.data?.email) {
+    return (
+      <Stack bgColor="red.100" p="3" alignItems="center">
+        <Heading size="md" p="3" border="1px">
+          Permision Denied
+        </Heading>
+      </Stack>
+    );
+  }
 
   return (
     <>
@@ -463,24 +453,48 @@ export default function Index() {
 
               <Flex w="100%" flexWrap="wrap" gap="4" justifyContent="center">
                 <Stack borderRadius="lg" bgColor="gray.100" p="3" flexGrow="1">
-                  <ChakraDatePicker
-                    bgColor="white"
-                    placeholder="Select First Date"
-                    minDate={Date.now()}
-                    onChange={HandleChangeStartDate}
-                    value={collectionDate}
+                  <Controller
+                    control={control}
+                    name="collectionDate"
+                    render={({ field }) => {
+                      return (
+                        <>
+                          <ChakraDatePicker
+                            bgColor="white"
+                            placeholder="Select First Date"
+                            minDate={Date.now()}
+                            onChange={(value) => field.onChange(value)}
+                            value={field.value}
+                          />
+                          <ErrorText>
+                            {errors?.collectionDate?.message}
+                          </ErrorText>
+                        </>
+                      );
+                    }}
                   />
-                  <ErrorText>{errors?.collectionDate?.message}</ErrorText>
                 </Stack>
                 <Stack borderRadius="lg" bgColor="gray.100" p="3" flexGrow="1">
-                  <ChakraDatePicker
-                    minDate={Date.now()}
-                    bgColor="white"
-                    placeholder="Select Second Date"
-                    onChange={HandleChangeCollectionDate2}
-                    value={collectionDate2}
+                  <Controller
+                    control={control}
+                    name="collectionDate2"
+                    render={({ field }) => {
+                      return (
+                        <>
+                          <ChakraDatePicker
+                            bgColor="white"
+                            placeholder="Select First Date"
+                            minDate={Date.now()}
+                            onChange={(value) => field.onChange(value)}
+                            value={field.value}
+                          />
+                          <ErrorText>
+                            {errors?.collectionDate?.message}
+                          </ErrorText>
+                        </>
+                      );
+                    }}
                   />
-                  <ErrorText>{errors?.collectionDate2?.message}</ErrorText>
                 </Stack>
               </Flex>
               <Divider />
