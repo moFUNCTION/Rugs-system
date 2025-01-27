@@ -118,6 +118,7 @@ export default function Index() {
     reset,
     getValues,
     register,
+    setError,
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -142,6 +143,14 @@ export default function Index() {
 
   const onSubmit = async (data) => {
     try {
+      if (!data.collectionDate) {
+        setError("collectionDate", "Required");
+        return;
+      }
+      if (!data.collectionDate2) {
+        setError("collectionDate2", "Required");
+        return;
+      }
       const Order_Init = new Order({
         status: "order",
         totalPrice: sumTotalPrice(
@@ -155,8 +164,8 @@ export default function Index() {
 
       await Order_Init.onConfirmByClient({
         orderId: id,
-        collectionDate: data.collectionDate,
-        collectionDate2: data.collectionDate2,
+        collectionDate: new Date(data.collectionDate).toLocaleString(),
+        collectionDate2: new Date(data.collectionDate2).toLocaleString(),
         billingAddress: data.billingAddress,
         isThereDifferentBillingAddress: data.isThereDifferentBillingAddress,
         isThereInvoiceRef: data.isThereInvoiceRef,
