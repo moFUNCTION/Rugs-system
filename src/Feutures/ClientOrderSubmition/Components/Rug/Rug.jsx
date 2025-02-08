@@ -1,7 +1,13 @@
 import { Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { TreatmentSelected } from "./Treatment";
-import { sumTotalPrice } from "../../../../Utils/RugsTotalPrice/RugsTotalPrice";
+import {
+  sumTotalPrice,
+  calculateAdditionalServicePrice,
+  calculateRugCleaningPrice,
+  calculateRugSize,
+  calculateTreatmentPrice,
+} from "../../../../Utils/RugsTotalPrice/RugsTotalPrice";
 import { AdditionalServicesSelected } from "./AditionalServices";
 export const Rug = ({
   RugData,
@@ -12,6 +18,7 @@ export const Rug = ({
 }) => {
   const { width, length, UnitSelector, RugCleaningOption, AdditionalServices } =
     RugData;
+  const rugSize = calculateRugSize(width, length, UnitSelector);
   return (
     <Stack
       alignItems="start"
@@ -41,10 +48,10 @@ export const Rug = ({
         </Text>
       </Flex>
       <Stack borderRadius="md" gap="5" border="1px" w="100%" p="3">
-        <Text>{RugCleaningOption.name}</Text>
-        {!isNaN(RugCleaningOption.price) && (
-          <Text ml="auto">{RugCleaningOption.price} £ </Text>
-        )}
+        <Text>{RugCleaningOption?.name}</Text>
+        <Text ml="auto">
+          {calculateRugCleaningPrice(RugCleaningOption?.price, rugSize)}£
+        </Text>
       </Stack>
 
       <Stack borderRadius="md" gap="3" border="1px" w="100%" p="3">
@@ -52,6 +59,7 @@ export const Rug = ({
         {RugCleaningOption.Treatment?.map((treatment) => {
           return (
             <TreatmentSelected
+              rugSize={rugSize}
               key={treatment.value}
               value={treatment?.value}
               price={treatment?.price}
@@ -71,6 +79,7 @@ export const Rug = ({
         {AdditionalServices?.map((service) => {
           return (
             <AdditionalServicesSelected
+              rugSize={rugSize}
               key={service.value}
               label={service.label}
               value={service?.value}

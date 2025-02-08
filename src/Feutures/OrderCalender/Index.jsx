@@ -56,13 +56,6 @@ export default function Index() {
   };
   return (
     <Stack as={Skeleton} isLoaded={!loading} gap="5" alignItems="center" p="3">
-      <Lottie
-        animationData={animationData}
-        style={{
-          width: "100%",
-          maxWidth: "150px",
-        }}
-      />
       <CenteredTextWithLines w="100%" maxWidth="400px" mb="22">
         <Text
           fontSize={{ base: "22px", sm: "26px" }}

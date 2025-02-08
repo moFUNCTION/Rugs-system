@@ -294,7 +294,7 @@ export default function Index() {
     }
   };
 
-  if (data?.isAcceptedByClient) {
+  if (data?.isAcceptedByClient && !loading) {
     return (
       <Stack p="3" alignItems="center">
         <Heading size="md" p="3" border="1px">
@@ -303,7 +303,7 @@ export default function Index() {
       </Stack>
     );
   }
-  if (data?.email !== user?.data?.email) {
+  if (data?.email !== user?.data?.email && !loading) {
     return (
       <Stack bgColor="red.100" p="3" alignItems="center">
         <Heading size="md" p="3" border="1px">

@@ -3,6 +3,45 @@
  * @param {Array} rugs - Array of rug objects
  * @returns {number} - Total price rounded to 2 decimal places
  */
+
+export const safeParseFloat = (value, fallback = 0) => {
+  const parsed = parseFloat(value);
+  return !isNaN(parsed) ? parsed : fallback;
+};
+
+export const getConversionFactor = (unit) => {
+  switch (unit) {
+    case "cms":
+      return 0.01;
+    case "inches":
+      return 0.0254;
+    default:
+      return 1;
+  }
+};
+
+export const calculateRugSize = (width, length, unit) => {
+  const conversionFactor = getConversionFactor(unit);
+  const widthInM = safeParseFloat(width) * conversionFactor;
+  const lengthInM = safeParseFloat(length) * conversionFactor;
+  return widthInM * lengthInM;
+};
+
+export const calculateTreatmentPrice = (treatment, rugSize) => {
+  if (!treatment) return 0;
+  return treatment?.value === "Flood water/mould/damp damage"
+    ? safeParseFloat(treatment?.price) * rugSize * 2
+    : safeParseFloat(treatment?.price);
+};
+
+export const calculateAdditionalServicePrice = (price, rugSize) => {
+  return safeParseFloat(price) * rugSize;
+};
+
+export const calculateRugCleaningPrice = (price, rugSize) => {
+  return safeParseFloat(price) * rugSize;
+};
+
 export const sumTotalPrice = (rugs) => {
   // Validate input
   if (!Array.isArray(rugs) || rugs.length === 0) {
@@ -43,7 +82,6 @@ export const sumTotalPrice = (rugs) => {
         if (Array.isArray(rug.RugCleaningOption?.Treatment)) {
           rugTotal += rug.RugCleaningOption.Treatment.reduce(
             (treatmentTotal, treatment) => {
-              console.log(treatment.price);
               if (!treatment) return treatmentTotal;
 
               switch (treatment.value) {

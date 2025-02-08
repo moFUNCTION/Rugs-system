@@ -3,7 +3,7 @@ import { GetUserDataReducer, INITIAL_STATE } from "./Reducer/GetUserReducer";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../../Config";
 import { doc, onSnapshot } from "firebase/firestore";
-
+import { signOut } from "firebase/auth";
 export const useAuth = () => {
   const [user, dispatch] = useReducer(GetUserDataReducer, INITIAL_STATE);
 
@@ -19,6 +19,8 @@ export const useAuth = () => {
           payload: data,
         });
         return data;
+      } else {
+        signOut(auth);
       }
     });
   };

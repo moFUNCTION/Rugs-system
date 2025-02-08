@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { MdRemove } from "react-icons/md";
 import { IoCloseOutline } from "react-icons/io5";
+import { calculateAdditionalServicePrice } from "../../../../Utils/RugsTotalPrice/RugsTotalPrice";
 const RemovingModal = ({ onClose, isOpen, service, onDelete }) => {
   return (
     <Modal
@@ -56,6 +57,7 @@ export const AdditionalServicesSelected = ({
   price,
   onDelete,
   label,
+  rugSize,
 }) => {
   const {
     isOpen: isOpenDeleteModal,
@@ -86,7 +88,7 @@ export const AdditionalServicesSelected = ({
           </IconButton>
           <Text whiteSpace="wrap">{label}</Text>
         </Flex>
-        <Text>{price} £</Text>
+        <Text>{calculateAdditionalServicePrice(price, rugSize)}£</Text>
       </Flex>
     </>
   );

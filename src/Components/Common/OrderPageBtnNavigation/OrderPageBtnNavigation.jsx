@@ -7,7 +7,8 @@ export const OrderPageBtnNavigation = () => {
   if (pathname !== "/" && pathname !== "/order" && pathname !== "") {
     return (
       <Button
-        colorScheme="red"
+        colorScheme="yellow"
+        bgColor="rgb(238 211 145)"
         borderRadius="full"
         pos="fixed"
         bottom="3"
@@ -15,6 +16,7 @@ export const OrderPageBtnNavigation = () => {
         zIndex="1000000"
         as={Link}
         to="/"
+        size="lg"
       >
         Navigate To Order Page
       </Button>
